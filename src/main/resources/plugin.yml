@@ -18,3 +18,8 @@ permissions:
   backpacks.*:
     description: Gives access to all commands in BackpacksRemastered.
     default: op
+  backpacks.help:
+    description: Gives access to the help command.
+    default: true
+  backpacks.config.reload:
+    description: Allows one to reload the YML configuration.
