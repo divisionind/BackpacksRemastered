@@ -18,6 +18,9 @@
 
 package com.divisionind.bprm;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Backpacks extends JavaPlugin {
@@ -28,11 +31,23 @@ public class Backpacks extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info(String.format("Backpacks v%s (git: %s) has been enabled!", VERSION, GIT_HASH));
+        getLogger().info(String.format("BackpacksRemastered v%s (git: %s) has been enabled!", VERSION, GIT_HASH));
     }
 
     @Override
     public void onDisable() {
-        getLogger().info(String.format("Backpacks v%s (git: %s) has been disabled.", VERSION, GIT_HASH));
+        getLogger().info(String.format("BackpacksRemastered v%s (git: %s) has been disabled.", VERSION, GIT_HASH));
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        Player player;
+        if (sender instanceof Player) player = (Player)sender; else player = null;
+
+        if (player != null) {
+            player.sendMessage(command.getName());
+        }
+
+        return true;
     }
 }

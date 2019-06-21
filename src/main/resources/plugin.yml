@@ -4,3 +4,17 @@ main: com.divisionind.bprm.Backpacks
 version: @DivisionVersion@
 author: drew6017
 website: divisionind.com
+api-version: 1.14
+
+commands:
+  backpacks:
+    description: The main command for BackpacksRemastered.
+    aliases:
+      - bp
+    permission: backpacks.*
+    usage: /bp help
+
+permissions:
+  backpacks.*:
+    description: Gives access to all commands in BackpacksRemastered.
+    default: op

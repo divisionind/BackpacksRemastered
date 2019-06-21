@@ -18,6 +18,7 @@
 
 import org.apache.tools.ant.filters.ReplaceTokens
 import java.lang.reflect.Method
+import org.gradle.internal.os.OperatingSystem
 
 plugins {
     id 'java'
@@ -31,6 +32,8 @@ def uploadBetas = false
 
 def spigotVersion = "1.14.2"
 def githubOwner = "divisionind"
+def runningServerPluginsDir = "/mnt/c/Users/drew6017/Desktop/Java\\ Coding\\ Pack/Spigot\\ Test\\ Server/1.14.2/plugins"
+def wslCommand = "kali"
 
 group 'com.divisionind'
 sourceCompatibility = 1.8
@@ -149,6 +152,31 @@ if (!(beta && !uploadBetas)) {
     println "Version qualified for a release."
     uploadArtifacts.finalizedBy tasks.githubRelease
 }
+
+def sourceJar = "build/libs/${project.name}-${project.version}.jar"
+def dstJar = "${runningServerPluginsDir}/${project.name}.jar"
+
+task update {
+    doLast {
+        println "moving $sourceJar => $dstJar"
+        OperatingSystem os = OperatingSystem.current()
+        if (os.isWindows()) {
+            exec {
+                commandLine wslCommand, 'run', "mv $sourceJar $dstJar"
+            }
+        } else
+        if (os.isLinux()) {
+            exec {
+                commandLine 'mv', sourceJar, dstJar
+            }
+        } else {
+            println 'This OS does not support real-time plugin updating.'
+            return
+        }
+        println 'Updated plugin on running server. Reload it now to see the changes.'
+    }
+}
+update.dependsOn pack
 
 repositories {
     mavenCentral()
