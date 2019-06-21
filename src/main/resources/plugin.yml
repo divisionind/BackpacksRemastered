@@ -1,0 +1,6 @@
+name: BackpacksRemastered
+description: A remastered version of the popular backpacks plugin.
+main: com.divisionind.bprm.Backpacks
+version: @DivisionVersion@
+author: drew6017
+website: divisionind.com

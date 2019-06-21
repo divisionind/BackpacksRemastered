@@ -1,0 +1,18 @@
+language: java
+
+dist: trusty
+
+jdk:
+  - oraclejdk8
+
+install: true
+
+branches:
+  only:
+    - master
+
+before_install:
+  - chmod +x gradlew
+
+script:
+  ./gradlew pack uploadArtifacts

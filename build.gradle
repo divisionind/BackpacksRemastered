@@ -1,0 +1,165 @@
+/*
+ * BackpacksRemastered - remastered version of the popular Backpacks plugin
+ * Copyright (C) 2019 Division Industries LLC
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.lang.reflect.Method
+
+plugins {
+    id 'java'
+
+    id "com.github.breadmoirai.github-release" version "2.2.9"
+}
+
+def baseVersion = "2019.0.1"
+def beta = true
+def uploadBetas = false
+
+def spigotVersion = "1.14.2"
+def githubOwner = "divisionind"
+
+group 'com.divisionind'
+sourceCompatibility = 1.8
+
+// returns hash of the current commit
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+// returns what commit this is in the entire history of the repo
+def getGitCommitNum = { shash ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-list', '--count', shash
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+// gets the changes sense the specified short hash
+def getGitChanges = { shash ->
+    def stdout = new ByteArrayOutputStream()
+    exec { // if this fails, try changing %h and %s to separate arguments
+        int lastReleaseInt
+        try {
+            lastReleaseInt = Integer.parseInt(getGitCommitNum(shash))
+        } catch (NumberFormatException e) {
+            lastReleaseInt = 0
+        }
+        commandLine 'git', 'log', '--pretty=format:* %h %s', '--max-count', "${Integer.parseInt(getGitCommitNum('HEAD'))-Integer.parseInt(getGitCommitNum(shash))}"
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+// what format the version info should take
+version baseVersion + (beta ? "-beta.${getGitCommitNum('HEAD')}" : "")
+
+// must be used after githubRelease, could be used for providing changelog to other destinations than github
+def lastRelease
+
+// generates sources by replacing these strings (surrounded by @, e.g. @DivisionVersion@)
+task generateSources(type: Copy) {
+    from 'src/main/java'
+    into "$buildDir/generated-src"
+
+    filter(ReplaceTokens, tokens: [
+            'DivisionVersion': project.version,
+            'DivisionGitHash': getGitHash(),
+            'DivisionGitComm': getGitCommitNum('HEAD')
+    ])
+}
+
+// generates resources by replacing these strings (surrounded by @, e.g. @DivisionVersion@)
+task generateResources(type: Copy) {
+    from 'src/main/resources'
+    into "$buildDir/generated-resources"
+
+    filter(ReplaceTokens, tokens: [
+            'DivisionVersion': project.version,
+            'DivisionGitHash': getGitHash(),
+            'DivisionGitComm': getGitCommitNum('HEAD')
+    ])
+}
+
+compileJava.setSource("$buildDir/generated-src")
+compileJava.dependsOn generateSources
+processResources.from("$buildDir/generated-resources")
+processResources.dependsOn generateResources
+
+task makeJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': project.name,
+                'Implementation-Version': version
+    }
+    baseName = project.name
+    from { configurations.compile.filter{ it.getName().endsWith(".jar") }.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task pack(dependsOn: ['clean', 'makeJar'])
+makeJar.mustRunAfter clean
+
+githubRelease {
+    token "${System.env.GITHUB_TOKEN}"
+    owner githubOwner
+    repo project.name
+    tagName "v${project.version}"
+    targetCommitish "master"
+    releaseName "v${project.version}"
+    draft false
+    prerelease beta
+    releaseAssets "build/libs/${project.name}-${project.version}.jar"
+    apiEndpoint "https://api.github.com"
+
+    // gets the last released commit from releaseplugin to calculate change log on its own (more control)
+    Class c = Class.forName("com.github.breadmoirai.githubreleaseplugin.ChangeLogSupplier")
+    Method m = c.getDeclaredMethod("getLastReleaseCommit")
+    m.setAccessible(true)
+    lastRelease = m.invoke(changelog())
+
+    if (System.env.TRAVIS != null) {
+        body "${getGitChanges(lastRelease)}"
+    }
+}
+
+// a dummy task so that the githubRelease task may be disable based on certain parameters
+task uploadArtifacts {}
+
+if (!(beta && !uploadBetas)) {
+    println "Version qualified for a release."
+    uploadArtifacts.finalizedBy tasks.githubRelease
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url 'https://raw.githubusercontent.com/divisionind/maven/repo'
+    }
+}
+
+dependencies {
+    compileOnly group: 'org.spigotmc', name: 'spigot-full', version: spigotVersion
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
