@@ -23,3 +23,4 @@ permissions:
     default: true
   backpacks.config.reload:
     description: Allows one to reload the YML configuration.
+    default: op
