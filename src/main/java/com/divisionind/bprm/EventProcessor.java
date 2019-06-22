@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm;
 
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,17 +29,39 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.InvocationTargetException;
 
 public class EventProcessor implements Listener {
+
+    /*
+        DB STRUCTURE:
+
+        backpacks: id (long) | type (int) | data (string)
+
+        for small/large, data = base64 serialized inventory
+        for linked, data = base64 serialized location of chest/chests
+     */
+
     @EventHandler
     public void onCraftEvent(CraftItemEvent e) {
-        ItemStack item = e.getCurrentItem();
-        HumanEntity ent = e.getWhoClicked();
-        ent.sendMessage("You just crafted an item.");
-
         try {
+            ItemStack item = e.getCurrentItem();
+            if (!item.getType().equals(Material.LEATHER_CHESTPLATE)) return; // optimization, does not need to run all that reflection if its not even the right material
+            HumanEntity ent = e.getWhoClicked();
+
             Object craftItemStack = NMSReflector.asNMSCopy(item);
             Object tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
-            NMSReflector.setNBT(tagCompound, "Long", long.class, "backpack_id", 400L);
+
+            if (!NMSReflector.hasNBTKey(tagCompound, "backpack_type")) return;
+            int backpack_type = (int)NMSReflector.getNBT(tagCompound, "Int", "backpack_type");
+            BackpackRecipes.BackpackItem backpack = BackpackRecipes.BackpackItem.getById(backpack_type);
+            if (backpack == null || !backpack.hasCraftPermission(ent)) {
+                ent.sendMessage(Backpacks.translate(String.format("&cYou do not have permission to craft the %s backpack.", backpack == null ? "null" : backpack.name().toLowerCase())));
+                e.setCancelled(true);
+                return;
+            }
+
+            NMSReflector.setNBT(tagCompound, "Long", long.class, "backpack_id", 400L); // TODO get next backpack id
             e.setCurrentItem(NMSReflector.asBukkitCopy(craftItemStack));
+
+            ent.sendMessage("You just crafted a backpack.");
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException ex) {
             ex.printStackTrace();
         }
@@ -47,5 +70,13 @@ public class EventProcessor implements Listener {
     @EventHandler
     public void onDamageEvent(PlayerItemDamageEvent e) {
         // if has backpack_id, cancel
+        if (!e.getItem().getType().equals(Material.LEATHER_CHESTPLATE)) return; // optimization, does not need to run all that reflection if its not even the right material
+        try {
+            Object craftItemStack = NMSReflector.asNMSCopy(e.getItem());
+            Object tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
+            if (NMSReflector.hasNBTKey(tagCompound, "backpack_id")) e.setCancelled(true);
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+            ex.printStackTrace();
+        }
     }
 }

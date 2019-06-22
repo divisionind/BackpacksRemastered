@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -103,16 +104,18 @@ public class BackpackRecipes {
 
     public enum BackpackItem {
 
-        SMALL(Color.GREEN, 0, "&aSmall Backpack"),
-        LARGE(Color.RED, 1, "&aLarge Backpack"),
-        LINKED(Color.BLUE, 2, "&aLinked Backpack");
+        SMALL(Color.GREEN, 0, "&aSmall Backpack", "backpacks.craft.small"),
+        LARGE(Color.RED, 1, "&aLarge Backpack", "backpacks.craft.large"),
+        LINKED(Color.BLUE, 2, "&aLinked Backpack", "backpacks.craft.linked");
 
         private ItemStack item;
         private int type_id;
+        private String permission;
 
-        BackpackItem(Color color, int type_id, String name) {
+        BackpackItem(Color color, int type_id, String name, String permission) {
             this.item = getBackpack(color, type_id, name);
             this.type_id = type_id;
+            this.permission = permission;
         }
 
         public ItemStack getItem() {
@@ -121,6 +124,17 @@ public class BackpackRecipes {
 
         public int getTypeId() {
             return type_id;
+        }
+
+        public boolean hasCraftPermission(HumanEntity entity) {
+            return entity.hasPermission(permission);
+        }
+
+        public static BackpackItem getById(int id) {
+            for (BackpackItem bp : values()) {
+                if (bp.type_id == id) return bp;
+            }
+            return null;
         }
     }
 }
