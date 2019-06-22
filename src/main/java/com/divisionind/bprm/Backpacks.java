@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -35,12 +36,24 @@ public class Backpacks extends JavaPlugin {
     public static final String GIT_NUM = "@DivisionGitComm@";
 
     private static List<ACommand> commands;
+    private static Backpacks inst;
 
     @Override
     public void onEnable() {
         commands = new ArrayList<>();
+        inst = this;
+
         registerCMDS(new Commands.Help(),
+                new Commands.Info(),
+                new Commands.ItemInfo(),
                 new Commands.ConfigReload());
+
+        Bukkit.getPluginManager().registerEvents(new EventProcessor(), this);
+
+        getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMSReflector.getVersion()));
+
+        saveDefaultConfig();
+        setupFromConfig();
 
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) has been enabled!", VERSION, GIT_HASH));
     }
@@ -115,5 +128,14 @@ public class Backpacks extends JavaPlugin {
 
     public static String translate(String in) {
         return ChatColor.translateAlternateColorCodes('&', in);
+    }
+
+    public static Backpacks getInstance() {
+        return inst;
+    }
+
+    public void setupFromConfig() {
+        Bukkit.getServer().resetRecipes(); // resets all recipes to default (including from other plugins) TODO find a better way
+        BackpackRecipes.registerRecipes(getConfig(), getLogger());
     }
 }

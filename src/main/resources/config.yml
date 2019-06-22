@@ -1,0 +1,33 @@
+recipes:
+  small:
+    ingredients:
+      A: FEATHER
+      B: SUGAR
+    shape:
+      - " A "
+      - "BBB"
+      - "A A"
+  large:
+    ingredients:
+      A: FEATHER
+      B: SUGAR
+    shape:
+      - "AAA"
+      - "BBB"
+      - "A A"
+  linked:
+    ingredients:
+      A: FEATHER
+      B: SUGAR
+    shape:
+      - " B "
+      - "BBB"
+      - "AAA"
+  backpack_key:
+    ingredients:
+      A: FEATHER
+      B: SUGAR
+    shape:
+      - " BB"
+      - "BBB"
+      - "AAA"

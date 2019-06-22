@@ -19,7 +19,10 @@
 package com.divisionind.bprm;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,7 +130,91 @@ public class Commands {
 
         @Override
         public void execute(CommandSender sender, String label, String[] args) {
-            respondnop(sender);
+            respond(sender, "&eReloading the configuration...");
+            Backpacks.getInstance().reloadConfig();
+            Backpacks.getInstance().setupFromConfig();
+            respond(sender, "&eConfiguration has been reloaded.");
+        }
+    }
+
+    protected static class Info extends ACommand {
+        @Override
+        public String alias() {
+            return "info";
+        }
+
+        @Override
+        public String desc() {
+            return "displays info about the plugin";
+        }
+
+        @Override
+        public String usage() {
+            return null;
+        }
+
+        @Override
+        public String permission() {
+            return "backpacks.info";
+        }
+
+        @Override
+        public void execute(CommandSender sender, String label, String[] args) {
+            respond(sender, "&e&lInfo");
+            respondn(sender, "&7Created by drew6017 as a remake of his original plugin with more features an optimizations.");
+            respondnf(sender, " &eVersion: &a%s", Backpacks.VERSION);
+            respondnf(sender, " &eGit Commit: &a%s", Backpacks.GIT_HASH);
+            respondnf(sender, " &eGit Build: &a%s", Backpacks.GIT_NUM);
+        }
+    }
+
+    protected static class ItemInfo extends ACommand {
+        @Override
+        public String alias() {
+            return "item:info";
+        }
+
+        @Override
+        public String desc() {
+            return "displays info about the item you are holding";
+        }
+
+        @Override
+        public String usage() {
+            return null;
+        }
+
+        @Override
+        public String permission() {
+            return "backpacks.item.info";
+        }
+
+        @Override
+        public void execute(CommandSender sender, String label, String[] args) {
+            if (!(sender instanceof Player)) return;
+            Player p = (Player)sender;
+            ItemStack item = p.getInventory().getItemInMainHand();
+
+            try {
+                Object tagCompound = NMSReflector.getNBTTagCompound(NMSReflector.asNMSCopy(item));
+
+                respond(sender, String.format("&ebackpack_key = %s", NMSReflector.hasNBTKey(tagCompound, "backpack_key")));
+
+                if (!NMSReflector.hasNBTKey(tagCompound, "backpack_id")) { // also add backpack_type
+                    respond(sender, "&eThis item doesnt have a backpack id.");
+                    return;
+                }
+
+                if (!NMSReflector.hasNBTKey(tagCompound, "backpack_type")) {
+                    respond(sender, "&eThis item doesnt have a backpack type.");
+                    return;
+                }
+
+                respond(sender, Long.toString((long)NMSReflector.getNBT(tagCompound, "Long", "backpack_id")));
+                respond(sender, Integer.toString((int)NMSReflector.getNBT(tagCompound, "Int", "backpack_type")));
+            } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

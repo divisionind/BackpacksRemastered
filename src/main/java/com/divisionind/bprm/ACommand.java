@@ -61,6 +61,10 @@ public abstract class ACommand {
         sender.sendMessage(sender instanceof ConsoleCommandSender ? ChatColor.stripColor(msg) : msg);
     }
 
+    public static void respondnf(CommandSender sender, String msg, Object... objects) {
+        respondn(sender, String.format(msg, objects));
+    }
+
     public static void respondnop(CommandSender sender) {
         respond(sender, "&cThis operation is not supported yet.");
     }

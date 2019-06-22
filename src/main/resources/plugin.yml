@@ -21,6 +21,12 @@ permissions:
   backpacks.help:
     description: Gives access to the help command.
     default: true
+  backpacks.info:
+    description: Allows players to use the info command.
+    default: true
+  backpacks.item.info:
+    description: Gives access to the item-info command.
+    default: op
   backpacks.config.reload:
     description: Allows one to reload the YML configuration.
     default: op
