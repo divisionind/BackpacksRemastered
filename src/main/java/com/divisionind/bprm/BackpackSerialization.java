@@ -19,6 +19,7 @@
 package com.divisionind.bprm;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -28,9 +29,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class InventorySerialization {
+public class BackpackSerialization {
 
-    public static byte[] toByteArray(Inventory inventory, String name) throws IOException {
+    public static byte[] toByteArrayInventory(Inventory inventory, String name) throws IOException {
         // create output streams
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         BukkitObjectOutputStream out = new BukkitObjectOutputStream(bout);
@@ -48,7 +49,7 @@ public class InventorySerialization {
         return bout.toByteArray();
     }
 
-    public static Inventory fromByteArray(byte[] data) throws IOException, ClassNotFoundException {
+    public static Inventory fromByteArrayInventory(byte[] data) throws IOException, ClassNotFoundException {
         // create input streams
         ByteArrayInputStream bin = new ByteArrayInputStream(data);
         BukkitObjectInputStream in = new BukkitObjectInputStream(bin);
@@ -62,5 +63,32 @@ public class InventorySerialization {
         // close stream, return inventory
         in.close();
         return inv;
+    }
+
+    public static byte[] toByteArrayLocation(Location location) throws IOException {
+        // create output streams
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        BukkitObjectOutputStream out = new BukkitObjectOutputStream(bout);
+
+        // write the location object
+        out.writeObject(location);
+
+        // flush and close output
+        out.flush();
+        out.close();
+        return bout.toByteArray();
+    }
+
+    public static Location fromByteArrayLocation(byte[] data) throws IOException, ClassNotFoundException {
+        // create input streams
+        ByteArrayInputStream bin = new ByteArrayInputStream(data);
+        BukkitObjectInputStream in = new BukkitObjectInputStream(bin);
+
+        // read location from data
+        Location location = (Location)in.readObject();
+
+        // close stream, return location
+        in.close();
+        return location;
     }
 }

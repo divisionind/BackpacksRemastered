@@ -36,12 +36,15 @@ permissions:
   backpacks.config.reload:
     description: Allows one to reload the YML configuration.
     default: op
-  backpack.craft.small:
+  backpacks.craft.small:
     description: Allows one to craft the small backpack.
     default: true
-  backpack.craft.large:
+  backpacks.craft.large:
     description: Allows one to craft the large backpack.
     default: true
-  backpack.craft.linked:
+  backpacks.craft.linked:
     description: Allows one to craft the linked backpack.
+    default: true
+  backpacks.link:
+    description: Allows a player to link a linked backpack to a chest.
     default: true

@@ -20,10 +20,15 @@ package com.divisionind.bprm;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -42,7 +47,7 @@ public enum BackpackItem {
     private BackpackHandler handler;
 
     BackpackItem(Color color, int type, String name, String permission, BackpackHandler handler) {
-        this.item = getBackpack(color, type, name);
+        this.item = getBackpack(color, type, name, handler.lore());
         this.type = type;
         this.permission = permission;
         this.handler = handler;
@@ -78,11 +83,12 @@ public enum BackpackItem {
         return null;
     }
 
-    private static ItemStack getBackpack(Color color, int type, String name) {
+    private static ItemStack getBackpack(Color color, int type, String name, LoreBuilder lore) {
         ItemStack backpack = new ItemStack(Material.LEATHER_CHESTPLATE);
         LeatherArmorMeta meta = (LeatherArmorMeta)backpack.getItemMeta();
         meta.setColor(color);
         meta.setDisplayName(Backpacks.translate(name));
+        meta.setLore(lore.build());
         backpack.setItemMeta(meta);
 
         // apply backpack_type nbt data
@@ -98,7 +104,7 @@ public enum BackpackItem {
         public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception {
             Inventory toOpen;
             if (hasData) {
-                toOpen = InventorySerialization.fromByteArray((byte[])NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
+                toOpen = BackpackSerialization.fromByteArrayInventory((byte[])NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
             } else {
                 toOpen = Bukkit.getServer().createInventory(null, 27, "Small Backpack");
             }
@@ -107,8 +113,14 @@ public enum BackpackItem {
 
         @Override
         public void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception {
-            NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", InventorySerialization.toByteArray(e.getInventory(), e.getView().getTitle()));
+            NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", BackpackSerialization.toByteArrayInventory(e.getInventory(), e.getView().getTitle()));
             e.getPlayer().getInventory().setChestplate(NMSReflector.asBukkitCopy(craftItemStack));
+        }
+
+        @Override
+        public LoreBuilder lore() {
+            return new LoreBuilder("A tiny little backpack. Great for short")
+                           .append("trips and such.");
         }
     }
 
@@ -117,7 +129,7 @@ public enum BackpackItem {
         public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception {
             Inventory toOpen;
             if (hasData) {
-                toOpen = InventorySerialization.fromByteArray((byte[])NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
+                toOpen = BackpackSerialization.fromByteArrayInventory((byte[])NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
             } else {
                 toOpen = Bukkit.getServer().createInventory(null, 54, "Large Backpack");
             }
@@ -126,20 +138,54 @@ public enum BackpackItem {
 
         @Override
         public void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception {
-            NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", InventorySerialization.toByteArray(e.getInventory(), e.getView().getTitle()));
+            NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", BackpackSerialization.toByteArrayInventory(e.getInventory(), e.getView().getTitle()));
             e.getPlayer().getInventory().setChestplate(NMSReflector.asBukkitCopy(craftItemStack));
+        }
+
+        @Override
+        public LoreBuilder lore() {
+            return new LoreBuilder("A big boy capable of storing a lot")
+                           .append("of items.");
         }
     }
 
     private static class Linked implements BackpackHandler {
         @Override
         public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception {
-            ACommand.respondnop(e.getPlayer());
+            if (hasData) {
+                Location chestLocation = BackpackSerialization.fromByteArrayLocation((byte[])NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
+                Inventory inv = getChestInventory(chestLocation.getBlock());
+                if (inv == null) {
+                    ACommand.respond(e.getPlayer(), "&cThe chest to which this bag was linked no longer exists.");
+                } else e.getPlayer().openInventory(inv);
+            } else {
+                ACommand.respond(e.getPlayer(), "&cThis backpack must form a connection before it can be used.");
+            }
         }
 
         @Override
-        public void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception {
-            ACommand.respondnop(e.getPlayer());
+        public void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception { }
+
+        @Override
+        public LoreBuilder lore() {
+            return new LoreBuilder("A mystical bag capable of transiting items across")
+                           .append("dimensions to a predetermined chest. Legend says")
+                           .append("that the bag will link to any chest you wack with")
+                           .append("it.");
+        }
+
+        private Inventory getChestInventory(Block block) {
+            BlockState blockState = block.getState();
+            if (blockState instanceof Chest) {
+                Chest chest = (Chest)blockState;
+                Inventory inv = chest.getInventory();
+
+                if (inv instanceof DoubleChestInventory) {
+                    return inv.getHolder().getInventory();
+                } else return inv;
+            }
+
+            return null;
         }
     }
 }

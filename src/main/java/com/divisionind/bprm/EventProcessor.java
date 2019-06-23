@@ -21,6 +21,7 @@ package com.divisionind.bprm;
 import io.netty.util.internal.ConcurrentSet;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,8 +31,12 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class EventProcessor implements Listener {
@@ -97,7 +102,7 @@ public class EventProcessor implements Listener {
     }
 
     @EventHandler
-    public void onRightClick(PlayerInteractEvent e) {
+    public void onBackpackOpen(PlayerInteractEvent e) {
         // did right click
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             // is item in hand backpack key
@@ -131,6 +136,42 @@ public class EventProcessor implements Listener {
                     }
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    @EventHandler
+    public void onLinkBackpack(PlayerInteractEvent e) {
+        if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
+            ItemStack inhand = e.getPlayer().getInventory().getItemInMainHand();
+            if (!inhand.getType().equals(Material.LEATHER_CHESTPLATE)) return;
+
+            try {
+                Object craftItemStack = NMSReflector.asNMSCopy(inhand);
+                Object tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
+                if (NMSReflector.hasNBTKey(tagCompound, "backpack_type")) {
+                    int type = (int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type");
+                    if (type == BackpackItem.LINKED.getTypeId()) {
+                        // the player is left clicking a block with a linked backpack in hand, this is lookin guuuuuddd
+
+                        Block block = e.getClickedBlock();
+                        Material blockMat = block.getType();
+                        if (blockMat.equals(Material.CHEST) || blockMat.equals(Material.TRAPPED_CHEST)) {
+                            NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", BackpackSerialization.toByteArrayLocation(block.getLocation()));
+                            ItemStack newBackpack = NMSReflector.asBukkitCopy(craftItemStack);
+                            ItemMeta meta = newBackpack.getItemMeta();
+                            List<String> newLore = new ArrayList<>(BackpackItem.LINKED.getHandler().lore().build());
+                            newLore.add("");
+                            newLore.add(Backpacks.translate("&aLinked"));
+                            meta.setLore(newLore);
+                            newBackpack.setItemMeta(meta);
+                            e.getPlayer().getInventory().setItemInMainHand(newBackpack);
+                            ACommand.respond(e.getPlayer(), "&eYou feel a strong connection form between the backpack and chest.");
+                        }
+                    }
+                }
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException | IOException ex) {
                 ex.printStackTrace();
             }
         }

@@ -18,13 +18,24 @@
 
 package com.divisionind.bprm;
 
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface BackpackHandler {
-    void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception;
+public class LoreBuilder {
 
-    void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception;
+    private List<String> lore;
 
-    LoreBuilder lore();
+    public LoreBuilder(String line) {
+        this.lore = new ArrayList<>();
+        append(line);
+    }
+
+    public LoreBuilder append(String line) {
+        lore.add(line);
+        return this;
+    }
+
+    public List<String> build() {
+        return lore;
+    }
 }
