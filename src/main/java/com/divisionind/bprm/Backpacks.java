@@ -51,6 +51,12 @@ public class Backpacks extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EventProcessor(), this);
 
         getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMSReflector.getVersion()));
+        try {
+            NMSReflector.initialize();
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            getLogger().severe("Error initializing NMS. Was the detected server wrong? If not, then NMS has changed significantly sense this plugin was released and therefore, it can not adapt.");
+            e.printStackTrace();
+        }
 
         saveDefaultConfig();
         setupFromConfig();

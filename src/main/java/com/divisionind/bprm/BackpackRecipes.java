@@ -52,7 +52,7 @@ public class BackpackRecipes {
 
         try {
             backpack_key = NMSReflector.setNBTOnce(backpack_key, NBTType.BOOLEAN, "backpack_key", true);
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             return;
         }
 
@@ -97,7 +97,7 @@ public class BackpackRecipes {
         // apply backpack_type nbt data
         try {
             return NMSReflector.setNBTOnce(backpack, NBTType.INT, "backpack_type", type);
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             return null;
         }
     }

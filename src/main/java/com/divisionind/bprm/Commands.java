@@ -213,7 +213,7 @@ public class Commands {
 
                 respond(sender, Long.toString((long)NMSReflector.getNBT(tagCompound, NBTType.LONG, "backpack_id")));
                 respond(sender, Integer.toString((int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type")));
-            } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
         }

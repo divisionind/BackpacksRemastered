@@ -64,7 +64,7 @@ public class EventProcessor implements Listener {
             e.setCurrentItem(NMSReflector.asBukkitCopy(craftItemStack));
 
             ent.sendMessage("You just crafted a backpack.");
-        } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException ex) {
+        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException ex) {
             ex.printStackTrace();
         }
     }
@@ -77,7 +77,7 @@ public class EventProcessor implements Listener {
             Object craftItemStack = NMSReflector.asNMSCopy(e.getItem());
             Object tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
             if (NMSReflector.hasNBTKey(tagCompound, "backpack_type")) e.setCancelled(true);
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException ex) {
             ex.printStackTrace();
         }
     }

@@ -44,74 +44,62 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
         inst = new NMSReflector();
     }
 
-    private Class classCraftItemStack;
-    private Class classNBTTagCompound;
-    private Class classItemStack;
+    private Class cCraftItemStack;
+    private Class cNBTTagCompound;
+    private Class cItemStack;
 
-    private Method methodasNMSCopy;
-    private Method methodasBukkitCopy;
-    private Method methodgetTag;
-    private Method methodsetTag;
-    private Method methodhasKey;
+    private Method masNMSCopy;
+    private Method masBukkitCopy;
+    private Method mgetTag;
+    private Method msetTag;
+    private Method mhasKey;
 
     private NMSReflector() throws ClassNotFoundException, NoSuchMethodException {
         // get NMS classes
-        classCraftItemStack = Class.forName(getCraftClass("inventory.CraftItemStack"));
-        classNBTTagCompound = Class.forName(getServerClass("NBTTagCompound"));
-        classItemStack = Class.forName(getServerClass("ItemStack"));
+        cCraftItemStack = Class.forName(getCraftClass("inventory.CraftItemStack"));
+        cNBTTagCompound = Class.forName(getServerClass("NBTTagCompound"));
+        cItemStack = Class.forName(getServerClass("ItemStack"));
 
         // get NMS methods
-        methodasNMSCopy = classCraftItemStack.getMethod("asNMSCopy", ItemStack.class);
-        methodasBukkitCopy = classCraftItemStack.getMethod("asBukkitCopy", Class.forName(getServerClass("ItemStack")));
-        methodgetTag = classItemStack.getMethod("getTag");
-        methodsetTag = classItemStack.getMethod("setTag");
-        methodhasKey = classNBTTagCompound.getMethod("hasKey", String.class);
+        masNMSCopy = cCraftItemStack.getMethod("asNMSCopy", ItemStack.class);
+        masBukkitCopy = cCraftItemStack.getMethod("asBukkitCopy", Class.forName(getServerClass("ItemStack")));
+        mgetTag = cItemStack.getMethod("getTag");
+        msetTag = cItemStack.getMethod("setTag", cNBTTagCompound);
+        mhasKey = cNBTTagCompound.getMethod("hasKey", String.class);
     }
 
-    public static Object asNMSCopy(ItemStack item) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Class craftItemStack = Class.forName(getCraftClass("inventory.CraftItemStack"));
-        Method asNMSCopy = craftItemStack.getMethod("asNMSCopy", ItemStack.class);
-        return asNMSCopy.invoke(null, item);
+    public static Object asNMSCopy(ItemStack item) throws InvocationTargetException, IllegalAccessException {
+        return inst.masNMSCopy.invoke(null, item);
     }
 
-    public static ItemStack asBukkitCopy(Object item) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Class craftItemStack = Class.forName(getCraftClass("inventory.CraftItemStack"));
-        Method asBukkitCopy = craftItemStack.getMethod("asBukkitCopy", Class.forName(getServerClass("ItemStack")));
-        return (ItemStack) asBukkitCopy.invoke(null, item);
+    public static ItemStack asBukkitCopy(Object item) throws InvocationTargetException, IllegalAccessException {
+        return (ItemStack) inst.masBukkitCopy.invoke(null, item);
     }
 
-    public static Object getNBTTagCompound(Object nmsItemStack) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
-        Class itemStack = Class.forName(getServerClass("ItemStack"));
-        Method getTag = itemStack.getMethod("getTag");
-        Object nbtCompound = getTag.invoke(nmsItemStack);
+    public static Object getNBTTagCompound(Object nmsItemStack) throws InvocationTargetException, IllegalAccessException, InstantiationException {
+        Object nbtCompound = inst.mgetTag.invoke(nmsItemStack);
         if (nbtCompound == null) {
-            Class tagCompoundClass = Class.forName(getServerClass("NBTTagCompound"));
-            nbtCompound = tagCompoundClass.newInstance();
-            Method setTag = itemStack.getMethod("setTag", tagCompoundClass);
-            setTag.invoke(nmsItemStack, nbtCompound);
+            nbtCompound = inst.cNBTTagCompound.newInstance();
+            inst.msetTag.invoke(nmsItemStack, nbtCompound);
         }
         return nbtCompound;
     }
 
-    public static boolean hasNBTKey(Object nmsTagCompound, String key) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Class tagCompoundClass = Class.forName(getServerClass("NBTTagCompound"));
-        Method hasKey = tagCompoundClass.getMethod("hasKey", String.class);
-        return (boolean)hasKey.invoke(nmsTagCompound, key);
+    public static boolean hasNBTKey(Object nmsTagCompound, String key) throws InvocationTargetException, IllegalAccessException {
+        return (boolean)inst.mhasKey.invoke(nmsTagCompound, key);
     }
 
-    public static void setNBT(Object nmsTagCompound, NBTType type, String key, Object value) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Class tagCompoundClass = Class.forName(getServerClass("NBTTagCompound"));
-        Method setKey = tagCompoundClass.getMethod(String.format("set%s", type.getType()), String.class, type.getClassType());
+    public static void setNBT(Object nmsTagCompound, NBTType type, String key, Object value) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method setKey = inst.cNBTTagCompound.getMethod(String.format("set%s", type.getType()), String.class, type.getClassType());
         setKey.invoke(nmsTagCompound, key, value);
     }
 
-    public static Object getNBT(Object nmsTagCompound, NBTType type, String key) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Class tagCompoundClass = Class.forName(getServerClass("NBTTagCompound"));
-        Method getKey = tagCompoundClass.getMethod(String.format("get%s", type.getType()), String.class);
+    public static Object getNBT(Object nmsTagCompound, NBTType type, String key) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getKey = inst.cNBTTagCompound.getMethod(String.format("get%s", type.getType()), String.class);
         return getKey.invoke(nmsTagCompound, key);
     }
 
-    public static ItemStack setNBTOnce(ItemStack item, NBTType type, String key, Object value) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static ItemStack setNBTOnce(ItemStack item, NBTType type, String key, Object value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Object nmsItem = asNMSCopy(item);
         Object tagCompound = getNBTTagCompound(nmsItem);
         setNBT(tagCompound, type, key, value);
