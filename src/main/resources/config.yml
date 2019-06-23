@@ -4,33 +4,35 @@ openBackpackCooldown: 8
 recipes:
   small:
     ingredients:
-      A: FEATHER
-      B: SUGAR
+      A: OAK_PLANKS
+      B: LEATHER
     shape:
-      - " A "
-      - "BBB"
-      - "A A"
+      - "AAA"
+      - "ABA"
+      - "AAA"
   large:
     ingredients:
-      A: FEATHER
-      B: SUGAR
+      A: OAK_LOG
+      B: IRON_INGOT
     shape:
       - "AAA"
-      - "BBB"
-      - "A A"
+      - "ABA"
+      - "AAA"
   linked:
     ingredients:
-      A: FEATHER
-      B: SUGAR
+      A: DIAMOND
+      B: LEATHER
+      C: ENDER_EYE
+      D: IRON_INGOT
     shape:
-      - " B "
-      - "BBB"
-      - "AAA"
+      - "ADA"
+      - "BCB"
+      - "ADA"
   backpack_key:
     ingredients:
-      A: FEATHER
-      B: SUGAR
+      A: IRON_INGOT
+      B: FEATHER
     shape:
-      - " BB"
-      - "BBB"
-      - "AAA"
+      - "  A"
+      - " BA"
+      - " AA"
