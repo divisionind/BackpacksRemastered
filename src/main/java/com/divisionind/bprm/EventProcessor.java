@@ -116,7 +116,7 @@ public class EventProcessor implements Listener {
                         // small backpack
                         if (type == 0) {
                             Inventory toOpen;
-                            if (NMSReflector.hasNBTKey(bpTagCompound, "backpack_data")) {
+                            if (NMSReflector.hasNBTKey(bpTagCompound, "backpack_data")) { // TODO create backpack data in BackpackRecipes sp that you do not have to check for this
                                 e.getPlayer().sendMessage("Got data from backpack NBT.");
                                 toOpen = InventorySerialization.fromByteArray((byte[])NMSReflector.getNBT(bpTagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
                             } else {
