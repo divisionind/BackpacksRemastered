@@ -34,7 +34,7 @@ public enum BackpackItem {
 
     SMALL(Color.BLACK, 0, "&aSmall Backpack", "backpacks.craft.small", new Small()),
     LARGE(Color.MAROON, 1, "&aLarge Backpack", "backpacks.craft.large", new Large()),
-    LINKED(Color.BLUE, 2, "&aLinked Backpack", "backpacks.craft.linked", new Small());
+    LINKED(Color.BLUE, 2, "&aLinked Backpack", "backpacks.craft.linked", new Linked());
 
     private ItemStack item;
     private int type;
@@ -71,6 +71,13 @@ public enum BackpackItem {
         return null;
     }
 
+    public static BackpackItem getByName(String name) {
+        for (BackpackItem item : values()) {
+            if (item.name().equalsIgnoreCase(name)) return item;
+        }
+        return null;
+    }
+
     private static ItemStack getBackpack(Color color, int type, String name) {
         ItemStack backpack = new ItemStack(Material.LEATHER_CHESTPLATE);
         LeatherArmorMeta meta = (LeatherArmorMeta)backpack.getItemMeta();
@@ -88,13 +95,11 @@ public enum BackpackItem {
 
     private static class Small implements BackpackHandler {
         @Override
-        public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound) throws Exception {
+        public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception {
             Inventory toOpen;
-            if (NMSReflector.hasNBTKey(tagCompound, "backpack_data")) {
-                e.getPlayer().sendMessage("Got data from backpack NBT.");
+            if (hasData) {
                 toOpen = InventorySerialization.fromByteArray((byte[])NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
             } else {
-                e.getPlayer().sendMessage("No NBT backpack data found. Creating...");
                 toOpen = Bukkit.getServer().createInventory(null, 27, "Small Backpack");
             }
             e.getPlayer().openInventory(toOpen);
@@ -110,13 +115,11 @@ public enum BackpackItem {
 
     private static class Large implements BackpackHandler {
         @Override
-        public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound) throws Exception {
+        public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception {
             Inventory toOpen;
-            if (NMSReflector.hasNBTKey(tagCompound, "backpack_data")) {
-                e.getPlayer().sendMessage("Got data from backpack NBT.");
+            if (hasData) {
                 toOpen = InventorySerialization.fromByteArray((byte[])NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
             } else {
-                e.getPlayer().sendMessage("No NBT backpack data found. Creating...");
                 toOpen = Bukkit.getServer().createInventory(null, 54, "Large Backpack");
             }
             e.getPlayer().openInventory(toOpen);
@@ -127,6 +130,18 @@ public enum BackpackItem {
             NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", InventorySerialization.toByteArray(e.getInventory(), e.getView().getTitle()));
             e.getPlayer().getInventory().setChestplate(NMSReflector.asBukkitCopy(craftItemStack));
             e.getPlayer().sendMessage("Stored data in backpack NBT.");
+        }
+    }
+
+    private static class Linked implements BackpackHandler {
+        @Override
+        public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception {
+            ACommand.respondnop(e.getPlayer());
+        }
+
+        @Override
+        public void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception {
+            ACommand.respondnop(e.getPlayer());
         }
     }
 }

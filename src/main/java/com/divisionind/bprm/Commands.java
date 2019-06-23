@@ -18,6 +18,8 @@
 
 package com.divisionind.bprm;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +41,7 @@ public class Commands {
 
     protected static class Help extends ACommand {
 
-        private static final int COMMANDS_PER_PAGE = 6;
+        private static final int COMMANDS_PER_PAGE = 4;
 
         @Override
         public String alias() {
@@ -216,6 +218,77 @@ public class Commands {
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    protected static class ItemGive extends ACommand {
+        @Override
+        public String alias() {
+            return "item:give";
+        }
+
+        @Override
+        public String desc() {
+            return "gives the current player the backpack by type";
+        }
+
+        @Override
+        public String usage() {
+            return "<type> <player:none>";
+        }
+
+        @Override
+        public String permission() {
+            return "backpacks.item.give";
+        }
+
+        @Override
+        public void execute(CommandSender sender, String label, String[] args) {
+            Player p;
+
+            // attempt to resolve player object
+            if (args.length == 2) {
+                if (!(sender instanceof Player)) {
+                    respond(sender, "&cYou must be a player to use this command");
+                    return;
+                }
+                p = (Player)sender;
+            } else
+            if (args.length == 3) {
+                p = Bukkit.getPlayer(args[2]);
+                if (p == null) {
+                    respondf(sender, "&cPlayer \"%s\" was not found. Please check your spelling and try again.", args[2]);
+                    return;
+                }
+            } else {
+                respondiu(sender, label);
+                return;
+            }
+
+            // attempt to resolve backpack type
+            BackpackItem item = BackpackItem.getByName(args[1]);
+            if (item == null) {
+                respondf(sender, "&cBackpack of type \"%s\" was not found.", args[1]);
+                return;
+            }
+
+            p.getInventory().addItem(item.getItem());
+            respondf(sender, "&eGave the player a %s backpack.", item.name().toLowerCase());
+        }
+
+        @Override
+        public List<String> tabComplete(CommandSender sender, Command command, String alias, String[] args) {
+            if (args.length == 2) {
+                List<String> parts = new ArrayList<>();
+                if (args[1].equals("")) {
+                    for (BackpackItem item : BackpackItem.values()) parts.add(item.name());
+                } else {
+                    for (BackpackItem item : BackpackItem.values()) {
+                        if (item.name().toLowerCase().startsWith(args[1].toLowerCase())) parts.add(item.name());
+                    }
+                }
+                return parts;
+            } else return null;
         }
     }
 }

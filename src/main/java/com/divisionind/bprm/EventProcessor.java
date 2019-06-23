@@ -18,6 +18,8 @@
 
 package com.divisionind.bprm;
 
+import io.netty.util.internal.ConcurrentSet;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -29,10 +31,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 public class EventProcessor implements Listener {
+
+    private static ConcurrentSet<UUID> openingBackpacks = new ConcurrentSet<>();
 
     @EventHandler
     public void onCraftEvent(CraftItemEvent e) {
@@ -113,7 +117,17 @@ public class EventProcessor implements Listener {
                         BackpackItem backpack = BackpackItem.getByType(type);
                         if (backpack == null) {
                             ACommand.respondf(e.getPlayer(), "Backpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
-                        } else backpack.getHandler().openBackpack(e, bpItemStack, bpTagCompound);
+                        } else {
+                            // opening backpack, while it opens, disable this code from running
+                            UUID playerId = e.getPlayer().getUniqueId();
+                            if (openingBackpacks.contains(playerId)) return; // TODO add an option for disabling nesting of backpacks
+                            openingBackpacks.add(playerId);
+                            // 8ticks = 0.4s should be enough time for the backpack to open (unless someone is lagging)
+                            Bukkit.getScheduler().scheduleSyncDelayedTask(Backpacks.getInstance(), () -> openingBackpacks.remove(playerId), Backpacks.getConf().getLong("openBackpackCooldown"));
+
+                            // actually open the backpack
+                            backpack.getHandler().openBackpack(e, bpItemStack, bpTagCompound, NMSReflector.hasNBTKey(bpTagCompound, "backpack_data"));
+                        }
                     }
                 }
             } catch (Exception ex) {

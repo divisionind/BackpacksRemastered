@@ -35,7 +35,7 @@ public class InventorySerialization {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         BukkitObjectOutputStream out = new BukkitObjectOutputStream(bout);
 
-        // write view name and inventory size (TODO maybe move these to backpack type?)
+        // write view name and inventory size (not storing this info with backpack type for legacy reasons)
         out.writeInt(inventory.getSize());
         out.writeUTF(name);
 

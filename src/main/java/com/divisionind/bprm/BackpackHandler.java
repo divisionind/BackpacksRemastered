@@ -22,7 +22,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public interface BackpackHandler {
-    void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound) throws Exception;
+    void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception;
 
     void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception;
 }

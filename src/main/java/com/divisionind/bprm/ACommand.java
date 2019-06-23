@@ -23,6 +23,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ACommand {
@@ -37,7 +38,11 @@ public abstract class ACommand {
 
     public abstract void execute(CommandSender sender, String label, String[] args);
 
-    public List<String> tabComplete(CommandSender sender, Command command, String alias, String[] args) { return null; } // recursively do these as to always have tab complete available
+    // recursively do these as to always have tab complete available
+    // if null, displays online players | if empty list, displays nothing
+    public List<String> tabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        return new ArrayList<>();
+    }
 
     protected boolean matchesAlias(String a) {
         return alias().equals(a);
@@ -45,6 +50,11 @@ public abstract class ACommand {
 
     public boolean hasPerm(CommandSender sender) {
         return sender.hasPermission(permission());
+    }
+
+    // incorrect usage
+    public void respondiu(CommandSender sender, String label) {
+        respondf(sender, "&cIncorrect usage. Correct usage: /%s %s %s", label, alias(), usage());
     }
 
     public static void respond(CommandSender sender, String msg) {

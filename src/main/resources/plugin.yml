@@ -27,6 +27,9 @@ permissions:
   backpacks.item.info:
     description: Gives access to the item-info command.
     default: op
+  backpacks.item.give:
+    description: Gives access to the item-give command.
+    default: op
   backpacks.config.reload:
     description: Allows one to reload the YML configuration.
     default: op

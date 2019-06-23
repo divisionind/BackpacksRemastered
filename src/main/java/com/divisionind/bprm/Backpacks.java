@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class Backpacks extends JavaPlugin {
         registerCMDS(new Commands.Help(),
                 new Commands.Info(),
                 new Commands.ItemInfo(),
+                new Commands.ItemGive(),
                 new Commands.ConfigReload());
 
         Bukkit.getPluginManager().registerEvents(new EventProcessor(), this);
@@ -59,6 +61,7 @@ public class Backpacks extends JavaPlugin {
         }
 
         saveDefaultConfig();
+        BackpackRecipes.registerRecipes(getConfig(), getLogger());
         setupFromConfig();
 
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) has been enabled!", VERSION, GIT_HASH));
@@ -140,7 +143,11 @@ public class Backpacks extends JavaPlugin {
         return inst;
     }
 
+    public static FileConfiguration getConf() {
+        return inst.getConfig();
+    }
+
     public void setupFromConfig() {
-        BackpackRecipes.registerRecipes(getConfig(), getLogger());
+
     }
 }

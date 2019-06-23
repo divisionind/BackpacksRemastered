@@ -1,3 +1,6 @@
+# How long (in ticks, 20ticks/second) to wait after someone opens a backpack before they can open it again
+openBackpackCooldown: 8
+
 recipes:
   small:
     ingredients:
