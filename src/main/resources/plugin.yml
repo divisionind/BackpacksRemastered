@@ -27,6 +27,9 @@ permissions:
   backpacks.item.info:
     description: Gives access to the item-info command.
     default: op
+  backpacks.item.info.get:
+    description: Gives access to the item-info-get command.
+    default: op
   backpacks.item.give:
     description: Gives access to the item-give command.
     default: op

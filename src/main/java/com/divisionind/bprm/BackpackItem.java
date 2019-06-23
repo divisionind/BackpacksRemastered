@@ -109,7 +109,6 @@ public enum BackpackItem {
         public void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception {
             NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", InventorySerialization.toByteArray(e.getInventory(), e.getView().getTitle()));
             e.getPlayer().getInventory().setChestplate(NMSReflector.asBukkitCopy(craftItemStack));
-            e.getPlayer().sendMessage("Stored data in backpack NBT.");
         }
     }
 
@@ -129,7 +128,6 @@ public enum BackpackItem {
         public void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception {
             NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", InventorySerialization.toByteArray(e.getInventory(), e.getView().getTitle()));
             e.getPlayer().getInventory().setChestplate(NMSReflector.asBukkitCopy(craftItemStack));
-            e.getPlayer().sendMessage("Stored data in backpack NBT.");
         }
     }
 

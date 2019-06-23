@@ -47,6 +47,7 @@ public class Backpacks extends JavaPlugin {
         registerCMDS(new Commands.Help(),
                 new Commands.Info(),
                 new Commands.ItemInfo(),
+                new Commands.ItemInfoGet(),
                 new Commands.ItemGive(),
                 new Commands.ConfigReload());
 

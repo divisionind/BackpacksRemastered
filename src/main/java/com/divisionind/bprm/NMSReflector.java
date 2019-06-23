@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 public class NMSReflector { // TODO load methods/classes once and just invoke them in real-time
 
@@ -47,18 +48,23 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
     private Class cCraftItemStack;
     private Class cNBTTagCompound;
     private Class cItemStack;
+    private Class cNBTBase;
 
     private Method masNMSCopy;
     private Method masBukkitCopy;
     private Method mgetTag;
     private Method msetTag;
     private Method mhasKey;
+    private Method mgetKeys;
+    private Method mgetKeyBase;
+    private Method mgetTypeId;
 
     private NMSReflector() throws ClassNotFoundException, NoSuchMethodException {
         // get NMS classes
         cCraftItemStack = Class.forName(getCraftClass("inventory.CraftItemStack"));
         cNBTTagCompound = Class.forName(getServerClass("NBTTagCompound"));
         cItemStack = Class.forName(getServerClass("ItemStack"));
+        cNBTBase = Class.forName(getServerClass("NBTBase"));
 
         // get NMS methods
         masNMSCopy = cCraftItemStack.getMethod("asNMSCopy", ItemStack.class);
@@ -66,6 +72,9 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
         mgetTag = cItemStack.getMethod("getTag");
         msetTag = cItemStack.getMethod("setTag", cNBTTagCompound);
         mhasKey = cNBTTagCompound.getMethod("hasKey", String.class);
+        mgetKeys = cNBTTagCompound.getMethod("getKeys");
+        mgetKeyBase = cNBTTagCompound.getMethod("get", String.class);
+        mgetTypeId = cNBTBase.getMethod("getTypeId");
     }
 
     public static Object asNMSCopy(ItemStack item) throws InvocationTargetException, IllegalAccessException {
@@ -97,6 +106,16 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
     public static Object getNBT(Object nmsTagCompound, NBTType type, String key) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method getKey = inst.cNBTTagCompound.getMethod(String.format("get%s", type.getType()), String.class);
         return getKey.invoke(nmsTagCompound, key);
+    }
+
+    public static Set<String> getKeys(Object nmsTagCompound) throws InvocationTargetException, IllegalAccessException {
+        return (Set<String>)inst.mgetKeys.invoke(nmsTagCompound);
+    }
+
+    public static NBTType getKeyType(Object nmsTagCompound, String key) throws InvocationTargetException, IllegalAccessException {
+        Object nbtBase = inst.mgetKeyBase.invoke(nmsTagCompound, key);
+        byte internalId = (byte)inst.mgetTypeId.invoke(nbtBase);
+        return NBTType.getByInternalId(internalId);
     }
 
     public static ItemStack setNBTOnce(ItemStack item, NBTType type, String key, Object value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {

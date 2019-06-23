@@ -27,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Commands {
 
@@ -179,7 +180,7 @@ public class Commands {
 
         @Override
         public String desc() {
-            return "displays info about the item you are holding";
+            return "displays a list of NBT data for the item you are holding";
         }
 
         @Override
@@ -194,28 +195,79 @@ public class Commands {
 
         @Override
         public void execute(CommandSender sender, String label, String[] args) {
-            if (!(sender instanceof Player)) return;
+            if (!(sender instanceof Player)) {
+                respond(sender, "&cYou must be a player to use this command.");
+                return;
+            }
             Player p = (Player)sender;
             ItemStack item = p.getInventory().getItemInMainHand();
 
             try {
                 Object tagCompound = NMSReflector.getNBTTagCompound(NMSReflector.asNMSCopy(item));
-
-                respond(sender, String.format("&ebackpack_key = %s", NMSReflector.hasNBTKey(tagCompound, "backpack_key")));
-
-                if (!NMSReflector.hasNBTKey(tagCompound, "backpack_id")) { // also add backpack_type
-                    respond(sender, "&eThis item doesnt have a backpack id.");
-                    return;
+                // show all nbt data
+                Set<String> data = NMSReflector.getKeys(tagCompound);
+                for (String s : data) {
+                    respondn(sender, s);
                 }
+                respondf(sender, "&eFound %s NBT data entries.", data.size());
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-                if (!NMSReflector.hasNBTKey(tagCompound, "backpack_type")) {
-                    respond(sender, "&eThis item doesnt have a backpack type.");
-                    return;
+    protected static class ItemInfoGet extends ACommand {
+        @Override
+        public String alias() {
+            return "item:info:get";
+        }
+
+        @Override
+        public String desc() {
+            return "gets the type and value of the NBT data key specified";
+        }
+
+        @Override
+        public String usage() {
+            return "<key>";
+        }
+
+        @Override
+        public String permission() {
+            return "backpacks.item.info.get";
+        }
+
+        @Override
+        public void execute(CommandSender sender, String label, String[] args) {
+            if (!(sender instanceof Player)) {
+                respond(sender, "&cYou must be a player to use this command.");
+                return;
+            }
+            Player p = (Player)sender;
+            ItemStack item = p.getInventory().getItemInMainHand();
+
+            if (args.length == 1) {
+                respondiu(sender, label);
+                return;
+            }
+
+            try {
+                Object tagCompound = NMSReflector.getNBTTagCompound(NMSReflector.asNMSCopy(item));
+
+                if (NMSReflector.hasNBTKey(tagCompound, args[1])) {
+                    NBTType type = NMSReflector.getKeyType(tagCompound, args[1]);
+
+                    if (type == null) {
+                        respondf(sender, "&cCould not resolve data type for key \"%s\".", args[1]);
+                        return;
+                    }
+
+                    respondf(sender, "&eData:&7 %s", NMSReflector.getNBT(tagCompound, type, args[1]));
+                    respondf(sender, "&eData Type:&7 %s", type.name());
+                } else {
+                    respondf(sender, "&cKey \"%s\" not found. See a list of keys with the item:info command.", args[1]);
                 }
-
-                respond(sender, Long.toString((long)NMSReflector.getNBT(tagCompound, NBTType.LONG, "backpack_id")));
-                respond(sender, Integer.toString((int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type")));
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
         }
@@ -249,7 +301,7 @@ public class Commands {
             // attempt to resolve player object
             if (args.length == 2) {
                 if (!(sender instanceof Player)) {
-                    respond(sender, "&cYou must be a player to use this command");
+                    respond(sender, "&cYou must be a player to use this command.");
                     return;
                 }
                 p = (Player)sender;

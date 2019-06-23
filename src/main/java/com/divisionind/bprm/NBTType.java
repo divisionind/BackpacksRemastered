@@ -20,23 +20,25 @@ package com.divisionind.bprm;
 
 public enum NBTType {
 
-    LONG("Long", long.class),
-    BOOLEAN("Boolean", boolean.class),
-    BYTE("Byte", byte.class),
-    BYTE_ARRAY("ByteArray", byte[].class),
-    DOUBLE("Double", double.class),
-    FLOAT("Float", float.class),
-    INT("Int", int.class),
-    INT_ARRAY("IntArray", int[].class),
-    SHORT("Short", short.class),
-    STRING("String", String.class);
+    LONG("Long", long.class, 4),
+    BOOLEAN("Boolean", boolean.class, 255), // booleans are considered bytes | 1 = true | 0 = false
+    BYTE("Byte", byte.class, 1),
+    BYTE_ARRAY("ByteArray", byte[].class, 7),
+    DOUBLE("Double", double.class, 6),
+    FLOAT("Float", float.class, 5),
+    INT("Int", int.class, 3),
+    INT_ARRAY("IntArray", int[].class, 11),
+    SHORT("Short", short.class, 2),
+    STRING("String", String.class, 8);
 
     private String type;
     private Class classType;
+    private byte internalId;
 
-    NBTType(String type, Class classType) {
+    NBTType(String type, Class classType, int internalId) {
         this.type = type;
         this.classType = classType;
+        this.internalId = (byte)internalId;
     }
 
     public String getType() {
@@ -45,5 +47,16 @@ public enum NBTType {
 
     public Class getClassType() {
         return classType;
+    }
+
+    public byte getInternalId() {
+        return internalId;
+    }
+
+    public static NBTType getByInternalId(byte id) {
+        for (NBTType type : values()) {
+            if (type.internalId == id) return type;
+        }
+        return null;
     }
 }
