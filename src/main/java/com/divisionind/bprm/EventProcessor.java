@@ -26,7 +26,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.Inventory;
@@ -36,17 +35,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 public class EventProcessor implements Listener {
-
-    /*
-        DB STRUCTURE:
-
-        backpacks: id (long) | type (int) | data (string)
-
-        for small/large, data = base64 serialized inventory
-        for linked, data = base64 serialized location of chest/chests
-
-        TODO forget database and store info right in nbt data
-     */
 
     @EventHandler
     public void onCraftEvent(CraftItemEvent e) {
@@ -68,10 +56,6 @@ public class EventProcessor implements Listener {
                 return;
             }
 
-            NMSReflector.setNBT(tagCompound, NBTType.LONG, "backpack_id", 400L); // TODO get next backpack id
-
-
-            e.setCurrentItem(NMSReflector.asBukkitCopy(craftItemStack));
             ent.sendMessage("You just crafted a backpack.");
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException ex) {
             ex.printStackTrace();
