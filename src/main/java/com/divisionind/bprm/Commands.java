@@ -31,15 +31,6 @@ import java.util.Set;
 
 public class Commands {
 
-    /*
-        TODO
-        for each subcommand use a colan and dont nest e.g.
-
-        /bp config:set <key> <value>
-        /bp config:remove <key>
-        etc
-     */
-
     protected static class Help extends ACommand {
 
         private static final int COMMANDS_PER_PAGE = 4;
