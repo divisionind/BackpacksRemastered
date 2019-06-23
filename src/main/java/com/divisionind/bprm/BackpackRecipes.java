@@ -51,7 +51,7 @@ public class BackpackRecipes {
         backpack_key.setItemMeta(backpack_key_meta);
 
         try {
-            backpack_key = NMSReflector.setNBTOnce(backpack_key, "Boolean", boolean.class, "backpack_key", true);
+            backpack_key = NMSReflector.setNBTOnce(backpack_key, NBTType.BOOLEAN, "backpack_key", true);
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             return;
         }
@@ -96,7 +96,7 @@ public class BackpackRecipes {
 
         // apply backpack_type nbt data
         try {
-            return NMSReflector.setNBTOnce(backpack, "Int", int.class, "backpack_type", type);
+            return NMSReflector.setNBTOnce(backpack, NBTType.INT, "backpack_type", type);
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             return null;
         }
@@ -104,8 +104,8 @@ public class BackpackRecipes {
 
     public enum BackpackItem {
 
-        SMALL(Color.GREEN, 0, "&aSmall Backpack", "backpacks.craft.small"),
-        LARGE(Color.RED, 1, "&aLarge Backpack", "backpacks.craft.large"),
+        SMALL(Color.BLACK, 0, "&aSmall Backpack", "backpacks.craft.small"),
+        LARGE(Color.MAROON, 1, "&aLarge Backpack", "backpacks.craft.large"),
         LINKED(Color.BLUE, 2, "&aLinked Backpack", "backpacks.craft.linked");
 
         private ItemStack item;

@@ -130,6 +130,7 @@ public class Commands {
 
         @Override
         public void execute(CommandSender sender, String label, String[] args) {
+            respond(sender, "&cWARNING: This command is not fully supported. Only use this for testing new configurations and ensure to reload the server once you are done.");
             respond(sender, "&eReloading the configuration...");
             Backpacks.getInstance().reloadConfig();
             Backpacks.getInstance().setupFromConfig();
@@ -210,8 +211,8 @@ public class Commands {
                     return;
                 }
 
-                respond(sender, Long.toString((long)NMSReflector.getNBT(tagCompound, "Long", "backpack_id")));
-                respond(sender, Integer.toString((int)NMSReflector.getNBT(tagCompound, "Int", "backpack_type")));
+                respond(sender, Long.toString((long)NMSReflector.getNBT(tagCompound, NBTType.LONG, "backpack_id")));
+                respond(sender, Integer.toString((int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type")));
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }

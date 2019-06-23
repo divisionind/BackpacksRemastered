@@ -37,6 +37,8 @@ public class EventProcessor implements Listener {
 
         for small/large, data = base64 serialized inventory
         for linked, data = base64 serialized location of chest/chests
+
+        TODO forget database and store info right in nbt data
      */
 
     @EventHandler
@@ -50,7 +52,7 @@ public class EventProcessor implements Listener {
             Object tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
 
             if (!NMSReflector.hasNBTKey(tagCompound, "backpack_type")) return;
-            int backpack_type = (int)NMSReflector.getNBT(tagCompound, "Int", "backpack_type");
+            int backpack_type = (int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type");
             BackpackRecipes.BackpackItem backpack = BackpackRecipes.BackpackItem.getById(backpack_type);
             if (backpack == null || !backpack.hasCraftPermission(ent)) {
                 ent.sendMessage(Backpacks.translate(String.format("&cYou do not have permission to craft the %s backpack.", backpack == null ? "null" : backpack.name().toLowerCase())));
@@ -58,7 +60,7 @@ public class EventProcessor implements Listener {
                 return;
             }
 
-            NMSReflector.setNBT(tagCompound, "Long", long.class, "backpack_id", 400L); // TODO get next backpack id
+            NMSReflector.setNBT(tagCompound, NBTType.LONG, "backpack_id", 400L); // TODO get next backpack id
             e.setCurrentItem(NMSReflector.asBukkitCopy(craftItemStack));
 
             ent.sendMessage("You just crafted a backpack.");
@@ -74,7 +76,7 @@ public class EventProcessor implements Listener {
         try {
             Object craftItemStack = NMSReflector.asNMSCopy(e.getItem());
             Object tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
-            if (NMSReflector.hasNBTKey(tagCompound, "backpack_id")) e.setCancelled(true);
+            if (NMSReflector.hasNBTKey(tagCompound, "backpack_type")) e.setCancelled(true);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException ex) {
             ex.printStackTrace();
         }

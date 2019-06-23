@@ -24,7 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class NMSReflector {
+public class NMSReflector { // TODO load methods/classes once and just invoke them in real-time
 
     private static final String VERSION = getVersion();
     private static final String SERVER_NMS_PATH = "net.minecraft.server." + VERSION + ".%s";
@@ -36,6 +36,36 @@ public class NMSReflector {
 
     public static String getCraftClass(String className) {
         return String.format(CRAFT_NMS_PATH, className);
+    }
+
+    private static NMSReflector inst;
+
+    public static void initialize() throws ClassNotFoundException, NoSuchMethodException {
+        inst = new NMSReflector();
+    }
+
+    private Class classCraftItemStack;
+    private Class classNBTTagCompound;
+    private Class classItemStack;
+
+    private Method methodasNMSCopy;
+    private Method methodasBukkitCopy;
+    private Method methodgetTag;
+    private Method methodsetTag;
+    private Method methodhasKey;
+
+    private NMSReflector() throws ClassNotFoundException, NoSuchMethodException {
+        // get NMS classes
+        classCraftItemStack = Class.forName(getCraftClass("inventory.CraftItemStack"));
+        classNBTTagCompound = Class.forName(getServerClass("NBTTagCompound"));
+        classItemStack = Class.forName(getServerClass("ItemStack"));
+
+        // get NMS methods
+        methodasNMSCopy = classCraftItemStack.getMethod("asNMSCopy", ItemStack.class);
+        methodasBukkitCopy = classCraftItemStack.getMethod("asBukkitCopy", Class.forName(getServerClass("ItemStack")));
+        methodgetTag = classItemStack.getMethod("getTag");
+        methodsetTag = classItemStack.getMethod("setTag");
+        methodhasKey = classNBTTagCompound.getMethod("hasKey", String.class);
     }
 
     public static Object asNMSCopy(ItemStack item) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -69,22 +99,22 @@ public class NMSReflector {
         return (boolean)hasKey.invoke(nmsTagCompound, key);
     }
 
-    public static void setNBT(Object nmsTagCompound, String type, Class classType, String key, Object value) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public static void setNBT(Object nmsTagCompound, NBTType type, String key, Object value) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Class tagCompoundClass = Class.forName(getServerClass("NBTTagCompound"));
-        Method setKey = tagCompoundClass.getMethod(String.format("set%s", type), String.class, classType);
+        Method setKey = tagCompoundClass.getMethod(String.format("set%s", type.getType()), String.class, type.getClassType());
         setKey.invoke(nmsTagCompound, key, value);
     }
 
-    public static Object getNBT(Object nmsTagCompound, String type, String key) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public static Object getNBT(Object nmsTagCompound, NBTType type, String key) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Class tagCompoundClass = Class.forName(getServerClass("NBTTagCompound"));
-        Method getKey = tagCompoundClass.getMethod(String.format("get%s", type), String.class);
+        Method getKey = tagCompoundClass.getMethod(String.format("get%s", type.getType()), String.class);
         return getKey.invoke(nmsTagCompound, key);
     }
 
-    public static ItemStack setNBTOnce(ItemStack item, String type, Class classType, String key, Object value) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static ItemStack setNBTOnce(ItemStack item, NBTType type, String key, Object value) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Object nmsItem = asNMSCopy(item);
         Object tagCompound = getNBTTagCompound(nmsItem);
-        setNBT(tagCompound, type, classType, key, value);
+        setNBT(tagCompound, type, key, value);
         return asBukkitCopy(nmsItem);
     }
 

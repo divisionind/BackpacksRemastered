@@ -135,7 +135,6 @@ public class Backpacks extends JavaPlugin {
     }
 
     public void setupFromConfig() {
-        Bukkit.getServer().resetRecipes(); // resets all recipes to default (including from other plugins) TODO find a better way
         BackpackRecipes.registerRecipes(getConfig(), getLogger());
     }
 }
