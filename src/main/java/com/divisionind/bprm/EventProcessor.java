@@ -18,7 +18,6 @@
 
 package com.divisionind.bprm;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -28,7 +27,6 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
@@ -49,14 +47,14 @@ public class EventProcessor implements Listener {
 
             if (!NMSReflector.hasNBTKey(tagCompound, "backpack_type")) return;
             int backpack_type = (int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type");
-            BackpackRecipes.BackpackItem backpack = BackpackRecipes.BackpackItem.getById(backpack_type);
+            BackpackItem backpack = BackpackItem.getByType(backpack_type);
             if (backpack == null || !backpack.hasCraftPermission(ent)) {
                 ent.sendMessage(Backpacks.translate(String.format("&cYou do not have permission to craft the %s backpack.", backpack == null ? "null" : backpack.name().toLowerCase())));
                 e.setCancelled(true);
                 return;
             }
 
-            ent.sendMessage("You just crafted a backpack.");
+            ACommand.respondf(ent, "&eYou just crafted a %s backpack.", backpack.name().toLowerCase());
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException ex) {
             ex.printStackTrace();
         }
@@ -84,13 +82,12 @@ public class EventProcessor implements Listener {
             Object tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
             if (NMSReflector.hasNBTKey(tagCompound, "backpack_type")) {
                 int type = (int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type");
-                if (type == 0) {
-                    NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", InventorySerialization.toByteArray(e.getInventory(), e.getView().getTitle()));
-                    e.getPlayer().getInventory().setChestplate(NMSReflector.asBukkitCopy(craftItemStack));
-                    e.getPlayer().sendMessage("Stored data in backpack NBT.");
-                }
+                BackpackItem backpack = BackpackItem.getByType(type);
+                if (backpack == null) {
+                    ACommand.respondf(e.getPlayer(), "Backpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
+                } else backpack.getHandler().onClose(e, craftItemStack, tagCompound);
             }
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException | IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -101,6 +98,7 @@ public class EventProcessor implements Listener {
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             // is item in hand backpack key
             ItemStack inhand = e.getPlayer().getInventory().getItemInMainHand(); // TODO add support for use from off-hand as well
+            if (!inhand.getType().equals(Material.FEATHER)) return;
             try {
                 Object handItemStack = NMSReflector.asNMSCopy(inhand);
                 Object handTagCompound = NMSReflector.getNBTTagCompound(handItemStack);
@@ -112,22 +110,13 @@ public class EventProcessor implements Listener {
                     Object bpTagCompound = NMSReflector.getNBTTagCompound(bpItemStack);
                     if (NMSReflector.hasNBTKey(bpTagCompound, "backpack_type")) {
                         int type = (int)NMSReflector.getNBT(bpTagCompound, NBTType.INT, "backpack_type");
-
-                        // small backpack
-                        if (type == 0) {
-                            Inventory toOpen;
-                            if (NMSReflector.hasNBTKey(bpTagCompound, "backpack_data")) { // TODO create backpack data in BackpackRecipes sp that you do not have to check for this
-                                e.getPlayer().sendMessage("Got data from backpack NBT.");
-                                toOpen = InventorySerialization.fromByteArray((byte[])NMSReflector.getNBT(bpTagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
-                            } else {
-                                e.getPlayer().sendMessage("No NBT backpack data found. Creating...");
-                                toOpen = Bukkit.getServer().createInventory(null, 27, "Small Backpack");
-                            }
-                            e.getPlayer().openInventory(toOpen);
-                        }
+                        BackpackItem backpack = BackpackItem.getByType(type);
+                        if (backpack == null) {
+                            ACommand.respondf(e.getPlayer(), "Backpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
+                        } else backpack.getHandler().openBackpack(e, bpItemStack, bpTagCompound);
                     }
                 }
-            } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException | IOException | ClassNotFoundException ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }

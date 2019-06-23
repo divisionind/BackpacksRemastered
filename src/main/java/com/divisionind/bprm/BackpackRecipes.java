@@ -19,16 +19,13 @@
 package com.divisionind.bprm;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -41,7 +38,7 @@ public class BackpackRecipes {
         // load backpacks
         for (BackpackItem backpack : BackpackItem.values()) {
             String backpack_name = backpack.name().toLowerCase();
-            loadRecipeFromConfig(config, log, backpack_name, backpack.item);
+            loadRecipeFromConfig(config, log, backpack_name, backpack.getItem());
         }
 
         // create backpack key
@@ -49,13 +46,11 @@ public class BackpackRecipes {
         ItemMeta backpack_key_meta = backpack_key.getItemMeta();
         backpack_key_meta.setDisplayName(Backpacks.translate("&aBackpack Key"));
         backpack_key.setItemMeta(backpack_key_meta);
-
         try {
             backpack_key = NMSReflector.setNBTOnce(backpack_key, NBTType.BOOLEAN, "backpack_key", true);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             return;
         }
-
         loadRecipeFromConfig(config, log, "backpack_key", backpack_key);
     }
 
@@ -85,56 +80,5 @@ public class BackpackRecipes {
         });
 
         Bukkit.addRecipe(recipe);
-    }
-
-    private static ItemStack getBackpack(Color color, int type, String name) {
-        ItemStack backpack = new ItemStack(Material.LEATHER_CHESTPLATE);
-        LeatherArmorMeta meta = (LeatherArmorMeta)backpack.getItemMeta();
-        meta.setColor(color);
-        meta.setDisplayName(Backpacks.translate(name));
-        backpack.setItemMeta(meta);
-
-        // apply backpack_type nbt data
-        try {
-            return NMSReflector.setNBTOnce(backpack, NBTType.INT, "backpack_type", type);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            return null;
-        }
-    }
-
-    public enum BackpackItem {
-
-        SMALL(Color.BLACK, 0, "&aSmall Backpack", "backpacks.craft.small"),
-        LARGE(Color.MAROON, 1, "&aLarge Backpack", "backpacks.craft.large"),
-        LINKED(Color.BLUE, 2, "&aLinked Backpack", "backpacks.craft.linked");
-
-        private ItemStack item;
-        private int type_id;
-        private String permission;
-
-        BackpackItem(Color color, int type_id, String name, String permission) {
-            this.item = getBackpack(color, type_id, name);
-            this.type_id = type_id;
-            this.permission = permission;
-        }
-
-        public ItemStack getItem() {
-            return item;
-        }
-
-        public int getTypeId() {
-            return type_id;
-        }
-
-        public boolean hasCraftPermission(HumanEntity entity) {
-            return entity.hasPermission(permission);
-        }
-
-        public static BackpackItem getById(int id) {
-            for (BackpackItem bp : values()) {
-                if (bp.type_id == id) return bp;
-            }
-            return null;
-        }
     }
 }
