@@ -113,9 +113,12 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
     }
 
     public static NBTType getKeyType(Object nmsTagCompound, String key) throws InvocationTargetException, IllegalAccessException {
+        return NBTType.getByInternalId(getKeyInternalTypeId(nmsTagCompound, key));
+    }
+
+    public static byte getKeyInternalTypeId(Object nmsTagCompound, String key) throws InvocationTargetException, IllegalAccessException {
         Object nbtBase = inst.mgetKeyBase.invoke(nmsTagCompound, key);
-        byte internalId = (byte)inst.mgetTypeId.invoke(nbtBase);
-        return NBTType.getByInternalId(internalId);
+        return (byte)inst.mgetTypeId.invoke(nbtBase);
     }
 
     public static ItemStack setNBTOnce(ItemStack item, NBTType type, String key, Object value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {

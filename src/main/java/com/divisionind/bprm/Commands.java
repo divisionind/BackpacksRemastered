@@ -246,10 +246,11 @@ public class Commands {
                 Object tagCompound = NMSReflector.getNBTTagCompound(NMSReflector.asNMSCopy(item));
 
                 if (NMSReflector.hasNBTKey(tagCompound, args[1])) {
-                    NBTType type = NMSReflector.getKeyType(tagCompound, args[1]);
+                    byte btype = NMSReflector.getKeyInternalTypeId(tagCompound, args[1]);
+                    NBTType type = NBTType.getByInternalId(btype);
 
                     if (type == null) {
-                        respondf(sender, "&cCould not resolve data type for key \"%s\".", args[1]);
+                        respondf(sender, "&cCould not resolve data type for key \"%s\". The internal type id was \"0x%02x or %s\".", args[1], btype, btype);
                         return;
                     }
 

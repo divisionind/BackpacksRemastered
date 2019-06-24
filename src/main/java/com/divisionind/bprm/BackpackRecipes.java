@@ -34,6 +34,8 @@ import java.util.logging.Logger;
 
 public class BackpackRecipes {
 
+    public static ItemStack BACKPACK_KEY;
+
     public static void registerRecipes(FileConfiguration config, Logger log) {
         // load backpacks
         for (BackpackItem backpack : BackpackItem.values()) {
@@ -42,16 +44,16 @@ public class BackpackRecipes {
         }
 
         // create backpack key
-        ItemStack backpack_key = new ItemStack(Material.FEATHER);
-        ItemMeta backpack_key_meta = backpack_key.getItemMeta();
+        BACKPACK_KEY = new ItemStack(Material.FEATHER);
+        ItemMeta backpack_key_meta = BACKPACK_KEY.getItemMeta();
         backpack_key_meta.setDisplayName(Backpacks.translate("&aBackpack Key"));
-        backpack_key.setItemMeta(backpack_key_meta);
+        BACKPACK_KEY.setItemMeta(backpack_key_meta);
         try {
-            backpack_key = NMSReflector.setNBTOnce(backpack_key, NBTType.BOOLEAN, "backpack_key", true);
+            BACKPACK_KEY = NMSReflector.setNBTOnce(BACKPACK_KEY, NBTType.BOOLEAN, "backpack_key", true);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             return;
         }
-        loadRecipeFromConfig(config, log, "backpack_key", backpack_key);
+        loadRecipeFromConfig(config, log, "backpack_key", BACKPACK_KEY);
     }
 
     private static void loadRecipeFromConfig(FileConfiguration config, Logger log, String recipeName, ItemStack item) {

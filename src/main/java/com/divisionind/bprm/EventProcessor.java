@@ -27,6 +27,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -173,6 +174,16 @@ public class EventProcessor implements Listener {
                 }
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException | IOException ex) {
                 ex.printStackTrace();
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBackpackKeyMove(InventoryClickEvent e) {
+        ItemStack item = e.getCurrentItem();
+        if (BackpackRecipes.BACKPACK_KEY.equals(item)) {
+            if (e.getView().getTitle().toLowerCase().contains("backpack")) {
+                e.setCancelled(true);
             }
         }
     }
