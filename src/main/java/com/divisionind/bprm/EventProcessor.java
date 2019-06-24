@@ -158,7 +158,7 @@ public class EventProcessor implements Listener {
 
                         Block block = e.getClickedBlock();
                         Material blockMat = block.getType();
-                        if (blockMat.equals(Material.CHEST) || blockMat.equals(Material.TRAPPED_CHEST)) {
+                        if (blockMat.equals(Material.CHEST) || blockMat.equals(Material.TRAPPED_CHEST) || blockMat.equals(Material.FURNACE)) {
                             NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", BackpackSerialization.toByteArrayLocation(block.getLocation()));
                             ItemStack newBackpack = NMSReflector.asBukkitCopy(craftItemStack);
                             ItemMeta meta = newBackpack.getItemMeta();
@@ -168,7 +168,7 @@ public class EventProcessor implements Listener {
                             meta.setLore(newLore);
                             newBackpack.setItemMeta(meta);
                             e.getPlayer().getInventory().setItemInMainHand(newBackpack);
-                            ACommand.respond(e.getPlayer(), "&eYou feel a strong connection form between the backpack and chest.");
+                            ACommand.respond(e.getPlayer(), "&eYou feel a strong connection form between the backpack and the container.");
                         }
                     }
                 }

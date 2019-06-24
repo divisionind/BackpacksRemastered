@@ -25,6 +25,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Furnace;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -154,9 +155,16 @@ public enum BackpackItem {
         public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception {
             if (hasData) {
                 Location chestLocation = BackpackSerialization.fromByteArrayLocation((byte[])NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
-                Inventory inv = getChestInventory(chestLocation.getBlock());
+                Block chestBlock = chestLocation.getBlock();
+
+                Inventory inv;
+                if (chestBlock.getType().equals(Material.FURNACE)) {
+                    Furnace furnace = (Furnace)chestBlock.getState();
+                    inv = furnace.getInventory();
+                } else inv = getChestInventory(chestBlock);
+
                 if (inv == null) {
-                    ACommand.respond(e.getPlayer(), "&cThe chest to which this bag was linked no longer exists.");
+                    ACommand.respond(e.getPlayer(), "&cThe container to which this bag was linked no longer exists.");
                 } else e.getPlayer().openInventory(inv);
             } else {
                 ACommand.respond(e.getPlayer(), "&cThis backpack must form a connection before it can be used.");
@@ -169,8 +177,8 @@ public enum BackpackItem {
         @Override
         public LoreBuilder lore() {
             return new LoreBuilder("A mystical bag capable of transiting items across")
-                           .append("dimensions to a predetermined chest. Legend says")
-                           .append("that the bag will link to any chest you wack with")
+                           .append("dimensions to a predetermined location. Legend says")
+                           .append("that the bag will link to any container you wack with")
                            .append("it.");
         }
 
