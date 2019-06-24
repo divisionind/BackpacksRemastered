@@ -1,3 +1,6 @@
+# the configuration version (do not change this)
+version: 2019.0.1
+
 # How long (in ticks, 20ticks/second) to wait after someone opens a backpack before they can open it again
 openBackpackCooldown: 8
 
