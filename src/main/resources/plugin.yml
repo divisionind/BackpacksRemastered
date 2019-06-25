@@ -11,13 +11,16 @@ commands:
     description: The main command for BackpacksRemastered.
     aliases:
       - bp
-    permission: backpacks.*
+    permission: backpacks.main
     usage: /bp help
 
 permissions:
   backpacks.*:
     description: Gives access to all commands in BackpacksRemastered.
     default: op
+  backpacks.main:
+    description: Gives generic access to commands from this plugin.
+    default: true
   backpacks.help:
     description: Gives access to the help command.
     default: true
