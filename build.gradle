@@ -27,7 +27,7 @@ plugins {
 }
 
 def baseVersion = "2019.0.1"
-def beta = true
+def beta = false
 def uploadBetas = false
 
 def spigotVersion = "1.14.2"
