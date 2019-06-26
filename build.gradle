@@ -26,8 +26,8 @@ plugins {
     id "com.github.breadmoirai.github-release" version "2.2.9"
 }
 
-def baseVersion = "2019.0.1"
-def beta = false
+def baseVersion = "2019.0.2"
+def beta = true
 def uploadBetas = false
 
 def spigotVersion = "1.14.2"
