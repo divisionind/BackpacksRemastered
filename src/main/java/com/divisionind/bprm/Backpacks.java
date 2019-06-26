@@ -31,6 +31,11 @@ import java.util.List;
 
 public class Backpacks extends JavaPlugin {
 
+    /**
+     * TODO
+     * add damage reduction to backpacks, show in lore and use nbt data
+     */
+
     public static final String PREFIX = translate("&9Backpacks &7&l>>&r ");
     public static final String VERSION = "@DivisionVersion@";
     public static final String GIT_HASH = "@DivisionGitHash@";
