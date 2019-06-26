@@ -94,7 +94,7 @@ public class EventProcessor implements Listener {
                 int type = (int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type");
                 BackpackItem backpack = BackpackItem.getByType(type);
                 if (backpack == null) {
-                    ACommand.respondf(e.getPlayer(), "Backpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
+                    ACommand.respondf(e.getPlayer(), "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
                 } else backpack.getHandler().onClose(e, craftItemStack, tagCompound);
             }
         } catch (Exception ex) {
@@ -122,7 +122,7 @@ public class EventProcessor implements Listener {
                         int type = (int)NMSReflector.getNBT(bpTagCompound, NBTType.INT, "backpack_type");
                         BackpackItem backpack = BackpackItem.getByType(type);
                         if (backpack == null) {
-                            ACommand.respondf(e.getPlayer(), "Backpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
+                            ACommand.respondf(e.getPlayer(), "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
                         } else {
                             // opening backpack, while it opens, disable this code from running
                             UUID playerId = e.getPlayer().getUniqueId();
