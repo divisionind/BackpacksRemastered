@@ -5,7 +5,8 @@
 ![](https://img.shields.io/badge/dev%20status-active-brightgreen.svg?style=flat-square)
 
 ## Info
-This is a remastered version of the popular Backpacks plugin.
+This is a remastered version of the popular Backpacks plugin. This project is based on the
+spigot boilerplate template by drew6017 on GitHub [here](https://github.com/divisionind/BoilerplateSpigot).
 
 ## Contributing
 All contributions must follow 
