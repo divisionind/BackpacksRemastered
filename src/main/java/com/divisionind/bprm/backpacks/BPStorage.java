@@ -29,7 +29,7 @@ public abstract class BPStorage implements BackpackHandler {
     private final String title;
     private final int size;
 
-    public BPStorage(String title, int size) {
+    BPStorage(String title, int size) {
         this.title = title;
         this.size = size;
     }

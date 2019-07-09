@@ -42,6 +42,14 @@ public class PotentialBackpackItem {
         return BackpackObject.getByType((int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type"));
     }
 
+    public byte[] getData() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        return (byte[]) NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data");
+    }
+
+    public boolean hasData() throws InvocationTargetException, IllegalAccessException {
+        return NMSReflector.hasNBTKey(tagCompound, "backpack_data");
+    }
+
     public ItemStack getItem() {
         return item;
     }
