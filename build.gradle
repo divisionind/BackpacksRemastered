@@ -135,7 +135,7 @@ internationalize {
     sourceResources file("$buildDir/generated-resources")
     bundleInitializerClasspath 'com.divisionind.bprm.Backpacks'
 
-    File commandsFile = file("$sourcesDir/com/divisionind/bprm/Commands.java")
+    File commandsFile = file("$sourcesDir/com/divisionind/bprm/commands")
     Pattern colorPat = Pattern.compile("(?i)" + String.valueOf('&') + "[0-9A-FK-OR]")
     stringDecider new StringDecider() {
         @Override
@@ -149,8 +149,8 @@ internationalize {
             if (colorPat.matcher(st.value).results().count() > 0) return true
 
             // these string values are not colored and would not be picked up otherwise
-            if (st.locationFile.equals(commandsFile)) {
-                String prevLine = FileScanUtils.getLine(commandsFile, st.line)
+            if (st.locationFile.getParentFile().equals(commandsFile)) {
+                String prevLine = FileScanUtils.getLine(st.locationFile, st.line)
                 return prevLine.contains("String desc()")
             }
         }

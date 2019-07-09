@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.commands.*;
 import com.divisionind.bprm.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -61,12 +62,12 @@ public class Backpacks extends JavaPlugin {
         saveDefaultConfig();
         setupFromConfig();
 
-        registerCMDS(new Commands.Help(),
-                new Commands.Info(),
-                new Commands.ItemInfo(),
-                new Commands.ItemInfoGet(),
-                new Commands.ItemGive(),
-                new Commands.ConfigReload());
+        registerCMDS(new Help(),
+                new Info(),
+                new ItemInfo(),
+                new ItemInfoGet(),
+                new ItemGive(),
+                new ConfigReload());
 
         registerEvents(new BackpackCraftEvent(),
                 new BackpackDamageEvent(),
@@ -108,12 +109,12 @@ public class Backpacks extends JavaPlugin {
                 // no command found by sub, attempts to parse as int for help pages
                 try {
                     int hpage = Integer.parseInt(subcmd);
-                    new Commands.Help().call(sender, label, new String[] {"help", Integer.toString(hpage)});
+                    new Help().call(sender, label, new String[] {"help", Integer.toString(hpage)});
                 } catch (NumberFormatException e) {
                     // not an int, idk wtf they were doing then
                     ACommand.respondf(sender, "&cError: Command \"%s\" not found.", subcmd);
                 }
-            } else new Commands.Help().call(sender, label, args);
+            } else new Help().call(sender, label, args);
         }
         return true;
     }
