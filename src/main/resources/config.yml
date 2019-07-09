@@ -1,8 +1,12 @@
 # the configuration version (do not change this)
-version: 2019.0.1
+version: 1
 
 # How long (in ticks, 20ticks/second) to wait after someone opens a backpack before they can open it again
 openBackpackCooldown: 8
+
+# What language to set the plugin to. You can compile the plugin to support any languages you wish. For more info, see the github.
+# Current included languages are: en (English), es (Spanish)
+language: en
 
 recipes:
   small:

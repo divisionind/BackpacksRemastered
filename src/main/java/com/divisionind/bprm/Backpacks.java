@@ -22,32 +22,42 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 
 public class Backpacks extends JavaPlugin {
 
     /**
      * TODO
      * add damage reduction to backpacks, show in lore and use nbt data
+     *  NOTE: DONT DO THIS | ALLOW PLAYERS TO COMBINE BACKPACK WITH THEIR ARMOR SO THAT THE ARMOR BECOMES THE BACKPACK (add setting to config to disable no item damage thing)
      */
 
     public static final String PREFIX = translate("&9Backpacks &7&l>>&r ");
     public static final String VERSION = "@DivisionVersion@";
     public static final String GIT_HASH = "@DivisionGitHash@";
     public static final String GIT_NUM = "@DivisionGitComm@";
+    public static final int CONFIGURATION_VERSION = 1;
+
+    public static ResourceBundle bundle;
+    public static long openBackpackCooldown;
 
     private static List<ACommand> commands;
     private static Backpacks inst;
 
     @Override
     public void onEnable() {
-        commands = new ArrayList<>();
         inst = this;
+        commands = new ArrayList<>();
+
+        // load / init config
+        saveDefaultConfig();
+        setupFromConfig();
 
         registerCMDS(new Commands.Help(),
                 new Commands.Info(),
@@ -66,9 +76,7 @@ public class Backpacks extends JavaPlugin {
             e.printStackTrace();
         }
 
-        saveDefaultConfig();
         BackpackRecipes.registerRecipes(getConfig(), getLogger());
-        setupFromConfig();
 
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) has been enabled!", VERSION, GIT_HASH));
     }
@@ -149,11 +157,40 @@ public class Backpacks extends JavaPlugin {
         return inst;
     }
 
-    public static FileConfiguration getConf() {
-        return inst.getConfig();
+    public void setupFromConfig() {
+        if (parseIntSilent(getConfig().getString("version")) != CONFIGURATION_VERSION) {
+            File configFile = new File(getDataFolder(), "config.yml");
+            File configFileBak = new File(getDataFolder(), "config.yml.bak");
+            try {
+                Files.move(configFile.toPath(), configFileBak.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                saveDefaultConfig();
+            } catch (IOException e) {
+                getLogger().severe("An error occurred backing up the configuration for an update.");
+                e.printStackTrace();
+            }
+
+            getLogger().warning("Your configuration file was outdated. The old configuration was moved to config.yml.bak and a new one has been created. Please manually copy over your settings.");
+        }
+
+        // checks for lang and country code TODO this needs work
+        String language = getConfig().getString("language", "en");
+        Locale loc;
+        if (language.contains("-")) {
+            String[] parts = language.split("-");
+            loc = new Locale(parts[0], parts[1]);
+        } else loc = new Locale(language);
+
+        Locale.setDefault(loc);
+        bundle = ResourceBundle.getBundle("lang");
+
+        openBackpackCooldown = getConfig().getLong("openBackpackCooldown");
     }
 
-    public void setupFromConfig() {
-
+    private int parseIntSilent(String in) {
+        try {
+            return Integer.parseInt(in);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 }

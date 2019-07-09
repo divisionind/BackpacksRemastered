@@ -109,6 +109,7 @@ public enum BackpackItem {
             } else {
                 toOpen = Bukkit.getServer().createInventory(null, 27, "Small Backpack");
             }
+            toOpen.getViewers().add(FakeBackpackViewer.INSTANCE);
             e.getPlayer().openInventory(toOpen);
         }
 
@@ -134,6 +135,7 @@ public enum BackpackItem {
             } else {
                 toOpen = Bukkit.getServer().createInventory(null, 54, "Large Backpack");
             }
+            toOpen.getViewers().add(FakeBackpackViewer.INSTANCE);
             e.getPlayer().openInventory(toOpen);
         }
 
@@ -165,7 +167,10 @@ public enum BackpackItem {
 
                 if (inv == null) {
                     ACommand.respond(e.getPlayer(), "&cThe container to which this bag was linked no longer exists.");
-                } else e.getPlayer().openInventory(inv);
+                } else {
+                    inv.getViewers().add(FakeBackpackViewer.INSTANCE);
+                    e.getPlayer().openInventory(inv);
+                }
             } else {
                 ACommand.respond(e.getPlayer(), "&cThis backpack must form a connection before it can be used.");
             }

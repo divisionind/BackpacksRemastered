@@ -84,9 +84,14 @@ public class EventProcessor implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent e) { // TODO find better way to identify backpack, add a click cooldown to onRightClick() to prevent multiple runs while backpack is opening
+    public void onInventoryClose(InventoryCloseEvent e) { // TODO add a click cooldown to onRightClick() to prevent multiple runs while backpack is opening
+        //ACommand.respondf(e.getPlayer(), "Is BackpackInventory = %s", e.getInventory() instanceof BackpackCustomInventory); does not work, must be instance of craftinventory (i.e. must use NMS) (this would be very inefficient to do with the current reflection method)
+        // use this https://github.com/raphw/byte-buddy to build adapter at runtime (would take too much effort) !!!seems like best option next to plain old adapters
+        // could compile class at runtime with javac and load it as a module (this would require the users to have the jdk, not just the jre, installed though)
+        // if adapters are used for backpack inventory determination, the plugin would not work at all on unsupported versions
+        // note: these we just ideas, ended up using fake human entity viewer
+        if (!e.getInventory().getViewers().contains(FakeBackpackViewer.INSTANCE)) return;
         ItemStack bp = e.getPlayer().getInventory().getChestplate();
-        if (!e.getView().getTitle().toLowerCase().contains("backpack")) return;
         try {
             Object craftItemStack = NMSReflector.asNMSCopy(bp);
             Object tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
@@ -129,7 +134,7 @@ public class EventProcessor implements Listener {
                             if (openingBackpacks.contains(playerId)) return; // TODO add an option for disabling nesting of backpacks
                             openingBackpacks.add(playerId);
                             // 8ticks = 0.4s should be enough time for the backpack to open (unless someone is lagging)
-                            Bukkit.getScheduler().scheduleSyncDelayedTask(Backpacks.getInstance(), () -> openingBackpacks.remove(playerId), Backpacks.getConf().getLong("openBackpackCooldown"));
+                            Bukkit.getScheduler().scheduleSyncDelayedTask(Backpacks.getInstance(), () -> openingBackpacks.remove(playerId), Backpacks.openBackpackCooldown);
 
                             // actually open the backpack
                             backpack.getHandler().openBackpack(e, bpItemStack, bpTagCompound, NMSReflector.hasNBTKey(bpTagCompound, "backpack_data"));
@@ -182,7 +187,7 @@ public class EventProcessor implements Listener {
     public void onBackpackKeyMove(InventoryClickEvent e) {
         ItemStack item = e.getCurrentItem();
         if (BackpackRecipes.BACKPACK_KEY.equals(item)) {
-            if (e.getView().getTitle().toLowerCase().contains("backpack")) {
+            if (e.getInventory().getViewers().contains(FakeBackpackViewer.INSTANCE)) {
                 e.setCancelled(true);
             }
         }

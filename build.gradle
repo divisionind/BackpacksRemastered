@@ -16,9 +16,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+
+import com.divisionind.i18n.DiscoveredString
+import com.divisionind.i18n.ExtractorPlugin
+import com.divisionind.i18n.GoogleTranslator
+import com.divisionind.i18n.api.StringDecider
+import com.divisionind.i18n.api.FileScanUtils
+import com.divisionind.i18n.api.corrector.RegexCorrectorMatcher
 import org.apache.tools.ant.filters.ReplaceTokens
 import java.lang.reflect.Method
 import org.gradle.internal.os.OperatingSystem
+
+import java.util.regex.Pattern
+
+buildscript {
+    repositories {
+        maven {
+            url 'https://raw.githubusercontent.com/divisionind/maven/repo'
+            //url uri('../maven') // local repo for testing
+        }
+    }
+    dependencies {
+        classpath group: 'com.divisionind',
+                name: 'i18nExtractor',
+                version: '2019.0.1'
+    }
+}
 
 plugins {
     id 'java'
@@ -26,8 +49,10 @@ plugins {
     id "com.github.breadmoirai.github-release" version "2.2.9"
 }
 
+apply plugin: ExtractorPlugin
+
 def baseVersion = "2019.0.2"
-def beta = true
+def beta = false
 def uploadBetas = false
 
 def spigotVersion = "1.14.2"
@@ -104,10 +129,45 @@ task generateResources(type: Copy) {
     ])
 }
 
-compileJava.setSource("$buildDir/generated-src")
-compileJava.dependsOn generateSources
-processResources.from("$buildDir/generated-resources")
-processResources.dependsOn generateResources
+internationalize {
+    sourcesDir file("$buildDir/generated-src")
+    sourceResources file("$buildDir/generated-resources")
+    bundleInitializerClasspath 'com.divisionind.bprm.Backpacks'
+
+    File commandsFile = file("$sourcesDir/com/divisionind/bprm/Commands.java")
+    Pattern colorPat = Pattern.compile("(?i)" + String.valueOf('&') + "[0-9A-FK-OR]")
+    stringDecider new StringDecider() {
+        @Override
+        boolean shouldAdd(DiscoveredString st) {
+            // exclude the names of backpacks from this (for now)
+            if (st.value == '&9Backpacks &7&l>>&r ' || st.value == '&aSmall Backpack' || st.value == '&aLarge Backpack' || st.value == '&aLinked Backpack') {
+                return false
+            }
+
+            // return yes for any colored string
+            if (colorPat.matcher(st.value).results().count() > 0) return true
+
+            // these string values are not colored and would not be picked up otherwise
+            if (st.locationFile.equals(commandsFile)) {
+                String prevLine = FileScanUtils.getLine(commandsFile, st.line)
+                return prevLine.contains("String desc()")
+            }
+        }
+    }
+    
+    // serializes color codes so they dont get messed with by the translator
+    translator = new GoogleTranslator(new RegexCorrectorMatcher(colorPat))
+
+    langs('es')
+}
+internationalize.dependsOn generateSources, generateResources
+compileJava.dependsOn internationalize
+processResources.dependsOn internationalize
+
+compileJava.setSource("$buildDir/internationalized-src")
+compileJava.dependsOn internationalize
+processResources.from("$buildDir/internationalized-resources")
+processResources.dependsOn internationalize
 
 task makeJar(type: Jar) {
     manifest {
