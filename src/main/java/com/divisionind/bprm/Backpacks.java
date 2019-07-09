@@ -18,10 +18,12 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -66,7 +68,12 @@ public class Backpacks extends JavaPlugin {
                 new Commands.ItemGive(),
                 new Commands.ConfigReload());
 
-        Bukkit.getPluginManager().registerEvents(new EventProcessor(), this);
+        registerEvents(new BackpackCraftEvent(),
+                new BackpackDamageEvent(),
+                new BackpackCloseEvent(),
+                new BackpackOpenEvent(),
+                new BackpackLinkEvent(),
+                new BackpackKeyMoveEvent());
 
         getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMSReflector.getVersion()));
         try {
@@ -143,6 +150,10 @@ public class Backpacks extends JavaPlugin {
 
     public static void registerCMDS(ACommand... cmds) {
         commands.addAll(Arrays.asList(cmds));
+    }
+
+    private void registerEvents(Listener... listeners) {
+        for (Listener lis : listeners) Bukkit.getPluginManager().registerEvents(lis, this);
     }
 
     public static List<ACommand> getCommands() {

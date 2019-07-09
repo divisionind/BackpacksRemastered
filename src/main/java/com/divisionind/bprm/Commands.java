@@ -156,7 +156,7 @@ public class Commands {
         @Override
         public void execute(CommandSender sender, String label, String[] args) {
             respond(sender, "&e&lInfo");
-            respondn(sender, "&7Created by drew6017 as a remake of his original plugin with more features an optimizations.");
+            respondn(sender, "&7Created by drew6017 as a remake of his original plugin with more features and optimizations.");
             respondnf(sender, " &eVersion: &a%s", Backpacks.VERSION);
             respondnf(sender, " &eGit Commit: &a%s", Backpacks.GIT_HASH);
             respondnf(sender, " &eGit Build: &a%s", Backpacks.GIT_NUM);
@@ -310,7 +310,7 @@ public class Commands {
             }
 
             // attempt to resolve backpack type
-            BackpackItem item = BackpackItem.getByName(args[1]);
+            BackpackObject item = BackpackObject.getByName(args[1]);
             if (item == null) {
                 respondf(sender, "&cBackpack of type \"%s\" was not found.", args[1]);
                 return;
@@ -325,9 +325,9 @@ public class Commands {
             if (args.length == 2) {
                 List<String> parts = new ArrayList<>();
                 if (args[1].equals("")) {
-                    for (BackpackItem item : BackpackItem.values()) parts.add(item.name());
+                    for (BackpackObject item : BackpackObject.values()) parts.add(item.name());
                 } else {
-                    for (BackpackItem item : BackpackItem.values()) {
+                    for (BackpackObject item : BackpackObject.values()) {
                         if (item.name().toLowerCase().startsWith(args[1].toLowerCase())) parts.add(item.name());
                     }
                 }

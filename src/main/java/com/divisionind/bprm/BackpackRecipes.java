@@ -38,7 +38,7 @@ public class BackpackRecipes {
 
     public static void registerRecipes(FileConfiguration config, Logger log) {
         // load backpacks
-        for (BackpackItem backpack : BackpackItem.values()) {
+        for (BackpackObject backpack : BackpackObject.values()) {
             String backpack_name = backpack.name().toLowerCase();
             loadRecipeFromConfig(config, log, backpack_name, backpack.getItem());
         }
