@@ -18,7 +18,7 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.NMSReflector;
+import com.divisionind.bprm.PotentialBackpackItem;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,13 +28,12 @@ import java.lang.reflect.InvocationTargetException;
 
 public class BackpackDamageEvent implements Listener {
     @EventHandler
-    public void onDamageEvent(PlayerItemDamageEvent e) { // TODO update to not check material type (except for elytra)
-        // if has backpack_id, cancel
-        if (!e.getItem().getType().equals(Material.LEATHER_CHESTPLATE)) return; // optimization, does not need to run all that reflection if its not even the right material
+    public void onDamageEvent(PlayerItemDamageEvent e) {
+        // dont want to stop damage event on elytra | this would be very op (and they never fully break anyway)
+        if (e.getItem().getType().equals(Material.ELYTRA)) return;
         try {
-            Object craftItemStack = NMSReflector.asNMSCopy(e.getItem());
-            Object tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
-            if (NMSReflector.hasNBTKey(tagCompound, "backpack_type")) e.setCancelled(true);
+            PotentialBackpackItem pbi = new PotentialBackpackItem(e.getItem());
+            if (pbi.isBackpack()) e.setCancelled(true);
         } catch (InvocationTargetException | IllegalAccessException | InstantiationException ex) {
             ex.printStackTrace();
         }
