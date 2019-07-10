@@ -106,7 +106,7 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
     }
 
     public static Object getNBT(Object nmsTagCompound, NBTType type, String key) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getKey = inst.cNBTTagCompound.getMethod(String.format("get%s", type.getType()), String.class);
+        Method getKey = inst.cNBTTagCompound.getMethod(String.format("get%s", type.getType()), String.class); // TODO load all of these methods on initialization
         return getKey.invoke(nmsTagCompound, key);
     }
 

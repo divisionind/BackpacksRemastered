@@ -67,7 +67,8 @@ public class Backpacks extends JavaPlugin {
                 new ItemInfo(),
                 new ItemInfoGet(),
                 new ItemGive(),
-                new ConfigReload());
+                new ConfigReload(),
+                new Split());
 
         registerEvents(new BackpackCraftEvent(),
                 new BackpackDamageEvent(),

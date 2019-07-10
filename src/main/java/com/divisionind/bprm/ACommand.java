@@ -18,10 +18,12 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.exceptions.PlayerRequiredException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +82,18 @@ public abstract class ACommand {
     }
 
     /**
+     * Validates that the command sender is a player and if so, returns player instance.
+     *
+     * @param sender entity in question
+     * @return player instance
+     */
+    public static Player validatePlayer(CommandSender sender) {
+        if (sender instanceof Player) {
+            return (Player)sender;
+        } else throw new PlayerRequiredException();
+    }
+
+    /**
      * Calls the command only if the sender has permission.
      *
      * @param sender
@@ -87,7 +101,13 @@ public abstract class ACommand {
      * @param args
      */
     public void call(CommandSender sender, String label, String[] args) {
-        if (hasPerm(sender)) execute(sender, label, args); else {
+        if (hasPerm(sender)) {
+            try {
+                execute(sender, label, args);
+            } catch (PlayerRequiredException e) {
+                respond(sender, "&cYou must be a player to use this command.");
+            }
+        } else {
             respond(sender, String.format("&cYou do not have permission to use this command. This command requires the permission \"%s\".", permission()));
         }
     }

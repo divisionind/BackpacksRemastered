@@ -55,11 +55,7 @@ public class ItemGive extends ACommand {
 
         // attempt to resolve player object
         if (args.length == 2) {
-            if (!(sender instanceof Player)) {
-                respond(sender, "&cYou must be a player to use this command.");
-                return;
-            }
-            p = (Player)sender;
+            p = validatePlayer(sender);
         } else
         if (args.length == 3) {
             p = Bukkit.getPlayer(args[2]);

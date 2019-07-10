@@ -50,11 +50,7 @@ public class ItemInfo extends ACommand {
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            respond(sender, "&cYou must be a player to use this command.");
-            return;
-        }
-        Player p = (Player)sender;
+        Player p = validatePlayer(sender);
         ItemStack item = p.getInventory().getItemInMainHand();
 
         try {

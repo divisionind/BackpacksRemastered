@@ -26,7 +26,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,35 +53,6 @@ public class BackpackCraftEvent implements Listener {
             ItemStack item = e.getCurrentItem();
             HumanEntity ent = e.getWhoClicked();
             PotentialBackpackItem backpackItem = new PotentialBackpackItem(item);
-            // run code to finish up uncombine process
-            if (backpackItem.hasNBT("uncombining")) {
-                BackpackObject bpo = BackpackObject.getByType(backpackItem.getType());
-
-                // copy data to new backpack item (this will not update lore of backpacks such as the linked backpack, i.e. known limitation) *and im lazy*
-                PotentialBackpackItem newBackpack = new PotentialBackpackItem(bpo.getItem());
-                if (backpackItem.hasData()) newBackpack.setNBT(NBTType.BYTE_ARRAY, "backpack_data", backpackItem.getData());
-                ent.getInventory().addItem(newBackpack.getModifiedItem());
-
-                // add shears to user inventory
-                ItemStack shearItem = null;
-                for (ItemStack possibleShear : e.getInventory().getMatrix()) {
-                    if (possibleShear != null && possibleShear.getType().equals(Material.SHEARS)) {
-                        shearItem = possibleShear;
-                        break;
-                    }
-                }
-                Damageable shearMeta = (Damageable) shearItem.getItemMeta();
-                shearMeta.setDamage(shearMeta.getDamage() - 1);
-                shearItem.setItemMeta((ItemMeta) shearMeta);
-                ent.getInventory().addItem(shearItem);
-
-                // remove nbt from old item
-                backpackItem.removeNBT("backpack_type");
-                backpackItem.removeNBT("backpack_data");
-                backpackItem.removeNBT("uncombining");
-                e.setCurrentItem(backpackItem.getModifiedItem());
-                return;
-            }
 
             if (!backpackItem.isBackpack()) return;
             int backpack_type = backpackItem.getType();
@@ -152,22 +122,6 @@ public class BackpackCraftEvent implements Listener {
                         // set resulting item
                         e.getInventory().setResult(result);
                         break;
-                    } else
-                    if (type.equals(Material.SHEARS)) { // TODO this is not working! CraftEvent is not run from this and this is not run when the item is actually crafted (maybe just make a command)
-                        // if combined with shears, this removes backpack from item
-                        BackpackObject bpo = BackpackObject.getByType(backpack.getType());
-                        if (bpo == null) return;
-
-                        // set this nbt data flag so that the code in the craft event will work
-                        backpack.setNBT(NBTType.BOOLEAN, "uncombining", true);
-                        ItemStack var = backpack.getModifiedItem();
-
-                        // remove old backpack lore
-                        ItemMeta varMeta = var.getItemMeta();
-                        varMeta.setLore(new ArrayList<>());
-                        var.setItemMeta(varMeta);
-
-                        //e.getInventory().setResult(var); // temporarily removed to prevent this feature from being used
                     }
                 }
             }

@@ -51,3 +51,6 @@ permissions:
   backpacks.link:
     description: Allows a player to link a linked backpack to a chest.
     default: true
+  backpacks.split:
+    description: Allows a player to use the split command.
+    default: true
