@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-public class NMSReflector { // TODO load methods/classes once and just invoke them in real-time
+public class NMSReflector {
 
     private static final String VERSION = getVersion();
     private static final String SERVER_NMS_PATH = "net.minecraft.server." + VERSION + ".%s";
@@ -67,6 +67,9 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
         cItemStack = Class.forName(getServerClass("ItemStack"));
         cNBTBase = Class.forName(getServerClass("NBTBase"));
 
+        // init all getters and setters for the various NBTTag data values
+        for (NBTType type : NBTType.values()) type.init(cNBTTagCompound);
+
         // get NMS methods
         masNMSCopy = cCraftItemStack.getMethod("asNMSCopy", ItemStack.class);
         masBukkitCopy = cCraftItemStack.getMethod("asBukkitCopy", Class.forName(getServerClass("ItemStack")));
@@ -100,14 +103,12 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
         return (boolean)inst.mhasKey.invoke(nmsTagCompound, key);
     }
 
-    public static void setNBT(Object nmsTagCompound, NBTType type, String key, Object value) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method setKey = inst.cNBTTagCompound.getMethod(String.format("set%s", type.getType()), String.class, type.getClassType());
-        setKey.invoke(nmsTagCompound, key, value);
+    public static void setNBT(Object nmsTagCompound, NBTType type, String key, Object value) throws InvocationTargetException, IllegalAccessException {
+        type.getSet().invoke(nmsTagCompound, key, value);
     }
 
-    public static Object getNBT(Object nmsTagCompound, NBTType type, String key) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getKey = inst.cNBTTagCompound.getMethod(String.format("get%s", type.getType()), String.class); // TODO load all of these methods on initialization
-        return getKey.invoke(nmsTagCompound, key);
+    public static Object getNBT(Object nmsTagCompound, NBTType type, String key) throws InvocationTargetException, IllegalAccessException {
+        return type.getGet().invoke(nmsTagCompound, key);
     }
 
     public static Set<String> getKeys(Object nmsTagCompound) throws InvocationTargetException, IllegalAccessException {

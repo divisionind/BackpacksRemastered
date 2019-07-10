@@ -18,6 +18,8 @@
 
 package com.divisionind.bprm;
 
+import java.lang.reflect.Method;
+
 public enum NBTType {
 
     LONG("Long", long.class, 4),
@@ -34,6 +36,8 @@ public enum NBTType {
     private String type;
     private Class classType;
     private byte internalId;
+    private Method set;
+    private Method get;
 
     NBTType(String type, Class classType, int internalId) {
         this.type = type;
@@ -53,10 +57,23 @@ public enum NBTType {
         return internalId;
     }
 
+    public Method getSet() {
+        return set;
+    }
+
+    public Method getGet() {
+        return get;
+    }
+
     public static NBTType getByInternalId(byte id) {
         for (NBTType type : values()) {
             if (type.internalId == id) return type;
         }
         return null;
+    }
+
+    void init(Class cNBTTagCompound) throws NoSuchMethodException {
+        set = cNBTTagCompound.getMethod(String.format("set%s", getType()), String.class, getClassType());
+        get = cNBTTagCompound.getMethod(String.format("get%s", getType()), String.class);
     }
 }
