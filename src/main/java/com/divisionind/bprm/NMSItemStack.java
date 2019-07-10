@@ -38,11 +38,11 @@ public class NMSItemStack {
         return NMSReflector.hasNBTKey(tagCompound, key);
     }
 
-    public Object getNBT(NBTType type, String key) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public Object getNBT(NBTType type, String key) throws IllegalAccessException, InvocationTargetException {
         return NMSReflector.getNBT(tagCompound, type, key);
     }
 
-    public void setNBT(NBTType type, String key, Object value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public void setNBT(NBTType type, String key, Object value) throws IllegalAccessException, InvocationTargetException {
         NMSReflector.setNBT(tagCompound, type, key, value);
     }
 

@@ -128,7 +128,7 @@ public class NMSReflector {
         return (byte)inst.mgetTypeId.invoke(nbtBase);
     }
 
-    public static ItemStack setNBTOnce(ItemStack item, NBTType type, String key, Object value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static ItemStack setNBTOnce(ItemStack item, NBTType type, String key, Object value) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Object nmsItem = asNMSCopy(item);
         Object tagCompound = getNBTTagCompound(nmsItem);
         setNBT(tagCompound, type, key, value);

@@ -79,7 +79,7 @@ public class Split extends ACommand {
                 p.getInventory().addItem(newBackpack.getModifiedItem());
                 respond(sender, "&eSplit backpack from what it was combined with.");
             } else respond(sender, "&cThis item is either not a backpack or has not been combined with anything.");
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
     }

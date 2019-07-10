@@ -32,11 +32,11 @@ public class PotentialBackpackItem extends NMSItemStack {
         return hasNBT("backpack_type");
     }
 
-    public int getType() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public int getType() throws IllegalAccessException, InvocationTargetException {
         return (int)getNBT(NBTType.INT, "backpack_type");
     }
 
-    public byte[] getData() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public byte[] getData() throws IllegalAccessException, InvocationTargetException {
         return (byte[]) getNBT(NBTType.BYTE_ARRAY, "backpack_data");
     }
 

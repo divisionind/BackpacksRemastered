@@ -64,7 +64,7 @@ public class BackpackCraftEvent implements Listener {
             }
 
             ACommand.respondf(ent, "&eYou just crafted a %s backpack.", backpack.name().toLowerCase());
-        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException ex) {
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException ex) {
             ex.printStackTrace();
         }
     }
@@ -125,7 +125,7 @@ public class BackpackCraftEvent implements Listener {
                     }
                 }
             }
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException ex) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException ex) {
             ex.printStackTrace();
         }
     }

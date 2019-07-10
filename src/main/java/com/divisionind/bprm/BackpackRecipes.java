@@ -50,7 +50,7 @@ public class BackpackRecipes {
         BACKPACK_KEY.setItemMeta(backpack_key_meta);
         try {
             BACKPACK_KEY = NMSReflector.setNBTOnce(BACKPACK_KEY, NBTType.BOOLEAN, "backpack_key", true);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
             return;
         }
         loadRecipeFromConfig(config, log, "backpack_key", BACKPACK_KEY);

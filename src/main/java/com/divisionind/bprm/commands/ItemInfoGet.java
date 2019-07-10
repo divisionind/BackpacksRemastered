@@ -75,7 +75,7 @@ public class ItemInfoGet extends ACommand {
             } else {
                 respondf(sender, "&cKey \"%s\" not found. See a list of keys with the item:info command.", args[1]);
             }
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
     }

@@ -88,7 +88,7 @@ public enum BackpackObject {
         // apply backpack_type nbt data
         try {
             return NMSReflector.setNBTOnce(backpack, NBTType.INT, "backpack_type", type);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
             return null;
         }
     }
