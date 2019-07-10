@@ -153,7 +153,7 @@ public class BackpackCraftEvent implements Listener {
                         e.getInventory().setResult(result);
                         break;
                     } else
-                    if (type.equals(Material.SHEARS)) { // TODO this is not working! CraftEvent is not run from this (maybe just make a command)
+                    if (type.equals(Material.SHEARS)) { // TODO this is not working! CraftEvent is not run from this and this is not run when the item is actually crafted (maybe just make a command)
                         // if combined with shears, this removes backpack from item
                         BackpackObject bpo = BackpackObject.getByType(backpack.getType());
                         if (bpo == null) return;
@@ -167,8 +167,7 @@ public class BackpackCraftEvent implements Listener {
                         varMeta.setLore(new ArrayList<>());
                         var.setItemMeta(varMeta);
 
-                        e.getInventory().setResult(var);
-                        System.out.println("setResult");
+                        //e.getInventory().setResult(var); // temporarily removed to prevent this feature from being used
                     }
                 }
             }
