@@ -19,7 +19,7 @@ google with a translation request for each string we choose to add. Be careful h
 if you see any message about this in the console, it means some strings in your program are not present for whatever
 language it was translating at the time.__
 
-Also, the i18nExtractor plugin is currently licensed as "All rights reserved" to Division Industries LLC. You may
+Also, the i18nExtractor plugin is currently licensed as "All rights reserved" to Division Industries LLC. You may not
 copy or modify any code from it. However, there is an API for creating custom translators (which you are free to do).
 
 
