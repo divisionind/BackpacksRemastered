@@ -8,6 +8,11 @@
 This is a remastered version of the popular Backpacks plugin. This project is based on the
 spigot boilerplate template by drew6017 on GitHub [here](https://github.com/divisionind/BoilerplateSpigot).
 
+## Download
+Please download the plugin from the Official Bukkit page [here](https://dev.bukkit.org/projects/backpack-item). I do 
+not get any ad revenue if you download the plugin from the releases page on GitHub. Those download links are only here 
+for convenience and to provide an archive of sources for particular versions if someone wishes to fork the project
+in the future.
 
 ## Adding languages
 This plugin uses the i18nExtractor plugin written by me (drew6017) to automatically extract / translating
