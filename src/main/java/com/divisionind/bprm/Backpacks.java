@@ -35,12 +35,6 @@ import java.util.*;
 
 public class Backpacks extends JavaPlugin {
 
-    /**
-     * TODO
-     * add damage reduction to backpacks, show in lore and use nbt data
-     *  NOTE: DONT DO THIS | ALLOW PLAYERS TO COMBINE BACKPACK WITH THEIR ARMOR SO THAT THE ARMOR BECOMES THE BACKPACK (add setting to config to disable no item damage thing)
-     */
-
     public static final String PREFIX = translate("&9Backpacks &7&l>>&r ");
     public static final String VERSION = "@DivisionVersion@";
     public static final String GIT_HASH = "@DivisionGitHash@";
