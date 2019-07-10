@@ -20,8 +20,8 @@ package com.divisionind.bprm.backpacks;
 
 import com.divisionind.bprm.*;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 
 public abstract class BPStorage implements BackpackHandler {
@@ -35,15 +35,12 @@ public abstract class BPStorage implements BackpackHandler {
     }
 
     @Override
-    public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception {
-        Inventory toOpen;
-        if (hasData) {
-            toOpen = BackpackSerialization.fromByteArrayInventory((byte[]) NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
+    public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
+        if (backpack.hasData()) {
+            return BackpackSerialization.fromByteArrayInventory(backpack.getData());
         } else {
-            toOpen = Bukkit.getServer().createInventory(null, size, title);
+            return Bukkit.getServer().createInventory(null, size, title);
         }
-        toOpen.getViewers().add(FakeBackpackViewer.INSTANCE);
-        e.getPlayer().openInventory(toOpen);
     }
 
     @Override

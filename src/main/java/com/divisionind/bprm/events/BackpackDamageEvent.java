@@ -28,7 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class BackpackDamageEvent implements Listener {
     @EventHandler
-    public void onDamageEvent(PlayerItemDamageEvent e) {
+    public void onDamageEvent(PlayerItemDamageEvent e) { // TODO update to not check material type (except for elytra)
         // if has backpack_id, cancel
         if (!e.getItem().getType().equals(Material.LEATHER_CHESTPLATE)) return; // optimization, does not need to run all that reflection if its not even the right material
         try {

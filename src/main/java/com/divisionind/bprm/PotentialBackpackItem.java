@@ -22,43 +22,25 @@ import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class PotentialBackpackItem {
-
-    private ItemStack item;
-    private Object craftItemStack;
-    private Object tagCompound;
+public class PotentialBackpackItem extends NMSItemStack {
 
     public PotentialBackpackItem(ItemStack item) throws InvocationTargetException, IllegalAccessException, InstantiationException {
-        this.item = item;
-        this.craftItemStack = NMSReflector.asNMSCopy(item);
-        this.tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
+        super(item);
     }
 
     public boolean isBackpack() throws InvocationTargetException, IllegalAccessException {
-        return NMSReflector.hasNBTKey(tagCompound, "backpack_type");
+        return hasNBT("backpack_type");
     }
 
-    public BackpackObject getType() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        return BackpackObject.getByType((int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type"));
+    public int getType() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        return (int)getNBT(NBTType.INT, "backpack_type");
     }
 
     public byte[] getData() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        return (byte[]) NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data");
+        return (byte[]) getNBT(NBTType.BYTE_ARRAY, "backpack_data");
     }
 
     public boolean hasData() throws InvocationTargetException, IllegalAccessException {
-        return NMSReflector.hasNBTKey(tagCompound, "backpack_data");
-    }
-
-    public ItemStack getItem() {
-        return item;
-    }
-
-    public Object getCraftItemStack() {
-        return craftItemStack;
-    }
-
-    public Object getTagCompound() {
-        return tagCompound;
+        return hasNBT("backpack_data");
     }
 }

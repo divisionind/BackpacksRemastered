@@ -26,6 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -47,14 +48,14 @@ public class BackpackOpenEvent implements Listener {
                 if (NMSReflector.hasNBTKey(handTagCompound, "backpack_key")) {
                     ItemStack backpackItem = e.getPlayer().getInventory().getChestplate();
                     if (backpackItem == null) return;
+                    PotentialBackpackItem bpi = new PotentialBackpackItem(backpackItem);
 
-                    Object bpItemStack = NMSReflector.asNMSCopy(backpackItem);
-                    Object bpTagCompound = NMSReflector.getNBTTagCompound(bpItemStack);
-                    if (NMSReflector.hasNBTKey(bpTagCompound, "backpack_type")) {
-                        int type = (int)NMSReflector.getNBT(bpTagCompound, NBTType.INT, "backpack_type");
-                        BackpackObject backpack = BackpackObject.getByType(type);
+                    // is wearing backpack
+                    if (bpi.isBackpack()) {
+                        int backpackType = bpi.getType();
+                        BackpackObject backpack = BackpackObject.getByType(backpackType);
                         if (backpack == null) {
-                            ACommand.respondf(e.getPlayer(), "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
+                            ACommand.respondf(e.getPlayer(), "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?", backpackType);
                         } else {
                             // opening backpack, while it opens, disable this code from running
                             UUID playerId = e.getPlayer().getUniqueId();
@@ -63,8 +64,11 @@ public class BackpackOpenEvent implements Listener {
                             // 8ticks = 0.4s should be enough time for the backpack to open (unless someone is lagging)
                             Bukkit.getScheduler().scheduleSyncDelayedTask(Backpacks.getInstance(), () -> openingBackpacks.remove(playerId), Backpacks.openBackpackCooldown);
 
-                            // actually open the backpack
-                            backpack.getHandler().openBackpack(e, bpItemStack, bpTagCompound, NMSReflector.hasNBTKey(bpTagCompound, "backpack_data"));
+                            // actually open the backpack (along with adding fake viewer for identification)
+                            Inventory inv = backpack.getHandler().openBackpack(e.getPlayer(), bpi);
+                            if (inv == null) return;
+                            inv.getViewers().add(FakeBackpackViewer.INSTANCE);
+                            e.getPlayer().openInventory(inv);
                         }
                     }
                 }

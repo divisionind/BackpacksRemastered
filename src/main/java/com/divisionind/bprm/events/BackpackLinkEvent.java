@@ -38,21 +38,19 @@ public class BackpackLinkEvent implements Listener {
     public void onLinkBackpack(PlayerInteractEvent e) {
         if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
             ItemStack inhand = e.getPlayer().getInventory().getItemInMainHand();
-            if (!inhand.getType().equals(Material.LEATHER_CHESTPLATE)) return;
 
             try {
-                Object craftItemStack = NMSReflector.asNMSCopy(inhand);
-                Object tagCompound = NMSReflector.getNBTTagCompound(craftItemStack);
-                if (NMSReflector.hasNBTKey(tagCompound, "backpack_type")) {
-                    int type = (int)NMSReflector.getNBT(tagCompound, NBTType.INT, "backpack_type");
+                PotentialBackpackItem backpack = new PotentialBackpackItem(inhand);
+                if (backpack.isBackpack()) {
+                    int type = backpack.getType();
                     if (type == BackpackObject.LINKED.getTypeId()) {
                         // the player is left clicking a block with a linked backpack in hand, this is lookin guuuuuddd
 
                         Block block = e.getClickedBlock();
                         Material blockMat = block.getType();
                         if (blockMat.equals(Material.CHEST) || blockMat.equals(Material.TRAPPED_CHEST) || blockMat.equals(Material.FURNACE)) {
-                            NMSReflector.setNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data", BackpackSerialization.toByteArrayLocation(block.getLocation()));
-                            ItemStack newBackpack = NMSReflector.asBukkitCopy(craftItemStack);
+                            backpack.setNBT(NBTType.BYTE_ARRAY, "backpack_data", BackpackSerialization.toByteArrayLocation(block.getLocation()));
+                            ItemStack newBackpack = backpack.getModifiedItem();
                             ItemMeta meta = newBackpack.getItemMeta();
                             List<String> newLore = new ArrayList<>(BackpackObject.LINKED.getHandler().lore().build());
                             newLore.add("");

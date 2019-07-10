@@ -57,6 +57,7 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
     private Method mhasKey;
     private Method mgetKeys;
     private Method mgetKeyBase;
+    private Method mremoveTag;
     private Method mgetTypeId;
 
     private NMSReflector() throws ClassNotFoundException, NoSuchMethodException {
@@ -74,6 +75,7 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
         mhasKey = cNBTTagCompound.getMethod("hasKey", String.class);
         mgetKeys = cNBTTagCompound.getMethod("getKeys");
         mgetKeyBase = cNBTTagCompound.getMethod("get", String.class);
+        mremoveTag = cNBTTagCompound.getMethod("remove", String.class);
         mgetTypeId = cNBTBase.getMethod("getTypeId");
     }
 
@@ -110,6 +112,10 @@ public class NMSReflector { // TODO load methods/classes once and just invoke th
 
     public static Set<String> getKeys(Object nmsTagCompound) throws InvocationTargetException, IllegalAccessException {
         return (Set<String>)inst.mgetKeys.invoke(nmsTagCompound);
+    }
+
+    public static void removeNBT(Object nmsTagCompound, String key) throws InvocationTargetException, IllegalAccessException {
+        inst.mremoveTag.invoke(nmsTagCompound, key);
     }
 
     public static NBTType getKeyType(Object nmsTagCompound, String key) throws InvocationTargetException, IllegalAccessException {

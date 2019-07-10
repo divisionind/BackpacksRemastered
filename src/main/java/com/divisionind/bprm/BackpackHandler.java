@@ -18,11 +18,12 @@
 
 package com.divisionind.bprm;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 
 public interface BackpackHandler { // TODO modify this such that it accepts PotentialBackpackItem, use PotentialBackpackItem in all events and no longer check for if material type == leather chestplate
-    void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception;
+    Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception;
 
     void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception;
 

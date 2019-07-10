@@ -25,16 +25,16 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Furnace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 
 public class BPLinked implements BackpackHandler {
     @Override
-    public void openBackpack(PlayerInteractEvent e, Object craftItemStack, Object tagCompound, boolean hasData) throws Exception {
-        if (hasData) {
-            Location chestLocation = BackpackSerialization.fromByteArrayLocation((byte[]) NMSReflector.getNBT(tagCompound, NBTType.BYTE_ARRAY, "backpack_data"));
+    public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
+        if (backpack.hasData()) {
+            Location chestLocation = BackpackSerialization.fromByteArrayLocation(backpack.getData());
             Block chestBlock = chestLocation.getBlock();
 
             Inventory inv;
@@ -44,13 +44,13 @@ public class BPLinked implements BackpackHandler {
             } else inv = getChestInventory(chestBlock);
 
             if (inv == null) {
-                ACommand.respond(e.getPlayer(), "&cThe container to which this bag was linked no longer exists.");
-            } else {
-                inv.getViewers().add(FakeBackpackViewer.INSTANCE);
-                e.getPlayer().openInventory(inv);
+                ACommand.respond(p, "&cThe container to which this bag was linked no longer exists.");
             }
+
+            return inv;
         } else {
-            ACommand.respond(e.getPlayer(), "&cThis backpack must form a connection before it can be used.");
+            ACommand.respond(p, "&cThis backpack must form a connection before it can be used.");
+            return null;
         }
     }
 
