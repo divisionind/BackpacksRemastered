@@ -58,7 +58,7 @@ def translate = false
 
 def spigotVersion = "1.14.2"
 def githubOwner = "divisionind"
-def runningServerPluginsDir = "/mnt/c/Users/drew6017/Desktop/Java\\ Coding\\ Pack/Spigot\\ Test\\ Server/1.14.2/plugins"
+def runningServerPluginsDir = System.env.DEV_SERVER
 def wslCommand = "kali"
 
 group 'com.divisionind'
