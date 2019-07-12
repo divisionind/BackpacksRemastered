@@ -55,7 +55,7 @@ public class BPLinked implements BackpackHandler {
     }
 
     @Override
-    public void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception { }
+    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack) throws Exception { }
 
     @Override
     public LoreBuilder lore() {

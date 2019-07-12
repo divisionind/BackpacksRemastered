@@ -18,31 +18,34 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.BackpackObject;
 import com.divisionind.bprm.FakeBackpackViewer;
 import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.backpacks.BPCombined;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class BackpackCloseEvent implements Listener {
+import java.lang.reflect.InvocationTargetException;
+
+public class BackpackInvClickEvent implements Listener {
     @EventHandler
-    public void onBackpackClose(InventoryCloseEvent e) {
-        if (!e.getInventory().getViewers().contains(FakeBackpackViewer.INSTANCE)) return;
-        ItemStack bp = e.getPlayer().getInventory().getChestplate();
-        try {
-            PotentialBackpackItem bpi = new PotentialBackpackItem(bp);
-            if (bpi.isBackpack()) {
-                int type = bpi.getType();
-                BackpackObject backpack = BackpackObject.getByType(type);
-                if (backpack == null) {
-                    ACommand.respondf(e.getPlayer(), "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
-                } else backpack.getHandler().onClose(e, bpi);
+    public void onInventoryClick(InventoryClickEvent e) {
+        // if is backpack inventory
+        if (e.getInventory().getViewers().contains(FakeBackpackViewer.INSTANCE)) {
+            try {
+                PotentialBackpackItem backpack = new PotentialBackpackItem(e.getWhoClicked().getInventory().getChestplate());
+                if (backpack.isBackpack()) {
+                    BackpackObject bpo = backpack.getTypeObject();
+
+                    // if backpack is combined bp, run click event in handler
+                    if (bpo != null && bpo.equals(BackpackObject.COMBINED)) {
+                        ((BPCombined)bpo.getHandler()).onClick(e);
+                    }
+                }
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
     }
 }

@@ -39,7 +39,7 @@ public class Backpacks extends JavaPlugin {
     public static final String VERSION = "@DivisionVersion@";
     public static final String GIT_HASH = "@DivisionGitHash@";
     public static final String GIT_NUM = "@DivisionGitComm@";
-    public static final int CONFIGURATION_VERSION = 1;
+    public static final int CONFIGURATION_VERSION = 2;
 
     public static ResourceBundle bundle;
     public static long openBackpackCooldown;
@@ -69,7 +69,8 @@ public class Backpacks extends JavaPlugin {
                 new BackpackCloseEvent(),
                 new BackpackOpenEvent(),
                 new BackpackLinkEvent(),
-                new BackpackKeyMoveEvent());
+                new BackpackKeyMoveEvent(),
+                new BackpackInvClickEvent());
 
         getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMSReflector.getVersion()));
         try {

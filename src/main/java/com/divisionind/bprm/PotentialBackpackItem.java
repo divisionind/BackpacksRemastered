@@ -43,4 +43,8 @@ public class PotentialBackpackItem extends NMSItemStack {
     public boolean hasData() throws InvocationTargetException, IllegalAccessException {
         return hasNBT("backpack_data");
     }
+
+    public BackpackObject getTypeObject() throws InvocationTargetException, IllegalAccessException {
+        return BackpackObject.getByType(getType());
+    }
 }

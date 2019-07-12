@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.backpacks.BPCombined;
 import com.divisionind.bprm.backpacks.BPLarge;
 import com.divisionind.bprm.backpacks.BPLinked;
 import com.divisionind.bprm.backpacks.BPSmall;
@@ -29,11 +30,14 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.lang.reflect.InvocationTargetException;
 
-public enum BackpackObject {
+public enum BackpackObject { // NOTE: any strings in this file are ignored
 
-    SMALL(Color.BLACK, 0, "&aSmall Backpack", "backpacks.craft.small", new BPSmall()),
-    LARGE(Color.MAROON, 1, "&aLarge Backpack", "backpacks.craft.large", new BPLarge()),
-    LINKED(Color.BLUE, 2, "&aLinked Backpack", "backpacks.craft.linked", new BPLinked());
+    SMALL(Color.BLACK, 0, "Small", "backpacks.craft.small", new BPSmall()),
+    LARGE(Color.MAROON, 1, "Large", "backpacks.craft.large", new BPLarge()),
+    LINKED(Color.BLUE, 2, "Linked", "backpacks.craft.linked", new BPLinked()),
+    COMBINED(Color.AQUA, 3, "Combined", "backpacks.craft.combined", new BPCombined());
+
+    public static final String NAME_FORMAT = "&a%s Backpack";
 
     private ItemStack item;
     private int type;
@@ -81,7 +85,7 @@ public enum BackpackObject {
         ItemStack backpack = new ItemStack(Material.LEATHER_CHESTPLATE);
         LeatherArmorMeta meta = (LeatherArmorMeta)backpack.getItemMeta();
         meta.setColor(color);
-        meta.setDisplayName(Backpacks.translate(name));
+        meta.setDisplayName(Backpacks.translate(String.format(NAME_FORMAT, name)));
         meta.setLore(lore.build());
         backpack.setItemMeta(meta);
 

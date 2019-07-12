@@ -1,5 +1,5 @@
 # the configuration version (do not change this)
-version: 1
+version: 2
 
 # How long (in ticks, 20ticks/second) to wait after someone opens a backpack before they can open it again
 openBackpackCooldown: 8
@@ -35,6 +35,15 @@ recipes:
       - "ADA"
       - "BCB"
       - "ADA"
+  combined:
+    ingredients:
+      A: GOLD_INGOT
+      B: ENDER_PEARL
+      C: LEATHER
+    shape:
+      - "CAC"
+      - "ABA"
+      - "CAC"
   backpack_key:
     ingredients:
       A: IRON_INGOT

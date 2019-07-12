@@ -25,7 +25,7 @@ import org.bukkit.inventory.Inventory;
 public interface BackpackHandler {
     Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception;
 
-    void onClose(InventoryCloseEvent e, Object craftItemStack, Object tagCompound) throws Exception;
+    void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack) throws Exception;
 
     LoreBuilder lore();
 }

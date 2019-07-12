@@ -19,36 +19,32 @@
 package com.divisionind.bprm.backpacks;
 
 import com.divisionind.bprm.BackpackHandler;
-import com.divisionind.bprm.BackpackSerialization;
-import com.divisionind.bprm.NBTType;
+import com.divisionind.bprm.LoreBuilder;
 import com.divisionind.bprm.PotentialBackpackItem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
-public abstract class BPStorage implements BackpackHandler {
-
-    private final String title;
-    private final int size;
-
-    BPStorage(String title, int size) {
-        this.title = title;
-        this.size = size;
-    }
-
+public class BPCombined implements BackpackHandler {
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
-        if (backpack.hasData()) {
-            return BackpackSerialization.fromByteArrayInventory(backpack.getData());
-        } else {
-            return Bukkit.getServer().createInventory(null, size, title);
-        }
+        Inventory display = Bukkit.createInventory(null, 9, "Combined Backpack");
+
+        return display;
+    }
+
+    public void onClick(InventoryClickEvent e) {
+
     }
 
     @Override
-    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack) throws Exception {
-        backpack.setNBT(NBTType.BYTE_ARRAY, "backpack_data", BackpackSerialization.toByteArrayInventory(e.getInventory(), e.getView().getTitle()));
-        e.getPlayer().getInventory().setChestplate(backpack.getModifiedItem());
+    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack) throws Exception { }
+
+    @Override
+    public LoreBuilder lore() {
+        return new LoreBuilder("A bag capable of storing multiple backpacks")
+                .append("for easy use.");
     }
 }
