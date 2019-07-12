@@ -46,6 +46,14 @@ public class NMSItemStack {
         NMSReflector.setNBT(tagCompound, type, key, value);
     }
 
+    public NBTMap getAsMap(String key) throws InvocationTargetException, IllegalAccessException {
+        return NMSReflector.getAsMap(tagCompound, key);
+    }
+
+    public void setAsMap(String key, NBTMap map) throws InvocationTargetException, IllegalAccessException {
+        NMSReflector.setAsMap(tagCompound, key, map);
+    }
+
     public void removeNBT(String key) throws InvocationTargetException, IllegalAccessException {
         NMSReflector.removeNBT(tagCompound, key);
     }

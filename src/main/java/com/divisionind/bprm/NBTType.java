@@ -31,7 +31,8 @@ public enum NBTType {
     INT("Int", int.class, 3),
     INT_ARRAY("IntArray", int[].class, 11),
     SHORT("Short", short.class, 2),
-    STRING("String", String.class, 8);
+    STRING("String", String.class, 8),
+    COMPOUND("", null, 10);
 
     private String type;
     private Class classType;
@@ -75,5 +76,9 @@ public enum NBTType {
     void init(Class cNBTTagCompound) throws NoSuchMethodException {
         set = cNBTTagCompound.getMethod(String.format("set%s", getType()), String.class, getClassType());
         get = cNBTTagCompound.getMethod(String.format("get%s", getType()), String.class);
+    }
+
+    void setClassType(Class classType) {
+        this.classType = classType;
     }
 }

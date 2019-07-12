@@ -31,6 +31,8 @@ public class BPCombined implements BackpackHandler {
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
         Inventory display = Bukkit.createInventory(null, 9, "Combined Backpack");
+        // TODO use NBTCompound
+
 
         return display;
     }

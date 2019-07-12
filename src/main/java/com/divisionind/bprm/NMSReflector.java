@@ -46,7 +46,7 @@ public class NMSReflector {
     }
 
     private Class cCraftItemStack;
-    private Class cNBTTagCompound;
+    protected Class cNBTTagCompound;
     private Class cItemStack;
     private Class cNBTBase;
 
@@ -56,7 +56,6 @@ public class NMSReflector {
     private Method msetTag;
     private Method mhasKey;
     private Method mgetKeys;
-    private Method mgetKeyBase;
     private Method mremoveTag;
     private Method mgetTypeId;
 
@@ -68,6 +67,7 @@ public class NMSReflector {
         cNBTBase = Class.forName(getServerClass("NBTBase"));
 
         // init all getters and setters for the various NBTTag data values
+        NBTType.COMPOUND.setClassType(cNBTBase);
         for (NBTType type : NBTType.values()) type.init(cNBTTagCompound);
 
         // get NMS methods
@@ -77,7 +77,6 @@ public class NMSReflector {
         msetTag = cItemStack.getMethod("setTag", cNBTTagCompound);
         mhasKey = cNBTTagCompound.getMethod("hasKey", String.class);
         mgetKeys = cNBTTagCompound.getMethod("getKeys");
-        mgetKeyBase = cNBTTagCompound.getMethod("get", String.class);
         mremoveTag = cNBTTagCompound.getMethod("remove", String.class);
         mgetTypeId = cNBTBase.getMethod("getTypeId");
     }
@@ -111,6 +110,15 @@ public class NMSReflector {
         return type.getGet().invoke(nmsTagCompound, key);
     }
 
+    public static void setAsMap(Object nmsTagCompound, String key, NBTMap value) throws InvocationTargetException, IllegalAccessException {
+        setNBT(nmsTagCompound, NBTType.COMPOUND, key, value.getTagCompound());
+    }
+
+    public static NBTMap getAsMap(Object nmsTagCompound, String key) throws InvocationTargetException, IllegalAccessException {
+        Object nbtBase = getNBT(nmsTagCompound, NBTType.COMPOUND, key);
+        return new NBTMap(nbtBase);
+    }
+
     public static Set<String> getKeys(Object nmsTagCompound) throws InvocationTargetException, IllegalAccessException {
         return (Set<String>)inst.mgetKeys.invoke(nmsTagCompound);
     }
@@ -124,7 +132,7 @@ public class NMSReflector {
     }
 
     public static byte getKeyInternalTypeId(Object nmsTagCompound, String key) throws InvocationTargetException, IllegalAccessException {
-        Object nbtBase = inst.mgetKeyBase.invoke(nmsTagCompound, key);
+        Object nbtBase = NBTType.COMPOUND.getGet().invoke(nmsTagCompound, key);
         return (byte)inst.mgetTypeId.invoke(nbtBase);
     }
 
@@ -138,5 +146,9 @@ public class NMSReflector {
     public static String getVersion() {
         String name = Bukkit.getServer().getClass().getPackage().getName();
         return name.substring(name.lastIndexOf('.') + 1);
+    }
+
+    public static NMSReflector getInstance() {
+        return inst;
     }
 }
