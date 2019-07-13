@@ -19,18 +19,18 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import com.divisionind.bprm.Backpacks;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
-public class Info extends ACommand {
+public class MaterialsList extends ACommand {
     @Override
     public String alias() {
-        return "info";
+        return "materials";
     }
 
     @Override
     public String desc() {
-        return "displays info about the plugin";
+        return "lists materials available to use in backpack recipes";
     }
 
     @Override
@@ -40,16 +40,21 @@ public class Info extends ACommand {
 
     @Override
     public String permission() {
-        return "backpacks.info";
+        return "backpacks.materials";
     }
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        respond(sender, "&e&lInfo");
-        respondn(sender, "&7Created by drew6017 as a remake of his original plugin with more features and optimizations.");
-        respondnf(sender, " &eVersion: &a%s", Backpacks.VERSION);
-        respondnf(sender, " &eGit Commit: &a%s", Backpacks.GIT_HASH);
-        respondnf(sender, " &eGit Build: &a%s", Backpacks.GIT_NUM);
-        respondn(sender, " &eDownload Page: &ahttps://dev.bukkit.org/projects/backpack-item");
+        StringBuilder sb = new StringBuilder();
+        renderList(sb, Material.values());
+        ACommand.respond(sender, sb.toString());
+    }
+
+    public static void renderList(StringBuilder sb, Material[] mats) {
+        sb.append("&eMaterials: &7");
+        for (int i = 0;i<mats.length;i++) {
+            sb.append(mats[i].name());
+            if ((i + 1) != mats.length) sb.append(", ");
+        }
     }
 }

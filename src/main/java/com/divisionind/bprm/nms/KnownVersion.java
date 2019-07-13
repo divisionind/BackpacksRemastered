@@ -43,18 +43,6 @@ public enum KnownVersion {
         return versions.toArray(new KnownVersion[versions.size()]);
     }
 
-//    public KnownVersions[] getVersionsAfter() {
-//        List<KnownVersions> versions = new ArrayList<>();
-//
-//        boolean shouldAdd = false;
-//        for (KnownVersions v : values()) {
-//            if (v.equals(this)) shouldAdd = true;
-//            if (shouldAdd) versions.add(v);
-//        }
-//
-//        return versions.toArray(new KnownVersions[versions.size()]);
-//    }
-
     /**
      * Checks if the current server version is before the current instances version
      *
@@ -63,15 +51,6 @@ public enum KnownVersion {
     public boolean isBefore() {
         return equalsAny(NMSReflector.VERSION, getVersionsBefore());
     }
-
-//    /**
-//     * Inverse of the isBefore method
-//     *
-//     * @return result
-//     */
-//    public boolean isAfter() {
-//        return equalsAny(NMSReflector.VERSION, getVersionsAfter());
-//    }
 
     public static boolean equalsAny(String in, KnownVersion... cmp) {
         for (KnownVersion c : cmp) {

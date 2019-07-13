@@ -19,37 +19,53 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import com.divisionind.bprm.Backpacks;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
-public class Info extends ACommand {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MaterialsSearch extends ACommand {
     @Override
     public String alias() {
-        return "info";
+        return "materials:search";
     }
 
     @Override
     public String desc() {
-        return "displays info about the plugin";
+        return "searches available materials to return a list of results";
     }
 
     @Override
     public String usage() {
-        return null;
+        return "<string>";
     }
 
     @Override
     public String permission() {
-        return "backpacks.info";
+        return "backpacks.materials.search";
     }
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        respond(sender, "&e&lInfo");
-        respondn(sender, "&7Created by drew6017 as a remake of his original plugin with more features and optimizations.");
-        respondnf(sender, " &eVersion: &a%s", Backpacks.VERSION);
-        respondnf(sender, " &eGit Commit: &a%s", Backpacks.GIT_HASH);
-        respondnf(sender, " &eGit Build: &a%s", Backpacks.GIT_NUM);
-        respondn(sender, " &eDownload Page: &ahttps://dev.bukkit.org/projects/backpack-item");
+        validateArgsLength(args, 2);
+
+        StringBuilder sb = new StringBuilder();
+        List<Material> results = new ArrayList<>();
+
+        for (Material mat : Material.values()) {
+            if (mat.name().toLowerCase().contains(args[1].toLowerCase())) results.add(mat);
+        }
+
+        renderList(sb, results.toArray(new Material[results.size()]));
+        ACommand.respond(sender, sb.toString());
+    }
+
+    public static void renderList(StringBuilder sb, Material[] mats) {
+        sb.append("&eMaterials: &7");
+        for (int i = 0;i<mats.length;i++) {
+            sb.append(mats[i].name());
+            if ((i + 1) != mats.length) sb.append(", ");
+        }
     }
 }

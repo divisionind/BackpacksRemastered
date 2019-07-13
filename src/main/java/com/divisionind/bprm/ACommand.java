@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.exceptions.IncorrectUsageException;
 import com.divisionind.bprm.exceptions.PlayerRequiredException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -94,6 +95,16 @@ public abstract class ACommand {
     }
 
     /**
+     * Validates that the arguments length is as specified.
+     *
+     * @param args args in question
+     * @param length length the args should be
+     */
+    public static void validateArgsLength(String[] args, int length) {
+        if (args.length != length) throw new IncorrectUsageException();
+    }
+
+    /**
      * Calls the command only if the sender has permission.
      *
      * @param sender
@@ -106,6 +117,8 @@ public abstract class ACommand {
                 execute(sender, label, args);
             } catch (PlayerRequiredException e) {
                 respond(sender, "&cYou must be a player to use this command.");
+            } catch (IncorrectUsageException e) {
+                respondiu(sender, label);
             }
         } else {
             respond(sender, String.format("&cYou do not have permission to use this command. This command requires the permission \"%s\".", permission()));
