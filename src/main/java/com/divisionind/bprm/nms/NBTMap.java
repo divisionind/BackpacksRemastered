@@ -16,12 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm;
+package com.divisionind.bprm.nms;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
-public class NBTMap { // TODO rework nms reflector to use this for getting/setting nbt tags
+public class NBTMap {
 
     private Object tagCompound;
 
@@ -43,6 +43,18 @@ public class NBTMap { // TODO rework nms reflector to use this for getting/setti
 
     public Object getNBT(NBTType type, String key) throws InvocationTargetException, IllegalAccessException {
         return NMSReflector.getNBT(tagCompound, type, key);
+    }
+
+    public void setAsMap(String key, NBTMap value) throws InvocationTargetException, IllegalAccessException {
+        NMSReflector.setAsMap(tagCompound, key, value);
+    }
+
+    public NBTMap getAsMap(String key) throws InvocationTargetException, IllegalAccessException {
+        return NMSReflector.getAsMap(tagCompound, key);
+    }
+
+    public boolean hasKey(String key) throws InvocationTargetException, IllegalAccessException {
+        return NMSReflector.hasNBTKey(tagCompound, key);
     }
 
     public Set<String> getKeys() throws InvocationTargetException, IllegalAccessException {

@@ -20,8 +20,8 @@ package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.BackpackObject;
-import com.divisionind.bprm.NBTType;
 import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.nms.NBTType;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

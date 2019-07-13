@@ -22,6 +22,8 @@ import com.divisionind.bprm.backpacks.BPCombined;
 import com.divisionind.bprm.backpacks.BPLarge;
 import com.divisionind.bprm.backpacks.BPLinked;
 import com.divisionind.bprm.backpacks.BPSmall;
+import com.divisionind.bprm.nms.NBTType;
+import com.divisionind.bprm.nms.NMSReflector;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;

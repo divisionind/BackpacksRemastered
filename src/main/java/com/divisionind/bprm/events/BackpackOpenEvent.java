@@ -19,6 +19,7 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.*;
+import com.divisionind.bprm.nms.NMSReflector;
 import io.netty.util.internal.ConcurrentSet;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

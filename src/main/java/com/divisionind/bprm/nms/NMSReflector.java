@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm;
+package com.divisionind.bprm.nms;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +27,7 @@ import java.util.Set;
 
 public class NMSReflector {
 
-    private static final String VERSION = getVersion();
+    public static final String VERSION = getVersion();
     private static final String SERVER_NMS_PATH = "net.minecraft.server." + VERSION + ".%s";
     private static final String CRAFT_NMS_PATH = "org.bukkit.craftbukkit." + VERSION + ".%s";
 
@@ -60,6 +60,17 @@ public class NMSReflector {
     private Method mgetTypeId;
 
     private NMSReflector() throws ClassNotFoundException, NoSuchMethodException {
+        /*
+            TODO
+            make an enum of all of these methods/classes called ReflectionFunction or other
+            add an initializer/caller interface field
+            allow the initializer/caller to be set by "adapters" for various versions in a layered system
+            once all layers are processed, run the initializers to init a variable containing the method/class loaded
+            then call the caller method whenever you want to run the function (try to adapt everything to a unified form)
+
+            havent done it yet because this is a little more elaborate than what is required here
+         */
+
         // get NMS classes
         cCraftItemStack = Class.forName(getCraftClass("inventory.CraftItemStack"));
         cNBTTagCompound = Class.forName(getServerClass("NBTTagCompound"));
@@ -76,9 +87,11 @@ public class NMSReflector {
         mgetTag = cItemStack.getMethod("getTag");
         msetTag = cItemStack.getMethod("setTag", cNBTTagCompound);
         mhasKey = cNBTTagCompound.getMethod("hasKey", String.class);
-        mgetKeys = cNBTTagCompound.getMethod("getKeys");
         mremoveTag = cNBTTagCompound.getMethod("remove", String.class);
         mgetTypeId = cNBTBase.getMethod("getTypeId");
+        if (KnownVersion.v1_13_R1.isBefore()) {
+            mgetKeys = cNBTTagCompound.getMethod("c");
+        } else mgetKeys = cNBTTagCompound.getMethod("getKeys");
     }
 
     public static Object asNMSCopy(ItemStack item) throws InvocationTargetException, IllegalAccessException {
@@ -119,7 +132,7 @@ public class NMSReflector {
         return new NBTMap(nbtBase);
     }
 
-    public static Set<String> getKeys(Object nmsTagCompound) throws InvocationTargetException, IllegalAccessException {
+    public static Set<String> getKeys(Object nmsTagCompound) throws InvocationTargetException, IllegalAccessException { // TODO this does not exist in at least 1.12.2 and below, create "adapters" to adjust code
         return (Set<String>)inst.mgetKeys.invoke(nmsTagCompound);
     }
 

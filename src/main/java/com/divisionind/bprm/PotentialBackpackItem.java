@@ -18,30 +18,35 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.nms.NBTType;
+import com.divisionind.bprm.nms.NMSItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 
 public class PotentialBackpackItem extends NMSItemStack {
 
+    public static final String FIELD_NAME_TYPE = "backpack_type";
+    public static final String FIELD_NAME_DATA = "backpack_data";
+
     public PotentialBackpackItem(ItemStack item) throws InvocationTargetException, IllegalAccessException, InstantiationException {
         super(item);
     }
 
     public boolean isBackpack() throws InvocationTargetException, IllegalAccessException {
-        return hasNBT("backpack_type");
+        return hasNBT(FIELD_NAME_TYPE);
     }
 
     public int getType() throws IllegalAccessException, InvocationTargetException {
-        return (int)getNBT(NBTType.INT, "backpack_type");
+        return (int)getNBT(NBTType.INT, FIELD_NAME_TYPE);
     }
 
     public byte[] getData() throws IllegalAccessException, InvocationTargetException {
-        return (byte[]) getNBT(NBTType.BYTE_ARRAY, "backpack_data");
+        return (byte[]) getNBT(NBTType.BYTE_ARRAY, FIELD_NAME_DATA);
     }
 
     public boolean hasData() throws InvocationTargetException, IllegalAccessException {
-        return hasNBT("backpack_data");
+        return hasNBT(FIELD_NAME_DATA);
     }
 
     public BackpackObject getTypeObject() throws InvocationTargetException, IllegalAccessException {

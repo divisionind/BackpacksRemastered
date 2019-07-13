@@ -20,6 +20,7 @@ package com.divisionind.bprm;
 
 import com.divisionind.bprm.commands.*;
 import com.divisionind.bprm.events.*;
+import com.divisionind.bprm.nms.NMSReflector;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -72,7 +73,7 @@ public class Backpacks extends JavaPlugin {
                 new BackpackKeyMoveEvent(),
                 new BackpackInvClickEvent());
 
-        getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMSReflector.getVersion()));
+        getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMSReflector.VERSION));
         try {
             NMSReflector.initialize();
         } catch (ClassNotFoundException | NoSuchMethodException e) {

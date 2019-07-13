@@ -21,24 +21,43 @@ package com.divisionind.bprm.backpacks;
 import com.divisionind.bprm.BackpackHandler;
 import com.divisionind.bprm.LoreBuilder;
 import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.nms.NBTMap;
+import com.divisionind.bprm.nms.NBTType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class BPCombined implements BackpackHandler {
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
         Inventory display = Bukkit.createInventory(null, 9, "Combined Backpack");
-        // TODO use NBTCompound
 
+        // ensure storedBackpacks var is initialized
+        NBTMap storedBackpacks;
+        if (backpack.hasNBT("storedBackpacks")) {
+            storedBackpacks = backpack.getAsMap("storedBackpacks");
+        } else backpack.setAsMap("storedBackpacks", storedBackpacks = new NBTMap());
+
+        storedBackpacks.getKeys().forEach(key -> {
+            int slot = Integer.parseInt(key);
+            try {
+                NBTMap innerBackpack = storedBackpacks.getAsMap(key);
+                int type = (int)innerBackpack.getNBT(NBTType.INT, PotentialBackpackItem.FIELD_NAME_TYPE);
+                // TODO
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
 
         return display;
     }
 
     public void onClick(InventoryClickEvent e) {
-
+        // TODO
     }
 
     @Override

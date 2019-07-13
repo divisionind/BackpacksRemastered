@@ -19,7 +19,7 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import com.divisionind.bprm.NMSReflector;
+import com.divisionind.bprm.nms.NMSReflector;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

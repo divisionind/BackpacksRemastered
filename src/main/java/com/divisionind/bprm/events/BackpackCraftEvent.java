@@ -18,7 +18,13 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.*;
+import com.divisionind.bprm.ACommand;
+import com.divisionind.bprm.BackpackObject;
+import com.divisionind.bprm.Backpacks;
+import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.nms.KnownVersion;
+import com.divisionind.bprm.nms.NBTType;
+import com.divisionind.bprm.nms.NMSItemStack;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -38,8 +44,12 @@ public class BackpackCraftEvent implements Listener {
 
     static {
         COMBINABLE = new ArrayList<>();
+
+        // because it used to be called GOLD_CHESTPLATE pre 1.13
+        if (KnownVersion.v1_13_R1.isBefore()) {
+            COMBINABLE.add(Material.valueOf("GOLD_CHESTPLATE"));
+        } else COMBINABLE.add(Material.valueOf("GOLDEN_CHESTPLATE"));
         COMBINABLE.add(Material.DIAMOND_CHESTPLATE);
-        COMBINABLE.add(Material.GOLDEN_CHESTPLATE);
         COMBINABLE.add(Material.IRON_CHESTPLATE);
         COMBINABLE.add(Material.LEATHER_CHESTPLATE);
         COMBINABLE.add(Material.CHAINMAIL_CHESTPLATE);

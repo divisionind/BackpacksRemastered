@@ -19,6 +19,7 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.*;
+import com.divisionind.bprm.nms.NBTType;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;

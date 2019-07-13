@@ -20,8 +20,8 @@ package com.divisionind.bprm.backpacks;
 
 import com.divisionind.bprm.BackpackHandler;
 import com.divisionind.bprm.BackpackSerialization;
-import com.divisionind.bprm.NBTType;
 import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.nms.NBTType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
