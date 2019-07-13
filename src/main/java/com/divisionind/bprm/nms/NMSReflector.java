@@ -132,7 +132,7 @@ public class NMSReflector {
         return new NBTMap(nbtBase);
     }
 
-    public static Set<String> getKeys(Object nmsTagCompound) throws InvocationTargetException, IllegalAccessException { // TODO this does not exist in at least 1.12.2 and below, create "adapters" to adjust code
+    public static Set<String> getKeys(Object nmsTagCompound) throws InvocationTargetException, IllegalAccessException {
         return (Set<String>)inst.mgetKeys.invoke(nmsTagCompound);
     }
 

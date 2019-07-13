@@ -142,7 +142,7 @@ internationalize {
         @Override
         boolean shouldAdd(DiscoveredString st) {
             // exclude the names of backpacks from this (for now)
-            if (st.value == '&9Backpacks &7&l>>&r ' || st.locationFile == backpackObject || st.value == '&aLinked') {
+            if (st.value == '&9Backpacks &7&l>>&r ' || st.locationFile == backpackObject || st.value == '&aLinked' || st.value.contains("0x%02x")) {
                 return false
             }
 

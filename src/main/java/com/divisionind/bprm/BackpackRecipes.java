@@ -59,7 +59,7 @@ public class BackpackRecipes {
     }
 
     private static void loadRecipeFromConfig(FileConfiguration config, Logger log, String recipeName, ItemStack item) {
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(Backpacks.getInstance(), recipeName), item); // TODO add pre 1.12 version backwards compatibility, change this namespaced key stuff
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(Backpacks.getInstance(), recipeName), item); // to add pre 1.12 version backwards compatibility, change this namespaced key stuff
 
         // ensures section exists in config
         ConfigurationSection section = config.getConfigurationSection(String.format("recipes.%s.ingredients", recipeName));
