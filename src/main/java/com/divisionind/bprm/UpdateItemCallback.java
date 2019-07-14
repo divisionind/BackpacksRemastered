@@ -18,14 +18,8 @@
 
 package com.divisionind.bprm;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-public interface BackpackHandler {
-    Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception;
-
-    void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception;
-
-    LoreBuilder lore();
+public interface UpdateItemCallback {
+    void update(ItemStack newItem);
 }

@@ -18,9 +18,7 @@
 
 package com.divisionind.bprm.backpacks;
 
-import com.divisionind.bprm.BackpackHandler;
-import com.divisionind.bprm.LoreBuilder;
-import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.*;
 import com.divisionind.bprm.nms.NBTMap;
 import com.divisionind.bprm.nms.NBTType;
 import org.bukkit.Bukkit;
@@ -28,10 +26,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class BPCombined implements BackpackHandler {
+
+    private HashMap<UUID, Integer> openBackpacks = new HashMap<>();
+
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
         Inventory display = Bukkit.createInventory(null, 9, "Combined Backpack");
@@ -45,10 +50,9 @@ public class BPCombined implements BackpackHandler {
         storedBackpacks.getKeys().forEach(key -> {
             int slot = Integer.parseInt(key);
             try {
-                NBTMap innerBackpack = storedBackpacks.getAsMap(key);
-                int type = (int)innerBackpack.getNBT(NBTType.INT, PotentialBackpackItem.FIELD_NAME_TYPE);
-                // TODO
-            } catch (InvocationTargetException | IllegalAccessException e) {
+                ItemStack bpInternal = BackpackSerialization.fromByteArrayItemStack((byte[])storedBackpacks.getNBT(NBTType.BYTE_ARRAY, key));
+                display.setItem(slot, bpInternal);
+            } catch (InvocationTargetException | IllegalAccessException | IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         });
@@ -57,11 +61,63 @@ public class BPCombined implements BackpackHandler {
     }
 
     public void onClick(InventoryClickEvent e) {
-        // TODO
+        // prevents this event for running for anyone who has a subbackpack open
+        if (openBackpacks.containsKey(e.getWhoClicked().getUniqueId())) return;
+
+        e.setCancelled(true);
+        ItemStack cur = e.getCurrentItem();
+        if (cur == null || e.getSlot() > 8) return;
+        try {
+            PotentialBackpackItem backpack = new PotentialBackpackItem(cur);
+            if (backpack.isBackpack()) {
+                int type = backpack.getType();
+                BackpackObject bpo = BackpackObject.getByType(type);
+                if (bpo == null) {
+                    ACommand.respondf(e.getWhoClicked(), "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
+                } else {
+                    // remove backpack identifier viewer so the onClose event is not triggered by this open event
+                    e.getClickedInventory().getViewers().remove(FakeBackpackViewer.INSTANCE);
+
+                    // open clicked backpack
+                    Inventory inv = bpo.getHandler().openBackpack((Player) e.getWhoClicked(), backpack);
+                    if (inv == null) return;
+                    inv.getViewers().add(FakeBackpackViewer.INSTANCE);
+                    openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getSlot());
+                    e.getWhoClicked().openInventory(inv);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
-    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack) throws Exception { }
+    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception {
+        // return if no backpack was opened
+        if (!openBackpacks.containsKey(e.getPlayer().getUniqueId())) return;
+
+        // get slot from map and backpack item of that slot in the combined backpack
+        int slot = openBackpacks.remove(e.getPlayer().getUniqueId());
+        NBTMap storedBackpacks = backpack.getAsMap("storedBackpacks");
+        ItemStack item = BackpackSerialization.fromByteArrayItemStack((byte[])storedBackpacks.getNBT(NBTType.BYTE_ARRAY, Integer.toString(slot)));
+
+        // parse subbackpack item as backpack
+        PotentialBackpackItem subback = new PotentialBackpackItem(item);
+        BackpackObject bpo = subback.getTypeObject();
+        if (bpo == null) return;
+
+        // create a new update callback to update the item within the backpack on close
+        bpo.getHandler().onClose(e, subback, newItem -> {
+            try {
+                storedBackpacks.setNBT(NBTType.BYTE_ARRAY, Integer.toString(slot), BackpackSerialization.toByteArrayItemStack(newItem));
+            } catch (InvocationTargetException | IllegalAccessException | IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        // update the main backpack item as usual
+        callback.update(backpack.getModifiedItem());
+    }
 
     @Override
     public LoreBuilder lore() {

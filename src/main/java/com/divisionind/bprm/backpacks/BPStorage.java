@@ -21,6 +21,7 @@ package com.divisionind.bprm.backpacks;
 import com.divisionind.bprm.BackpackHandler;
 import com.divisionind.bprm.BackpackSerialization;
 import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.UpdateItemCallback;
 import com.divisionind.bprm.nms.NBTType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -47,8 +48,8 @@ public abstract class BPStorage implements BackpackHandler {
     }
 
     @Override
-    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack) throws Exception {
-        backpack.setNBT(NBTType.BYTE_ARRAY, "backpack_data", BackpackSerialization.toByteArrayInventory(e.getInventory(), e.getView().getTitle()));
-        e.getPlayer().getInventory().setChestplate(backpack.getModifiedItem());
+    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception {
+        backpack.setNBT(NBTType.BYTE_ARRAY, PotentialBackpackItem.FIELD_NAME_DATA, BackpackSerialization.toByteArrayInventory(e.getInventory(), e.getView().getTitle()));
+        callback.update(backpack.getModifiedItem());
     }
 }

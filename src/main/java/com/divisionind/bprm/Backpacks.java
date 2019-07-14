@@ -90,6 +90,7 @@ public class Backpacks extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        // TODO look for any open backpacks and close them gracefully
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) has been disabled.", VERSION, GIT_HASH));
     }
 

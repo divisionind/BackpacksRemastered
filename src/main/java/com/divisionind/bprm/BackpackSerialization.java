@@ -65,6 +65,29 @@ public class BackpackSerialization {
         return inv;
     }
 
+    public static byte[] toByteArrayItemStack(ItemStack item) throws IOException {
+        // create output streams
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        BukkitObjectOutputStream out = new BukkitObjectOutputStream(bout);
+
+        out.writeObject(item);
+
+        out.flush();
+        out.close();
+        return bout.toByteArray();
+    }
+
+    public static ItemStack fromByteArrayItemStack(byte[] data) throws IOException, ClassNotFoundException {
+        // create input streams
+        ByteArrayInputStream bin = new ByteArrayInputStream(data);
+        BukkitObjectInputStream in = new BukkitObjectInputStream(bin);
+
+        ItemStack item = (ItemStack) in.readObject();
+
+        in.close();
+        return item;
+    }
+
     public static byte[] toByteArrayLocation(Location location) throws IOException {
         // create output streams
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
