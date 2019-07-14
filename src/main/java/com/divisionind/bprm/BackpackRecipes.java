@@ -41,6 +41,7 @@ public class BackpackRecipes {
     public static void registerRecipes(FileConfiguration config, Logger log) {
         // load backpacks
         for (BackpackObject backpack : BackpackObject.values()) {
+            if (backpack.equals(BackpackObject.COMBINED)) continue; // temporarily disables crafting of combined backpack
             String backpack_name = backpack.name().toLowerCase();
             loadRecipeFromConfig(config, log, backpack_name, backpack.getItem());
         }

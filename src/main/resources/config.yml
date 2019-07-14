@@ -38,11 +38,10 @@ recipes:
   combined:
     ingredients:
       A: GOLD_INGOT
-      B: ENDER_PEARL
       C: LEATHER
     shape:
       - "CAC"
-      - "ABA"
+      - "A A"
       - "CAC"
   backpack_key:
     ingredients:

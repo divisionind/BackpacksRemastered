@@ -147,8 +147,13 @@ public class BackpackCraftEvent implements Listener {
                     // if backpack has already be combined, stop it from being combined again (also allows backpacks to be combined infinitely with leather chestplates)
                     if (!backpack.getItem().getType().equals(Material.LEATHER_CHESTPLATE)) return;
 
+                    int bpType = backpack.getType();
+
+                    // temporarily disables combined backpack with this, will add in future
+                    if (bpType == BackpackObject.COMBINED.getTypeId()) return;
+
                     // if other items type is contained in our list of combinables
-                    itemOtherThanBackpack.setNBT(NBTType.INT, "backpack_type", backpack.getType()); // TODO make this more generic so it can be used with the combined backpack
+                    itemOtherThanBackpack.setNBT(NBTType.INT, "backpack_type", type); // TODO make this more generic so it can be used with the combined backpack
                     if (backpack.hasData()) itemOtherThanBackpack.setNBT(NBTType.BYTE_ARRAY, "backpack_data", backpack.getData());
 
                     // copy lore from backpack and add it to the bottom of this items lore
@@ -156,7 +161,7 @@ public class BackpackCraftEvent implements Listener {
                     ItemMeta meta = result.getItemMeta();
                     List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
 
-                    BackpackObject bpo = BackpackObject.getByType(backpack.getType());
+                    BackpackObject bpo = BackpackObject.getByType(bpType);
                     if (bpo == null) return;
                     lore.add("");
                     lore.addAll(bpo.getHandler().lore().build());
