@@ -142,7 +142,7 @@ internationalize {
         @Override
         boolean shouldAdd(DiscoveredString st) {
             // exclude the names of backpacks from this (for now)
-            if (st.value == '&9Backpacks &7&l>>&r ' || st.locationFile == backpackObject || st.value == '&aLinked' || st.value.contains("0x%02x")) {
+            if (st.value == '&9Backpacks &7&l>>&r ' || st.locationFile == backpackObject || st.value == '&aLinked') {
                 return false
             }
 
@@ -158,7 +158,8 @@ internationalize {
     }
     
     // serializes color codes so they dont get messed with by the translator
-    translator = new GoogleTranslator(new RegexCorrectorMatcher(colorPat))
+    translator = new GoogleTranslator(new RegexCorrectorMatcher(colorPat), 
+            new RegexCorrectorMatcher(Pattern.compile("0x%02x", Pattern.LITERAL)))
 
     if (translate) {
         langs('es')
