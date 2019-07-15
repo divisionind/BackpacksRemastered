@@ -20,14 +20,17 @@ package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.BackpackObject;
+import com.divisionind.bprm.BackpackSerialization;
 import com.divisionind.bprm.PotentialBackpackItem;
-import com.divisionind.bprm.nms.NBTType;
+import com.divisionind.bprm.backpacks.BPCombined;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
@@ -39,12 +42,12 @@ public class Split extends ACommand {
 
     @Override
     public String desc() {
-        return "separates a backpack in your hand from the item it has been combined with";
+        return "separates a backpack in your hand from the item it has been combined with or pulls backpack out of a combined backpack";
     }
 
     @Override
     public String usage() {
-        return null;
+        return "<none:slot>";
     }
 
     @Override
@@ -58,13 +61,54 @@ public class Split extends ACommand {
         ItemStack inhand = p.getInventory().getItemInMainHand();
         try {
             PotentialBackpackItem backpack = new PotentialBackpackItem(inhand);
-            if (backpack.isBackpack() && !inhand.getType().equals(Material.LEATHER_CHESTPLATE)) {
+            if (backpack.isBackpack()) {
+
+                // if is a base backpack (not combined with anything)
+                if (inhand.getType().equals(Material.LEATHER_CHESTPLATE)) {
+
+                    // if a combined backpack
+                    if (backpack.getType() == BackpackObject.COMBINED.getTypeId()) {
+                        validateArgsLength(args, 2);
+
+                        // get slot from cmd
+                        int slot;
+                        try {
+                            slot = Integer.parseInt(args[1]);
+                        } catch (NumberFormatException e) {
+                            respondf(sender, "&cThe argument \"%s\" is not a valid integer.", args[1]);
+                            return;
+                        }
+
+                        // ensure no out of bounds exception
+                        Inventory combinedInv = BackpackSerialization.fromByteArrayInventory(backpack.getData());
+                        if (slot >= combinedInv.getSize()) {
+                            respondf(sender, "&cThe supplied slot number is too large. The max is %s.", slot);
+                            return;
+                        }
+
+                        // check if item specified is null
+                        ItemStack item = combinedInv.getItem(slot);
+                        if (item == null) {
+                            respondf(sender, "&cA backpack was not found in slot %s of the combined backpack.", slot);
+                            return;
+                        }
+
+                        // null item before giving it back to favor the deletion of the item rather than duplication
+                        combinedInv.setItem(slot, null);
+                        backpack.setData(BackpackSerialization.toByteArrayInventory(combinedInv, BPCombined.NAME));
+                        p.getInventory().setItemInMainHand(backpack.getModifiedItem());
+
+                        p.getInventory().addItem(item);
+                        respond(sender, "&eRemoved backpack from combined backpack.");
+                    }
+                    return;
+                }
 
                 // copy backpack data to new backpack
-                BackpackObject bpo = BackpackObject.getByType(backpack.getType());
-                PotentialBackpackItem newBackpack = new PotentialBackpackItem(bpo.getItem());
-                newBackpack.setNBT(NBTType.INT, PotentialBackpackItem.FIELD_NAME_TYPE, backpack.getType());
-                newBackpack.setNBT(NBTType.BYTE_ARRAY, PotentialBackpackItem.FIELD_NAME_DATA, backpack.getData());
+                BackpackObject bpo = backpack.getTypeObject();
+                PotentialBackpackItem newBackpack = new PotentialBackpackItem(bpo.getItem()); // will cause null pointer if backpack does not exist in this version
+                newBackpack.setType(backpack.getType());
+                newBackpack.setData(backpack.getData());
 
                 // remove backpack data from old backpack, including lore
                 backpack.removeNBT(PotentialBackpackItem.FIELD_NAME_TYPE);
@@ -79,7 +123,7 @@ public class Split extends ACommand {
                 p.getInventory().addItem(newBackpack.getModifiedItem());
                 respond(sender, "&eSplit backpack from what it was combined with.");
             } else respond(sender, "&cThis item is either not a backpack or has not been combined with anything.");
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

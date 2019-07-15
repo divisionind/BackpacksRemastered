@@ -130,7 +130,7 @@ public class BackpackCraftEvent implements Listener {
 
                            // set backpack item at that index, return result
                            combinedInv.setItem(center, normalBackpack.getItem());
-                           combinedBackpack.setNBT(NBTType.BYTE_ARRAY, PotentialBackpackItem.FIELD_NAME_DATA, BackpackSerialization.toByteArrayInventory(combinedInv, BPCombined.NAME));
+                           combinedBackpack.setData(BackpackSerialization.toByteArrayInventory(combinedInv, BPCombined.NAME));
                            e.getInventory().setResult(combinedBackpack.getModifiedItem());
                            return;
                        }

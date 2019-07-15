@@ -19,7 +19,6 @@
 package com.divisionind.bprm.backpacks;
 
 import com.divisionind.bprm.*;
-import com.divisionind.bprm.nms.NBTType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -52,6 +51,7 @@ public class BPCombined implements BackpackHandler {
         return display;
     }
 
+    // TODO fix issue where players can open backpacks by clicking on them if they are in their hotbar
     public void onClick(InventoryClickEvent e) {
         // prevents this event for running for anyone who has a subbackpack open
         if (openBackpacks.containsKey(e.getWhoClicked().getUniqueId())) return;
@@ -103,7 +103,7 @@ public class BPCombined implements BackpackHandler {
         bpo.getHandler().onClose(e, inUse, newItem -> combinedInv.setItem(slot, newItem));
 
         // update the combined backpacks data
-        backpack.setNBT(NBTType.BYTE_ARRAY, PotentialBackpackItem.FIELD_NAME_DATA, BackpackSerialization.toByteArrayInventory(combinedInv, NAME));
+        backpack.setData(BackpackSerialization.toByteArrayInventory(combinedInv, NAME));
 
         callback.update(backpack.getModifiedItem());
     }

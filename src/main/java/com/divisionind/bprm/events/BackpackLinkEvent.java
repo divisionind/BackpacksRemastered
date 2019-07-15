@@ -19,7 +19,6 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.*;
-import com.divisionind.bprm.nms.NBTType;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -50,7 +49,7 @@ public class BackpackLinkEvent implements Listener {
                         Block block = e.getClickedBlock();
                         Material blockMat = block.getType();
                         if (blockMat.equals(Material.CHEST) || blockMat.equals(Material.TRAPPED_CHEST) || blockMat.equals(Material.FURNACE)) {
-                            backpack.setNBT(NBTType.BYTE_ARRAY, PotentialBackpackItem.FIELD_NAME_DATA, BackpackSerialization.toByteArrayLocation(block.getLocation()));
+                            backpack.setData(BackpackSerialization.toByteArrayLocation(block.getLocation()));
                             ItemStack newBackpack = backpack.getModifiedItem();
                             ItemMeta meta = newBackpack.getItemMeta();
                             List<String> newLore = new ArrayList<>(BackpackObject.LINKED.getHandler().lore().build());

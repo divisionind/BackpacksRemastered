@@ -45,6 +45,14 @@ public class PotentialBackpackItem extends NMSItemStack {
         return (byte[]) getNBT(NBTType.BYTE_ARRAY, FIELD_NAME_DATA);
     }
 
+    public void setType(int type) throws InvocationTargetException, IllegalAccessException {
+        setNBT(NBTType.INT, FIELD_NAME_TYPE, type);
+    }
+
+    public void setData(byte[] data) throws InvocationTargetException, IllegalAccessException {
+        setNBT(NBTType.BYTE_ARRAY, FIELD_NAME_DATA, data);
+    }
+
     public boolean hasData() throws InvocationTargetException, IllegalAccessException {
         return hasNBT(FIELD_NAME_DATA);
     }
