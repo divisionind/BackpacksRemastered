@@ -52,9 +52,9 @@ plugins {
 apply plugin: ExtractorPlugin
 
 def baseVersion = "2019.0.5"
-def beta = true
+def beta = false
 def uploadBetas = false
-def translate = false
+def translate = !beta
 
 def spigotVersion = "1.14.2"
 def githubOwner = "divisionind"
