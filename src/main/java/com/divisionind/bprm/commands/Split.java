@@ -63,12 +63,12 @@ public class Split extends ACommand {
                 // copy backpack data to new backpack
                 BackpackObject bpo = BackpackObject.getByType(backpack.getType());
                 PotentialBackpackItem newBackpack = new PotentialBackpackItem(bpo.getItem());
-                newBackpack.setNBT(NBTType.INT, "backpack_type", backpack.getType());
-                newBackpack.setNBT(NBTType.BYTE_ARRAY, "backpack_data", backpack.getData());
+                newBackpack.setNBT(NBTType.INT, PotentialBackpackItem.FIELD_NAME_TYPE, backpack.getType());
+                newBackpack.setNBT(NBTType.BYTE_ARRAY, PotentialBackpackItem.FIELD_NAME_DATA, backpack.getData());
 
                 // remove backpack data from old backpack, including lore
-                backpack.removeNBT("backpack_type");
-                backpack.removeNBT("backpack_data");
+                backpack.removeNBT(PotentialBackpackItem.FIELD_NAME_TYPE);
+                backpack.removeNBT(PotentialBackpackItem.FIELD_NAME_DATA);
                 ItemStack oldBackpack = backpack.getModifiedItem();
                 ItemMeta oldBackpackMeta = oldBackpack.getItemMeta();
                 oldBackpackMeta.setLore(new ArrayList<>());

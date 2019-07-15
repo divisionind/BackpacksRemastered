@@ -1,8 +1,11 @@
 # the configuration version (do not change this)
-version: 2
+version: 3
 
 # How long (in ticks, 20ticks/second) to wait after someone opens a backpack before they can open it again
 openBackpackCooldown: 8
+
+# Max number of backpacks that can be put into a combined backpack (cannot be more than 9)
+maxNumberOfCombinedBackpacks: 9
 
 # What language to set the plugin to. You can compile the plugin to support any languages you wish. For more info, see the github.
 # Current included languages are: en (English), es (Spanish)

@@ -40,10 +40,11 @@ public class Backpacks extends JavaPlugin {
     public static final String VERSION = "@DivisionVersion@";
     public static final String GIT_HASH = "@DivisionGitHash@";
     public static final String GIT_NUM = "@DivisionGitComm@";
-    public static final int CONFIGURATION_VERSION = 2;
+    public static final int CONFIGURATION_VERSION = 3;
 
     public static ResourceBundle bundle;
     public static long openBackpackCooldown;
+    public static int maxNumberOfCombinedBackpacks;
 
     private static List<ACommand> commands;
     private static Backpacks inst;
@@ -196,6 +197,7 @@ public class Backpacks extends JavaPlugin {
         bundle = ResourceBundle.getBundle("lang");
 
         openBackpackCooldown = getConfig().getLong("openBackpackCooldown");
+        maxNumberOfCombinedBackpacks = getConfig().getInt("maxNumberOfCombinedBackpacks");
     }
 
     private int parseIntSilent(String in) {

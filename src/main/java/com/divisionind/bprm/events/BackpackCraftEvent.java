@@ -19,8 +19,8 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.*;
+import com.divisionind.bprm.backpacks.BPCombined;
 import com.divisionind.bprm.nms.KnownVersion;
-import com.divisionind.bprm.nms.NBTMap;
 import com.divisionind.bprm.nms.NBTType;
 import com.divisionind.bprm.nms.NMSItemStack;
 import org.bukkit.Material;
@@ -29,6 +29,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -36,7 +37,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class BackpackCraftEvent implements Listener {
 
@@ -97,7 +97,7 @@ public class BackpackCraftEvent implements Listener {
                 for (ItemStack item : notNull) {
                    PotentialBackpackItem potentialBackpackItem = new PotentialBackpackItem(item);
                    if (potentialBackpackItem.isBackpack()) {
-                       // there were two backpacks in grid, return
+                       // there were two backpacks in grid, is one a combined backpack?, if not, return
                        if (backpack != null) {
                            PotentialBackpackItem combinedBackpack;
                            PotentialBackpackItem normalBackpack;
@@ -110,27 +110,27 @@ public class BackpackCraftEvent implements Listener {
                                normalBackpack = backpack;
                            } else return;
 
-                           // resolve tag compound of stored backpacks
-                           NBTMap storedBackpacks;
-                           if (combinedBackpack.hasNBT("storedBackpacks")) {
-                               storedBackpacks = combinedBackpack.getAsMap("storedBackpacks");
-                           } else combinedBackpack.setAsMap("storedBackpacks", storedBackpacks = new NBTMap());
-                           Set<String> keys = storedBackpacks.getKeys();
+                           // resolve stored backpacks
+                           Inventory combinedInv;
+                           if (combinedBackpack.hasData()) {
+                               combinedInv = BackpackSerialization.fromByteArrayInventory(combinedBackpack.getData());
+                           } else combinedInv = BPCombined.createInv();
 
-                           // verify no more than 9 backpacks have been added
-                           if (keys.size() == 9) return;
-
-                           // get lowest index (make this better later)
-                           int lowest = 0;
-                           for (int i = 0;i<9;i++) {
-                               if (!keys.contains(Integer.toString(i))) {
-                                   lowest = i;
-                                   break;
-                               }
+                           // count how many backpacks are in the combined backpack
+                           int totalBackpacks = 0;
+                           for (ItemStack i : combinedInv.getContents()) {
+                               if (i != null) totalBackpacks++;
                            }
 
+                           // verify no more than 9 backpacks have been added
+                           if (totalBackpacks >= Backpacks.maxNumberOfCombinedBackpacks) return;
+
+                           // most centered index
+                           int center = getMostCenteredNull(combinedInv.getContents());
+
                            // set backpack item at that index, return result
-                           storedBackpacks.setNBT(NBTType.BYTE_ARRAY, Integer.toString(lowest), BackpackSerialization.toByteArrayItemStack(normalBackpack.getItem()));
+                           combinedInv.setItem(center, normalBackpack.getItem());
+                           combinedBackpack.setNBT(NBTType.BYTE_ARRAY, PotentialBackpackItem.FIELD_NAME_DATA, BackpackSerialization.toByteArrayInventory(combinedInv, BPCombined.NAME));
                            e.getInventory().setResult(combinedBackpack.getModifiedItem());
                            return;
                        }
@@ -149,12 +149,9 @@ public class BackpackCraftEvent implements Listener {
 
                     int bpType = backpack.getType();
 
-                    // temporarily disables combined backpack with this, will add in future
-                    if (bpType == BackpackObject.COMBINED.getTypeId()) return;
-
                     // if other items type is contained in our list of combinables
-                    itemOtherThanBackpack.setNBT(NBTType.INT, "backpack_type", type); // TODO make this more generic so it can be used with the combined backpack
-                    if (backpack.hasData()) itemOtherThanBackpack.setNBT(NBTType.BYTE_ARRAY, "backpack_data", backpack.getData());
+                    itemOtherThanBackpack.setNBT(NBTType.INT, PotentialBackpackItem.FIELD_NAME_TYPE, bpType);
+                    if (backpack.hasData()) itemOtherThanBackpack.setNBT(NBTType.BYTE_ARRAY, PotentialBackpackItem.FIELD_NAME_DATA, backpack.getData());
 
                     // copy lore from backpack and add it to the bottom of this items lore
                     ItemStack result = itemOtherThanBackpack.getModifiedItem();
@@ -172,8 +169,31 @@ public class BackpackCraftEvent implements Listener {
                     e.getInventory().setResult(result);
                 }
             }
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | IOException ex) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private static int getMostCenteredNull(ItemStack[] item) {
+        int i = item.length / 2;
+        boolean positive = true;
+        int magnitude = 1;
+
+        for (;;) {
+            // if item is not null, return index
+            if (item[i] == null) return i;
+
+            // adds the value of magnitude in the direction it should be adding
+            i = i + (positive ? magnitude : -magnitude);
+
+            // check if the new index is out of bounds
+            if (i >= item.length || i < 0) return -1;
+
+            // increment magnitude so we progress
+            magnitude++;
+
+            // invert value each loop
+            positive = !positive;
         }
     }
 }

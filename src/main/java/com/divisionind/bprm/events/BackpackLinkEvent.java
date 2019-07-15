@@ -50,7 +50,7 @@ public class BackpackLinkEvent implements Listener {
                         Block block = e.getClickedBlock();
                         Material blockMat = block.getType();
                         if (blockMat.equals(Material.CHEST) || blockMat.equals(Material.TRAPPED_CHEST) || blockMat.equals(Material.FURNACE)) {
-                            backpack.setNBT(NBTType.BYTE_ARRAY, "backpack_data", BackpackSerialization.toByteArrayLocation(block.getLocation()));
+                            backpack.setNBT(NBTType.BYTE_ARRAY, PotentialBackpackItem.FIELD_NAME_DATA, BackpackSerialization.toByteArrayLocation(block.getLocation()));
                             ItemStack newBackpack = backpack.getModifiedItem();
                             ItemMeta meta = newBackpack.getItemMeta();
                             List<String> newLore = new ArrayList<>(BackpackObject.LINKED.getHandler().lore().build());
