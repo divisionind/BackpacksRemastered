@@ -161,7 +161,7 @@ public class BackpackCraftEvent implements Listener {
                     BackpackObject bpo = BackpackObject.getByType(bpType);
                     if (bpo == null) return;
                     lore.add("");
-                    lore.addAll(bpo.getHandler().lore().build());
+                    lore.addAll(bpo.getLore());
                     meta.setLore(lore);
                     result.setItemMeta(meta);
 

@@ -1,5 +1,5 @@
 # the configuration version (do not change this)
-version: 3
+version: 4
 
 # How long (in ticks, 20ticks/second) to wait after someone opens a backpack before they can open it again
 openBackpackCooldown: 8
@@ -13,6 +13,10 @@ language: en
 
 recipes:
   small:
+    display_name: "&aSmall Backpack"
+    lore:
+      - "A tiny little backpack. Great for short"
+      - "trips and such."
     ingredients:
       A: OAK_PLANKS
       B: LEATHER
@@ -21,6 +25,10 @@ recipes:
       - "ABA"
       - "AAA"
   large:
+    display_name: "&aLarge Backpack"
+    lore:
+      - "A big boy capable of storing a lot"
+      - "of items."
     ingredients:
       A: OAK_LOG
       B: IRON_INGOT
@@ -29,6 +37,12 @@ recipes:
       - "ABA"
       - "AAA"
   linked:
+    display_name: "&aLinked Backpack"
+    lore:
+      - "A mystical bag capable of transiting items across"
+      - "dimensions to a predetermined location. Legend says"
+      - "that the bag will link to any container you wack with"
+      - "it."
     ingredients:
       A: DIAMOND
       B: LEATHER
@@ -39,6 +53,10 @@ recipes:
       - "BCB"
       - "ADA"
   combined:
+    display_name: "&aCombined Backpack"
+    lore:
+      - "A bag capable of storing multiple backpacks"
+      - "for easy use."
     ingredients:
       A: GOLD_INGOT
       C: LEATHER

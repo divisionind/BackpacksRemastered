@@ -31,26 +31,33 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
-public enum BackpackObject { // NOTE: any strings in this file are ignored
+public enum BackpackObject {
 
-    SMALL(Color.BLACK, 0, "Small", "backpacks.craft.small", new BPSmall()),
-    LARGE(Color.MAROON, 1, "Large", "backpacks.craft.large", new BPLarge()),
-    LINKED(Color.BLUE, 2, "Linked", "backpacks.craft.linked", new BPLinked()),
-    COMBINED(Color.AQUA, 3, "Combined", "backpacks.craft.combined", new BPCombined());
-
-    public static final String NAME_FORMAT = "&a%s Backpack";
+    SMALL(Color.BLACK, 0, "backpacks.craft.small", new BPSmall()),
+    LARGE(Color.MAROON, 1, "backpacks.craft.large", new BPLarge()),
+    LINKED(Color.BLUE, 2, "backpacks.craft.linked", new BPLinked()),
+    COMBINED(Color.AQUA, 3, "backpacks.craft.combined", new BPCombined());
 
     private ItemStack item;
+    private List<String> lore;
+
+    private Color color;
     private int type;
     private String permission;
     private BackpackHandler handler;
 
-    BackpackObject(Color color, int type, String name, String permission, BackpackHandler handler) {
-        this.item = getBackpack(color, type, name, handler.lore());
+    BackpackObject(Color color, int type, String permission, BackpackHandler handler) {
+        this.color = color;
         this.type = type;
         this.permission = permission;
         this.handler = handler;
+    }
+
+    void init(String name, List<String> lore) {
+        this.lore = lore;
+        this.item = getBackpack(color, type, name, lore);
     }
 
     public ItemStack getItem() {
@@ -69,6 +76,10 @@ public enum BackpackObject { // NOTE: any strings in this file are ignored
         return handler;
     }
 
+    public List<String> getLore() {
+        return lore;
+    }
+
     public static BackpackObject getByType(int type) {
         for (BackpackObject bp : values()) {
             if (bp.type == type) return bp;
@@ -83,17 +94,17 @@ public enum BackpackObject { // NOTE: any strings in this file are ignored
         return null;
     }
 
-    private static ItemStack getBackpack(Color color, int type, String name, LoreBuilder lore) {
+    private static ItemStack getBackpack(Color color, int type, String name, List<String> lore) {
         ItemStack backpack = new ItemStack(Material.LEATHER_CHESTPLATE);
         LeatherArmorMeta meta = (LeatherArmorMeta)backpack.getItemMeta();
         meta.setColor(color);
-        meta.setDisplayName(Backpacks.translate(String.format(NAME_FORMAT, name)));
-        meta.setLore(lore.build());
+        meta.setDisplayName(Backpacks.translate(name));
+        meta.setLore(lore);
         backpack.setItemMeta(meta);
 
         // apply backpack_type nbt data
         try {
-            return NMSReflector.setNBTOnce(backpack, NBTType.INT, "backpack_type", type);
+            return NMSReflector.setNBTOnce(backpack, NBTType.INT, PotentialBackpackItem.FIELD_NAME_TYPE, type);
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
             return null;
         }

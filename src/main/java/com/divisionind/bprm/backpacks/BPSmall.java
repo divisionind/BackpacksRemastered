@@ -18,17 +18,8 @@
 
 package com.divisionind.bprm.backpacks;
 
-import com.divisionind.bprm.LoreBuilder;
-
 public class BPSmall extends BPStorage {
-
     public BPSmall() {
         super("Small Backpack", 27);
-    }
-
-    @Override
-    public LoreBuilder lore() {
-        return new LoreBuilder("A tiny little backpack. Great for short")
-                .append("trips and such.");
     }
 }

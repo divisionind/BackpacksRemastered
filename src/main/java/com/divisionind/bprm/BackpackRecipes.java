@@ -42,6 +42,12 @@ public class BackpackRecipes {
         // load backpacks
         for (BackpackObject backpack : BackpackObject.values()) {
             String backpack_name = backpack.name().toLowerCase();
+
+            // initialize backpack object from config before getting item
+            List<String> lore = config.getStringList(String.format("recipes.%s.lore", backpack_name));
+            for (int i = 0;i<lore.size();i++) lore.set(i, Backpacks.translate(lore.get(i)));
+            backpack.init(config.getString(String.format("recipes.%s.display_name", backpack_name)), lore);
+
             loadRecipeFromConfig(config, log, backpack_name, backpack.getItem());
         }
 

@@ -57,14 +57,6 @@ public class BPLinked implements BackpackHandler {
     @Override
     public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception { }
 
-    @Override
-    public LoreBuilder lore() {
-        return new LoreBuilder("A mystical bag capable of transiting items across")
-                .append("dimensions to a predetermined location. Legend says")
-                .append("that the bag will link to any container you wack with")
-                .append("it.");
-    }
-
     private Inventory getChestInventory(Block block) {
         BlockState blockState = block.getState();
         if (blockState instanceof Chest) {

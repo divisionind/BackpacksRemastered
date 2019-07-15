@@ -136,13 +136,12 @@ internationalize {
     bundleInitializerClasspath 'com.divisionind.bprm.Backpacks'
 
     File commandsFile = file("$sourcesDir/com/divisionind/bprm/commands")
-    File backpackObject = file("$sourcesDir/com/divisionind/bprm/BackpackObject.java")
     Pattern colorPat = Pattern.compile("(?i)" + String.valueOf('&') + "[0-9A-FK-OR]")
     stringDecider new StringDecider() {
         @Override
         boolean shouldAdd(DiscoveredString st) {
             // exclude the names of backpacks from this (for now)
-            if (st.value == '&9Backpacks &7&l>>&r ' || st.locationFile == backpackObject || st.value == '&aLinked') {
+            if (st.value == '&9Backpacks &7&l>>&r ' || st.value == '&aLinked') {
                 return false
             }
 

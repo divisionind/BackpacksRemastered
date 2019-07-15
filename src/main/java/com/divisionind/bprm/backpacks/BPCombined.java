@@ -107,10 +107,4 @@ public class BPCombined implements BackpackHandler {
 
         callback.update(backpack.getModifiedItem());
     }
-
-    @Override
-    public LoreBuilder lore() {
-        return new LoreBuilder("A bag capable of storing multiple backpacks")
-                .append("for easy use.");
-    }
 }

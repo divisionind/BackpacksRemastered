@@ -40,7 +40,7 @@ public class Backpacks extends JavaPlugin {
     public static final String VERSION = "@DivisionVersion@";
     public static final String GIT_HASH = "@DivisionGitHash@";
     public static final String GIT_NUM = "@DivisionGitComm@";
-    public static final int CONFIGURATION_VERSION = 3;
+    public static final int CONFIGURATION_VERSION = 4;
 
     public static ResourceBundle bundle;
     public static long openBackpackCooldown;
