@@ -50,7 +50,7 @@ public class Backpacks extends JavaPlugin {
     private static Backpacks inst;
 
     @Override
-    public void onEnable() {
+    public void onEnable() { // TODO for furnace backpack, using Server#iterateRecipes or something else to get all furnace recipes then run the furnace operations yourself
         inst = this;
         commands = new ArrayList<>();
 
