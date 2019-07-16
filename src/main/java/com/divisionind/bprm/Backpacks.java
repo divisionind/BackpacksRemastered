@@ -87,6 +87,10 @@ public class Backpacks extends JavaPlugin {
 
         BackpackRecipes.registerRecipes(getConfig(), getLogger());
 
+        // enable metrics collection
+        Metrics metrics = new Metrics(this);
+        // TODO add a custom pie graph showing backpack popularity by the amount crafted
+
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) was enabled in %.2fs!", VERSION, GIT_HASH, ((double)(System.currentTimeMillis() - startTime)) / 1000.0D));
     }
 

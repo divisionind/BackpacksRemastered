@@ -246,9 +246,7 @@ update.dependsOn pack
 repositories {
     mavenCentral()
 
-    maven {
-        url 'https://raw.githubusercontent.com/divisionind/maven/repo'
-    }
+    maven { url 'https://raw.githubusercontent.com/divisionind/maven/repo' }
 }
 
 dependencies {
