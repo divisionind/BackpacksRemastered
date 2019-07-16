@@ -25,8 +25,8 @@ public class NBTMap {
 
     private Object tagCompound;
 
-    public NBTMap(Object nbtBase) throws ClassCastException {
-        this.tagCompound = NMSReflector.getInstance().cNBTTagCompound.cast(nbtBase);
+    public NBTMap(Object tagCompound) {
+        this.tagCompound = tagCompound;
     }
 
     public NBTMap() throws IllegalAccessException, InstantiationException {
@@ -45,6 +45,10 @@ public class NBTMap {
         return NMSReflector.getNBT(tagCompound, type, key);
     }
 
+    public void removeNBT(String key) throws InvocationTargetException, IllegalAccessException {
+        NMSReflector.removeNBT(tagCompound, key);
+    }
+
     public void setAsMap(String key, NBTMap value) throws InvocationTargetException, IllegalAccessException {
         NMSReflector.setAsMap(tagCompound, key, value);
     }
@@ -53,7 +57,7 @@ public class NBTMap {
         return NMSReflector.getAsMap(tagCompound, key);
     }
 
-    public boolean hasKey(String key) throws InvocationTargetException, IllegalAccessException {
+    public boolean hasNBT(String key) throws InvocationTargetException, IllegalAccessException {
         return NMSReflector.hasNBTKey(tagCompound, key);
     }
 

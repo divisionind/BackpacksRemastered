@@ -60,17 +60,6 @@ public class NMSReflector {
     private Method mgetTypeId;
 
     private NMSReflector() throws ClassNotFoundException, NoSuchMethodException {
-        /*
-            TODO
-            make an enum of all of these methods/classes called ReflectionFunction or other
-            add an initializer/caller interface field
-            allow the initializer/caller to be set by "adapters" for various versions in a layered system
-            once all layers are processed, run the initializers to init a variable containing the method/class loaded
-            then call the caller method whenever you want to run the function (try to adapt everything to a unified form)
-
-            havent done it yet because this is a little more elaborate than what is required here
-         */
-
         // get NMS classes
         cCraftItemStack = Class.forName(getCraftClass("inventory.CraftItemStack"));
         cNBTTagCompound = Class.forName(getServerClass("NBTTagCompound"));
@@ -129,7 +118,7 @@ public class NMSReflector {
 
     public static NBTMap getAsMap(Object nmsTagCompound, String key) throws InvocationTargetException, IllegalAccessException {
         Object nbtBase = getNBT(nmsTagCompound, NBTType.COMPOUND, key);
-        return new NBTMap(nbtBase);
+        return new NBTMap(inst.cNBTTagCompound.cast(nbtBase));
     }
 
     public static Set<String> getKeys(Object nmsTagCompound) throws InvocationTargetException, IllegalAccessException {
