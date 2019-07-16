@@ -51,14 +51,13 @@ public class BPCombined implements BackpackHandler {
         return display;
     }
 
-    // TODO fix issue where players can open backpacks by clicking on them if they are in their hotbar
     public void onClick(InventoryClickEvent e) {
         // prevents this event for running for anyone who has a subbackpack open
         if (openBackpacks.containsKey(e.getWhoClicked().getUniqueId())) return;
 
         e.setCancelled(true);
         ItemStack cur = e.getCurrentItem();
-        if (cur == null || e.getSlot() > 8) return;
+        if (cur == null || e.getRawSlot() > 8) return;
         try {
             PotentialBackpackItem backpack = new PotentialBackpackItem(cur);
             if (backpack.isBackpack()) {
@@ -75,7 +74,7 @@ public class BPCombined implements BackpackHandler {
                     Inventory inv = bpo.getHandler().openBackpack((Player) e.getWhoClicked(), backpack);
                     if (inv == null) return;
                     inv.getViewers().add(FakeBackpackViewer.INSTANCE);
-                    openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getSlot());
+                    openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
                     e.getWhoClicked().openInventory(inv);
                 }
             }
