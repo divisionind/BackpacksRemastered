@@ -54,7 +54,7 @@ apply plugin: ExtractorPlugin
 def baseVersion = "2019.0.6"
 def beta = true
 def uploadBetas = false
-def translate = !beta
+def translate = true
 
 def spigotVersion = "1.14.2"
 def githubOwner = "divisionind"
@@ -158,10 +158,11 @@ internationalize {
     
     // serializes color codes so they dont get messed with by the translator
     translator = new GoogleTranslator(new RegexCorrectorMatcher(colorPat), 
-            new RegexCorrectorMatcher(Pattern.compile("0x%02x", Pattern.LITERAL)))
+            new RegexCorrectorMatcher(Pattern.compile("0x%02x", Pattern.LITERAL)),
+            new RegexCorrectorMatcher(Pattern.compile("%.2f", Pattern.LITERAL)))
 
     if (translate) {
-        langs('es')
+        langs('es', 'it')
     }
 }
 internationalize.dependsOn generateSources, generateResources

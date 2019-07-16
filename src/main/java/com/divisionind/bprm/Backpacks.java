@@ -51,6 +51,7 @@ public class Backpacks extends JavaPlugin {
 
     @Override
     public void onEnable() { // TODO for furnace backpack, using Server#iterateRecipes or something else to get all furnace recipes then run the furnace operations yourself
+        long startTime = System.currentTimeMillis();
         inst = this;
         commands = new ArrayList<>();
 
@@ -86,7 +87,7 @@ public class Backpacks extends JavaPlugin {
 
         BackpackRecipes.registerRecipes(getConfig(), getLogger());
 
-        getLogger().info(String.format("BackpacksRemastered v%s (git: %s) has been enabled!", VERSION, GIT_HASH));
+        getLogger().info(String.format("BackpacksRemastered v%s (git: %s) was enabled in %.2fs!", VERSION, GIT_HASH, ((double)(System.currentTimeMillis() - startTime)) / 1000.0D));
     }
 
     @Override

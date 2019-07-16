@@ -8,7 +8,7 @@ openBackpackCooldown: 8
 maxNumberOfCombinedBackpacks: 9
 
 # What language to set the plugin to. You can compile the plugin to support any languages you wish. For more info, see the github.
-# Current included languages are: en (English), es (Spanish)
+# Current included languages are: en (English), es (Spanish), it (Italian)
 language: en
 
 recipes:
