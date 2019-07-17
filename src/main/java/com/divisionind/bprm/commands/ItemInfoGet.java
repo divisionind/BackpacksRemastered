@@ -51,7 +51,7 @@ public class ItemInfoGet extends ACommand {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         Player p = validatePlayer(sender);
-        validateArgsLength(args, 1);
+        validateArgsLength(args, 2);
 
         ItemStack item = p.getInventory().getItemInMainHand();
 
