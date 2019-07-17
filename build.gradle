@@ -54,7 +54,7 @@ apply plugin: ExtractorPlugin
 def baseVersion = "2019.0.7"
 def beta = true
 def uploadBetas = false
-def translate = !beta
+def translate = true
 
 def spigotVersion = "1.14.2"
 def githubOwner = "divisionind"
@@ -162,7 +162,7 @@ internationalize {
             new RegexCorrectorMatcher(Pattern.compile("%.2f", Pattern.LITERAL)))
 
     if (translate) {
-        langs('es', 'it')
+        langs('es', 'it', 'fr')
     }
 }
 internationalize.dependsOn generateSources, generateResources
