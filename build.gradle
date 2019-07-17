@@ -54,7 +54,7 @@ apply plugin: ExtractorPlugin
 def baseVersion = "2019.0.7"
 def beta = true
 def uploadBetas = false
-def translate = true
+def translate = !beta
 
 def spigotVersion = "1.14.2"
 def githubOwner = "divisionind"
