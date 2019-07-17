@@ -19,7 +19,7 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.*;
-import com.divisionind.bprm.nms.NMSReflector;
+import com.divisionind.bprm.nms.NMSItemStack;
 import io.netty.util.internal.ConcurrentSet;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -44,9 +44,8 @@ public class BackpackOpenEvent implements Listener {
             ItemStack inhand = e.getPlayer().getInventory().getItemInMainHand(); // TODO add support for use from off-hand as well
             if (!inhand.getType().equals(Material.FEATHER)) return;
             try {
-                Object handItemStack = NMSReflector.asNMSCopy(inhand);
-                Object handTagCompound = NMSReflector.getNBTTagCompound(handItemStack);
-                if (NMSReflector.hasNBTKey(handTagCompound, "backpack_key")) {
+                NMSItemStack backpackKey = new NMSItemStack(inhand);
+                if (backpackKey.hasNBT("backpack_key")) {
                     ItemStack backpackItem = e.getPlayer().getInventory().getChestplate();
                     if (backpackItem == null) return;
                     PotentialBackpackItem bpi = new PotentialBackpackItem(backpackItem);

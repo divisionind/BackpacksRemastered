@@ -19,7 +19,7 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import com.divisionind.bprm.nms.NMSReflector;
+import com.divisionind.bprm.nms.NMSItemStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -54,9 +54,9 @@ public class ItemInfo extends ACommand {
         ItemStack item = p.getInventory().getItemInMainHand();
 
         try {
-            Object tagCompound = NMSReflector.getNBTTagCompound(NMSReflector.asNMSCopy(item));
+            NMSItemStack nmsItem = new NMSItemStack(item);
             // show all nbt data
-            Set<String> data = NMSReflector.getKeys(tagCompound);
+            Set<String> data = nmsItem.getKeys();
             for (String s : data) {
                 respondn(sender, s);
             }

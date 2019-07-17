@@ -64,4 +64,8 @@ public class NBTMap {
     public Set<String> getKeys() throws InvocationTargetException, IllegalAccessException {
         return NMSReflector.getKeys(tagCompound);
     }
+
+    public byte getKeyInternalTypeId(String key) throws InvocationTargetException, IllegalAccessException {
+        return NMSReflector.getKeyInternalTypeId(tagCompound, key);
+    }
 }

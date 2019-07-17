@@ -20,7 +20,7 @@ package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.nms.NBTType;
-import com.divisionind.bprm.nms.NMSReflector;
+import com.divisionind.bprm.nms.NMSItemStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -51,18 +51,15 @@ public class ItemInfoGet extends ACommand {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         Player p = validatePlayer(sender);
+        validateArgsLength(args, 1);
+
         ItemStack item = p.getInventory().getItemInMainHand();
 
-        if (args.length == 1) {
-            respondiu(sender, label);
-            return;
-        }
-
         try {
-            Object tagCompound = NMSReflector.getNBTTagCompound(NMSReflector.asNMSCopy(item));
+            NMSItemStack nmsItem = new NMSItemStack(item);
 
-            if (NMSReflector.hasNBTKey(tagCompound, args[1])) {
-                byte btype = NMSReflector.getKeyInternalTypeId(tagCompound, args[1]);
+            if (nmsItem.hasNBT(args[1])) {
+                byte btype = nmsItem.getKeyInternalTypeId(args[1]);
                 NBTType type = NBTType.getByInternalId(btype);
 
                 if (type == null) {
@@ -70,7 +67,7 @@ public class ItemInfoGet extends ACommand {
                     return;
                 }
 
-                respondf(sender, "&eData:&7 %s", NMSReflector.getNBT(tagCompound, type, args[1]));
+                respondf(sender, "&eData:&7 %s", nmsItem.getNBT(type, args[1]));
                 respondf(sender, "&eData Type:&7 %s", type.name());
             } else {
                 respondf(sender, "&cKey \"%s\" not found. See a list of keys with the item:info command.", args[1]);
