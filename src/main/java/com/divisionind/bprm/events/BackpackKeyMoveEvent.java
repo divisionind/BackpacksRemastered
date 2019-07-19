@@ -19,7 +19,7 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.BackpackRecipes;
-import com.divisionind.bprm.FakeBackpackViewer;
+import com.divisionind.bprm.Backpacks;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -30,7 +30,7 @@ public class BackpackKeyMoveEvent implements Listener {
     public void onBackpackKeyMove(InventoryClickEvent e) {
         ItemStack item = e.getCurrentItem();
         if (BackpackRecipes.BACKPACK_KEY.equals(item)) {
-            if (e.getInventory().getViewers().contains(FakeBackpackViewer.INSTANCE)) {
+            if (Backpacks.isBackpackInventory(e.getInventory())) {
                 e.setCancelled(true);
             }
         }

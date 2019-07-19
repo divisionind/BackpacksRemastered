@@ -1,5 +1,5 @@
 # the configuration version (do not change this)
-version: 4
+version: 5
 
 # How long (in ticks, 20ticks/second) to wait after someone opens a backpack before they can open it again
 openBackpackCooldown: 8
@@ -64,6 +64,18 @@ recipes:
       - "CAC"
       - "A A"
       - "CAC"
+  craft:
+    display_name: "&aCraft Backpack"
+    lore:
+      - "A portable workbench for all of your on the"
+      - "go crafting needs."
+    ingredients:
+      A: LEATHER
+      B: CRAFTING_TABLE
+    shape:
+      - " A "
+      - "ABA"
+      - " A "
   backpack_key:
     ingredients:
       A: IRON_INGOT

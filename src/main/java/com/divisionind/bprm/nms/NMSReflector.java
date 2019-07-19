@@ -18,11 +18,14 @@
 
 package com.divisionind.bprm.nms;
 
+import com.divisionind.bprm.Backpacks;
+import com.divisionind.bprm.FakeBackpackViewer;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Set;
 
 public class NMSReflector {
@@ -81,6 +84,23 @@ public class NMSReflector {
         if (KnownVersion.v1_13_R1.isBefore()) {
             mgetKeys = cNBTTagCompound.getMethod("c");
         } else mgetKeys = cNBTTagCompound.getMethod("getKeys");
+
+        // initialize fake viewer using reflection (so that it can support spigot + craftbukkit)
+        Backpacks.FAKE_VIEWER = (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(),
+                new Class[]{FakeBackpackViewer.class},
+                (proxy, method, args) -> {
+                    Class type = method.getReturnType();
+
+                    if (type.equals(boolean.class)) return false;
+                    if (type.equals(int.class)) return 0;
+                    if (type.equals(double.class)) return 0D;
+                    if (type.equals(float.class)) return 0F;
+                    if (type.equals(long.class)) return 0L;
+                    if (type.equals(short.class)) return (short)0;
+                    if (type.equals(byte.class)) return (byte)0;
+
+                    return null;
+                });
     }
 
     public static Object asNMSCopy(ItemStack item) throws InvocationTargetException, IllegalAccessException {

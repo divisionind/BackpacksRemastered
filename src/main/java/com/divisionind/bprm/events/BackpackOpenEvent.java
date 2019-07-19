@@ -18,7 +18,10 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.*;
+import com.divisionind.bprm.ACommand;
+import com.divisionind.bprm.BackpackObject;
+import com.divisionind.bprm.Backpacks;
+import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.nms.NMSItemStack;
 import io.netty.util.internal.ConcurrentSet;
 import org.bukkit.Bukkit;
@@ -67,7 +70,7 @@ public class BackpackOpenEvent implements Listener {
                             // actually open the backpack (along with adding fake viewer for identification)
                             Inventory inv = backpack.getHandler().openBackpack(e.getPlayer(), bpi);
                             if (inv == null) return;
-                            inv.getViewers().add(FakeBackpackViewer.INSTANCE);
+                            inv.getViewers().add(Backpacks.FAKE_VIEWER);
                             e.getPlayer().openInventory(inv);
                         }
                     }

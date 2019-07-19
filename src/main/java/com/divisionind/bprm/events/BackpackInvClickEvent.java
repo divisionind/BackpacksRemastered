@@ -19,7 +19,7 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.BackpackObject;
-import com.divisionind.bprm.FakeBackpackViewer;
+import com.divisionind.bprm.Backpacks;
 import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.backpacks.BPCombined;
 import org.bukkit.event.EventHandler;
@@ -32,7 +32,7 @@ public class BackpackInvClickEvent implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         // if is backpack inventory
-        if (e.getInventory().getViewers().contains(FakeBackpackViewer.INSTANCE)) {
+        if (Backpacks.isBackpackInventory(e.getInventory())) {
             try {
                 PotentialBackpackItem backpack = new PotentialBackpackItem(e.getWhoClicked().getInventory().getChestplate());
                 if (backpack.isBackpack()) {

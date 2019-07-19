@@ -67,14 +67,14 @@ public class BPCombined implements BackpackHandler {
                     ACommand.respondf(e.getWhoClicked(), "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
                 } else {
                     // remove backpack identifier viewer so the onClose event is not triggered by this open event
-                    e.getClickedInventory().getViewers().remove(FakeBackpackViewer.INSTANCE);
+                    Backpacks.removeFakeBackpackViewer(e.getClickedInventory());
                     e.getWhoClicked().closeInventory(); // ensure to force close the inventory right after this or else a duplication glitch would be possible
 
                     // open clicked backpack
                     Inventory inv = bpo.getHandler().openBackpack((Player) e.getWhoClicked(), backpack);
                     if (inv == null) return;
-                    inv.getViewers().add(FakeBackpackViewer.INSTANCE);
-                    openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
+                    inv.getViewers().add(Backpacks.FAKE_VIEWER);
+                    openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot()); // TODO change this to fix issue with crafting backpack
                     e.getWhoClicked().openInventory(inv);
                 }
             }

@@ -20,7 +20,7 @@ package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.BackpackObject;
-import com.divisionind.bprm.FakeBackpackViewer;
+import com.divisionind.bprm.Backpacks;
 import com.divisionind.bprm.PotentialBackpackItem;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack;
 public class BackpackCloseEvent implements Listener {
     @EventHandler
     public void onBackpackClose(InventoryCloseEvent e) {
-        if (!e.getInventory().getViewers().contains(FakeBackpackViewer.INSTANCE)) return;
+        if (!Backpacks.isBackpackInventory(e.getInventory())) return;
         ItemStack bp = e.getPlayer().getInventory().getChestplate();
         try {
             PotentialBackpackItem bpi = new PotentialBackpackItem(bp);

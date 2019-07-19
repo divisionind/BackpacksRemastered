@@ -100,7 +100,11 @@ public class Split extends ACommand {
 
                         p.getInventory().addItem(item);
                         respond(sender, "&eRemoved backpack from combined backpack.");
+                        return;
                     }
+
+                    // if not
+                    respond(sender, "&cThis backpack is not combined with anything.");
                     return;
                 }
 
@@ -122,7 +126,7 @@ public class Split extends ACommand {
                 // add new backpack to inventory
                 p.getInventory().addItem(newBackpack.getModifiedItem());
                 respond(sender, "&eSplit backpack from what it was combined with.");
-            } else respond(sender, "&cThis item is either not a backpack or has not been combined with anything.");
+            } else respond(sender, "&cThis item is not a backpack.");
         } catch (InvocationTargetException | IllegalAccessException | InstantiationException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

@@ -25,7 +25,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -40,7 +42,9 @@ public class Backpacks extends JavaPlugin {
     public static final String VERSION = "@DivisionVersion@";
     public static final String GIT_HASH = "@DivisionGitHash@";
     public static final String GIT_NUM = "@DivisionGitComm@";
-    public static final int CONFIGURATION_VERSION = 4;
+    public static final int CONFIGURATION_VERSION = 5;
+
+    public static HumanEntity FAKE_VIEWER;
 
     public static ResourceBundle bundle;
     public static long openBackpackCooldown;
@@ -155,26 +159,6 @@ public class Backpacks extends JavaPlugin {
         return entries;
     }
 
-    public static void registerCMDS(ACommand... cmds) {
-        commands.addAll(Arrays.asList(cmds));
-    }
-
-    private void registerEvents(Listener... listeners) {
-        for (Listener lis : listeners) Bukkit.getPluginManager().registerEvents(lis, this);
-    }
-
-    public static List<ACommand> getCommands() {
-        return commands;
-    }
-
-    public static String translate(String in) {
-        return ChatColor.translateAlternateColorCodes('&', in);
-    }
-
-    public static Backpacks getInstance() {
-        return inst;
-    }
-
     public void setupFromConfig() {
         if (parseIntSilent(getConfig().getString("version")) != CONFIGURATION_VERSION) {
             File configFile = new File(getDataFolder(), "config.yml");
@@ -210,6 +194,45 @@ public class Backpacks extends JavaPlugin {
             return Integer.parseInt(in);
         } catch (NumberFormatException e) {
             return -1;
+        }
+    }
+
+    public static void registerCMDS(ACommand... cmds) {
+        commands.addAll(Arrays.asList(cmds));
+    }
+
+    private void registerEvents(Listener... listeners) {
+        for (Listener lis : listeners) Bukkit.getPluginManager().registerEvents(lis, this);
+    }
+
+    public static List<ACommand> getCommands() {
+        return commands;
+    }
+
+    public static String translate(String in) {
+        return ChatColor.translateAlternateColorCodes('&', in);
+    }
+
+    public static Backpacks getInstance() {
+        return inst;
+    }
+
+    // we can no longer check if the viewer equals the fake backpack viewer instance because that will always be false
+    public static boolean isBackpackInventory(Inventory inv) {
+        for (HumanEntity ent : inv.getViewers()) {
+            if (ent instanceof FakeBackpackViewer) return true;
+        }
+
+        return false;
+    }
+
+    public static void removeFakeBackpackViewer(Inventory inv) {
+        List<HumanEntity> viewers = inv.getViewers();
+        for (int i = 0;i<viewers.size();i++) {
+            if (viewers.get(i) instanceof FakeBackpackViewer) {
+                viewers.remove(i);
+                return;
+            }
         }
     }
 }

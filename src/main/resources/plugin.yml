@@ -51,6 +51,9 @@ permissions:
   backpacks.craft.combined:
     description: Allows one to craft the combined backpack.
     default: true
+  backpacks.craft.craft:
+    description: Allows one to craft the craft backpack.
+    default: true
   backpacks.link:
     description: Allows a player to link a linked backpack to a chest.
     default: true

@@ -18,10 +18,7 @@
 
 package com.divisionind.bprm;
 
-import com.divisionind.bprm.backpacks.BPCombined;
-import com.divisionind.bprm.backpacks.BPLarge;
-import com.divisionind.bprm.backpacks.BPLinked;
-import com.divisionind.bprm.backpacks.BPSmall;
+import com.divisionind.bprm.backpacks.*;
 import com.divisionind.bprm.nms.NBTType;
 import com.divisionind.bprm.nms.NMSReflector;
 import org.bukkit.Color;
@@ -35,10 +32,11 @@ import java.util.List;
 
 public enum BackpackObject {
 
-    SMALL(Color.BLACK, 0, "backpacks.craft.small", new BPSmall()),
-    LARGE(Color.MAROON, 1, "backpacks.craft.large", new BPLarge()),
-    LINKED(Color.BLUE, 2, "backpacks.craft.linked", new BPLinked()),
-    COMBINED(Color.AQUA, 3, "backpacks.craft.combined", new BPCombined());
+    SMALL(Color.BLACK, 0, new BPSmall()),
+    LARGE(Color.MAROON, 1, new BPLarge()),
+    LINKED(Color.BLUE, 2, new BPLinked()),
+    COMBINED(Color.AQUA, 3, new BPCombined()),
+    CRAFT(Color.ORANGE, 4, new BPCraft());
 
     private ItemStack item;
     private List<String> lore;
@@ -48,10 +46,10 @@ public enum BackpackObject {
     private String permission;
     private BackpackHandler handler;
 
-    BackpackObject(Color color, int type, String permission, BackpackHandler handler) {
+    BackpackObject(Color color, int type, BackpackHandler handler) {
         this.color = color;
         this.type = type;
-        this.permission = permission;
+        this.permission = "backpacks.craft." + name().toLowerCase();
         this.handler = handler;
     }
 
