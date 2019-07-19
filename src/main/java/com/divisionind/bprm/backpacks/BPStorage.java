@@ -27,7 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
-public abstract class BPStorage implements BackpackHandler {
+public abstract class BPStorage extends BackpackHandler {
 
     private final String title;
     private final int size;

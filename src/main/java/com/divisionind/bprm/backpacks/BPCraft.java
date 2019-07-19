@@ -22,20 +22,24 @@ import com.divisionind.bprm.BackpackHandler;
 import com.divisionind.bprm.Backpacks;
 import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.UpdateItemCallback;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
-public class BPCraft implements BackpackHandler {
+public class BPCraft extends BackpackHandler {
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
-        Inventory inv = p.openWorkbench(null, true).getTopInventory();
-        inv.getViewers().add(Backpacks.FAKE_VIEWER); // we have to add this explicitly on this backpack because we are returning null
-        return null;
+        return p.openWorkbench(null, true).getTopInventory();
     }
 
     @Override
     public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception {
         // TODO possibly save the contents of the workbench, this would make life a lot easier
+    }
+
+    @Override
+    public void finalizeBackpackOpen(HumanEntity p, Inventory inv) throws Exception {
+        inv.getViewers().add(Backpacks.FAKE_VIEWER); // we do not want to open the backpack here as well
     }
 }

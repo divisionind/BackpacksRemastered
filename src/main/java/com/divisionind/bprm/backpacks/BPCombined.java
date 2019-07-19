@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class BPCombined implements BackpackHandler {
+public class BPCombined extends BackpackHandler {
 
     public static final String NAME = "Combined Backpack";
     private HashMap<UUID, Integer> openBackpacks = new HashMap<>();
@@ -71,16 +71,12 @@ public class BPCombined implements BackpackHandler {
                     e.getWhoClicked().closeInventory(); // ensure to force close the inventory right after this or else a duplication glitch would be possible
 
                     // open clicked backpack
-                    Inventory inv = bpo.getHandler().openBackpack((Player) e.getWhoClicked(), backpack);
-
-                    if (bpo.equals(BackpackObject.CRAFT)) {
-                        openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
-                    }
+                    BackpackHandler handler = bpo.getHandler();
+                    Inventory inv = handler.openBackpack((Player) e.getWhoClicked(), backpack);
 
                     if (inv == null) return;
-                    inv.getViewers().add(Backpacks.FAKE_VIEWER);
+                    handler.finalizeBackpackOpen(e.getWhoClicked(), inv);
                     openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
-                    e.getWhoClicked().openInventory(inv);
                 }
             }
         } catch (Exception ex) {

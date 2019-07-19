@@ -18,12 +18,45 @@
 
 package com.divisionind.bprm;
 
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
-public interface BackpackHandler {
-    Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception;
+public abstract class BackpackHandler {
+    /**
+     * Opens the supplied item as a backpack for the specified player.
+     *
+     * @param p player to open the backpack for
+     * @param backpack item which has been confirmed to be a backpack
+     * @return resulting inventory instance that was opened
+     * @throws Exception if there was an error opening the backpack
+     */
+    public abstract Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception;
 
-    void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception;
+    /**
+     * Runs when the backpack has been closed. Note: This depends on the
+     * inventory containing the {@link FakeBackpackViewer} entity and therefore
+     * it should always be added to backpacks when they are opened
+     *
+     * @param e bukkit inventory close event instance
+     * @param backpack backpack item in question
+     * @param callback a callback for replacing the item should any info about it be updated whilst it was open
+     * @throws Exception if there was an error closing the backpack
+     */
+    public abstract void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception;
+
+    /**
+     * Completes the final steps of opening the backpack. These are things
+     * that must be done but are often similar. Unfortunately, bukkits poor
+     * and inconsistent inventory opening system is why this exists.
+     *
+     * @param p player to open the backpack for
+     * @param inv inventory created from openBackpack
+     * @throws Exception if there was a problem finalizing the opening of the backpack
+     */
+    public void finalizeBackpackOpen(HumanEntity p, Inventory inv) throws Exception {
+        inv.getViewers().add(Backpacks.FAKE_VIEWER);
+        p.openInventory(inv);
+    }
 }
