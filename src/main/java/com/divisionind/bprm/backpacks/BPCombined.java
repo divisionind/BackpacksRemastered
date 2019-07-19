@@ -72,9 +72,14 @@ public class BPCombined implements BackpackHandler {
 
                     // open clicked backpack
                     Inventory inv = bpo.getHandler().openBackpack((Player) e.getWhoClicked(), backpack);
+
+                    if (bpo.equals(BackpackObject.CRAFT)) {
+                        openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
+                    }
+
                     if (inv == null) return;
                     inv.getViewers().add(Backpacks.FAKE_VIEWER);
-                    openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot()); // TODO change this to fix issue with crafting backpack
+                    openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
                     e.getWhoClicked().openInventory(inv);
                 }
             }

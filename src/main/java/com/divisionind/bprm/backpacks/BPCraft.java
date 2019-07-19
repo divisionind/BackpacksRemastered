@@ -25,7 +25,6 @@ import com.divisionind.bprm.UpdateItemCallback;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 public class BPCraft implements BackpackHandler {
     @Override
@@ -36,8 +35,5 @@ public class BPCraft implements BackpackHandler {
     }
 
     @Override
-    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception {
-        ItemStack item = e.getInventory().getItem(0); // 0 = output | 1-9 = input
-        // i was thinking about making the crafting backpack save the contents of the workbench but idk
-    }
+    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception { }
 }
