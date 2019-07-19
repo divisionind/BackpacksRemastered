@@ -35,5 +35,7 @@ public class BPCraft implements BackpackHandler {
     }
 
     @Override
-    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception { }
+    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception {
+        // TODO possibly save the contents of the workbench, this would make life a lot easier
+    }
 }
