@@ -65,7 +65,7 @@ recipes:
       - "A A"
       - "CAC"
   craft:
-    display_name: "&aCraft Backpack"
+    display_name: "&aCrafting Backpack"
     lore:
       - "A portable workbench for all of your on the"
       - "go crafting needs."
