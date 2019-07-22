@@ -51,8 +51,8 @@ plugins {
 
 apply plugin: ExtractorPlugin
 
-def baseVersion = "2019.0.8"
-def beta = false
+def baseVersion = "2019.0.9"
+def beta = true
 def uploadBetas = false
 def translate = !beta
 
