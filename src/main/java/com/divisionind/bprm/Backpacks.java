@@ -52,6 +52,7 @@ public class Backpacks extends JavaPlugin {
 
     private static List<ACommand> commands;
     private static Backpacks inst;
+    private static BPSnooper snooper;
 
     @Override
     public void onEnable() { // TODO for furnace backpack, using Server#iterateRecipes or something else to get all furnace recipes then run the furnace operations yourself
@@ -95,12 +96,20 @@ public class Backpacks extends JavaPlugin {
         Metrics metrics = new Metrics(this);
         // TODO add a custom pie graph showing backpack popularity by the amount crafted
 
+        // only send data to our servers if bstats is enabled
+        if (metrics.isEnabled()) {
+            snooper = new BPSnooper();
+        }
+
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) was enabled in %.2fs!", VERSION, GIT_HASH, ((double)(System.currentTimeMillis() - startTime)) / 1000.0D));
     }
 
     @Override
     public void onDisable() {
         // TODO look for any open backpacks and close them gracefully
+
+        if (snooper != null) snooper.stop();
+
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) has been disabled.", VERSION, GIT_HASH));
     }
 
