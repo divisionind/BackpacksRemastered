@@ -162,7 +162,7 @@ internationalize {
             new RegexCorrectorMatcher(Pattern.compile("%.2f", Pattern.LITERAL)))
 
     if (translate) {
-        langs('es', 'it', 'fr', 'pl')
+        langs('es', 'it', 'fr')
     }
 }
 internationalize.dependsOn generateSources, generateResources
