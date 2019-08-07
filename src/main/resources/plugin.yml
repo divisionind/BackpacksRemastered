@@ -54,6 +54,9 @@ permissions:
   backpacks.craft.craft:
     description: Allows one to craft the craft backpack.
     default: true
+  backpacks.craft.ender:
+    description: Allows one to craft the ender backpack.
+    default: true
   backpacks.link:
     description: Allows a player to link a linked backpack to a chest.
     default: true

@@ -42,7 +42,7 @@ public class Backpacks extends JavaPlugin {
     public static final String VERSION = "@DivisionVersion@";
     public static final String GIT_HASH = "@DivisionGitHash@";
     public static final String GIT_NUM = "@DivisionGitComm@";
-    public static final int CONFIGURATION_VERSION = 5;
+    public static final int CONFIGURATION_VERSION = 6;
 
     public static HumanEntity FAKE_VIEWER;
 
@@ -196,6 +196,7 @@ public class Backpacks extends JavaPlugin {
 
         openBackpackCooldown = getConfig().getLong("openBackpackCooldown");
         maxNumberOfCombinedBackpacks = getConfig().getInt("maxNumberOfCombinedBackpacks");
+        if (maxNumberOfCombinedBackpacks > 9 || maxNumberOfCombinedBackpacks < 1) maxNumberOfCombinedBackpacks = 9;
     }
 
     private int parseIntSilent(String in) {

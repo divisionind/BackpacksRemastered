@@ -36,7 +36,8 @@ public enum BackpackObject {
     LARGE(Color.MAROON, 1, new BPLarge()),
     LINKED(Color.BLUE, 2, new BPLinked()),
     COMBINED(Color.AQUA, 3, new BPCombined()),
-    CRAFT(Color.ORANGE, 4, new BPCraft());
+    CRAFT(Color.ORANGE, 4, new BPCraft()),
+    ENDER(Color.GREEN, 5, new BPEnder());
 
     private ItemStack item;
     private List<String> lore;
