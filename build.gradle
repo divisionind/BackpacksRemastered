@@ -39,7 +39,7 @@ buildscript {
     dependencies {
         classpath group: 'com.divisionind',
                 name: 'i18nExtractor',
-                version: '2019.0.1'
+                version: '2019.0.6'
     }
 }
 
