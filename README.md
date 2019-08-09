@@ -22,9 +22,13 @@ strings into other languages. You can specify any language supported by Google T
 under the internationalize task.
 
 __NOTE: Google loves throwing 429 errors (too many requests) when you use this because we are essentially spamming 
-google with a translation request for each string we choose to add. Be careful how many translations you add and
-if you see any message about this in the console, it means some strings in your program are not present for whatever
-language it was translating at the time.__
+google with a translation request for each string we choose to add.__ You could modify this to use googles translation
+api but you are then subject to limitations (and you have to pay). Translations are cached to the ".i18nExtractor"
+directory. Delete the cache corresponding to a particular language to refresh it. Be careful how many languages you
+add/refresh at once because too many requests ~70-150 (depending on the trust factory of the network requesting translation) 
+in one go will cause you to get locked out by google for several hours. __If you see any message about a 429 error in 
+the console, it means that a string was not translated and the resulting jar should not be used with other languages 
+as this WILL result in errors.__
 
 Also, the i18nExtractor plugin is currently licensed as "All rights reserved" to Division Industries LLC. You may not
 copy or modify any code from it. However, there is an API for creating custom translators (which you are free to do).
