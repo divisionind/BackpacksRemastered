@@ -11,10 +11,6 @@ branches:
   only:
     - master
 
-cache:
-  directories:
-    - /home/travis/.i18nExtractor
-
 before_install:
   - chmod +x gradlew
 

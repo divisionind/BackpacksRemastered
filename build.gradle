@@ -39,7 +39,7 @@ buildscript {
     dependencies {
         classpath group: 'com.divisionind',
                 name: 'i18nExtractor',
-                version: '2019.0.6'
+                version: '2019.0.7'
     }
 }
 
@@ -54,7 +54,6 @@ apply plugin: ExtractorPlugin
 def baseVersion = "2019.0.9"
 def beta = true
 def uploadBetas = false
-def translate = !beta
 
 def spigotVersion = "1.14.2"
 def githubOwner = "divisionind"
@@ -134,6 +133,7 @@ internationalize {
     sourcesDir file("$buildDir/generated-src")
     sourceResources file("$buildDir/generated-resources")
     bundleInitializerClasspath 'com.divisionind.bprm.Backpacks'
+    cacheDirectory file("$projectDir/.i18nExtractor")
 
     File commandsFile = file("$sourcesDir/com/divisionind/bprm/commands")
     Pattern colorPat = Pattern.compile("(?i)" + String.valueOf('&') + "[0-9A-FK-OR]")
@@ -157,13 +157,11 @@ internationalize {
     }
     
     // serializes color codes so they dont get messed with by the translator
-    translator = new GoogleTranslator(new RegexCorrectorMatcher(colorPat), 
+    translator = new GoogleTranslator(69, 10, new RegexCorrectorMatcher(colorPat), 
             new RegexCorrectorMatcher(Pattern.compile("0x%02x", Pattern.LITERAL)),
             new RegexCorrectorMatcher(Pattern.compile("%.2f", Pattern.LITERAL)))
 
-    if (translate) {
-        langs('es', 'it', 'fr')
-    }
+    langs('es', 'it', 'fr')
 }
 internationalize.dependsOn generateSources, generateResources
 compileJava.dependsOn internationalize
