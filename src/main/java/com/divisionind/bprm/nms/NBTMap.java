@@ -18,6 +18,9 @@
 
 package com.divisionind.bprm.nms;
 
+import com.divisionind.bprm.nms.reflect.NBTType;
+import com.divisionind.bprm.nms.reflect.NMSClass;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
@@ -29,8 +32,8 @@ public class NBTMap {
         this.tagCompound = tagCompound;
     }
 
-    public NBTMap() throws IllegalAccessException, InstantiationException {
-        this.tagCompound = NMSReflector.getInstance().cNBTTagCompound.newInstance();
+    public NBTMap() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        this.tagCompound = NMSClass.NBTTagCompound.getClazz().getDeclaredConstructor().newInstance();
     }
 
     public Object getTagCompound() {

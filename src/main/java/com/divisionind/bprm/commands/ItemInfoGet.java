@@ -19,8 +19,8 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import com.divisionind.bprm.nms.NBTType;
 import com.divisionind.bprm.nms.NMSItemStack;
+import com.divisionind.bprm.nms.reflect.NBTType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

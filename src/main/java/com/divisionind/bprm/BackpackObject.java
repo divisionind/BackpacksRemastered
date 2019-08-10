@@ -19,8 +19,8 @@
 package com.divisionind.bprm;
 
 import com.divisionind.bprm.backpacks.*;
-import com.divisionind.bprm.nms.NBTType;
 import com.divisionind.bprm.nms.NMSReflector;
+import com.divisionind.bprm.nms.reflect.NBTType;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;

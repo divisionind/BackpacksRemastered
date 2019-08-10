@@ -18,8 +18,8 @@
 
 package com.divisionind.bprm;
 
-import com.divisionind.bprm.nms.NBTType;
 import com.divisionind.bprm.nms.NMSReflector;
+import com.divisionind.bprm.nms.reflect.NBTType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

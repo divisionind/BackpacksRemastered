@@ -18,8 +18,8 @@
 
 package com.divisionind.bprm;
 
-import com.divisionind.bprm.nms.NBTType;
 import com.divisionind.bprm.nms.NMSItemStack;
+import com.divisionind.bprm.nms.reflect.NBTType;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;

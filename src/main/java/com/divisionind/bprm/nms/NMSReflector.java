@@ -18,16 +18,15 @@
 
 package com.divisionind.bprm.nms;
 
-import com.divisionind.bprm.Backpacks;
-import com.divisionind.bprm.FakeBackpackViewer;
+import com.divisionind.bprm.nms.reflect.NBTType;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Set;
 
+@Deprecated
 public class NMSReflector {
 
     public static final String VERSION = getVersion();
@@ -62,7 +61,7 @@ public class NMSReflector {
     private Method mremoveTag;
     private Method mgetTypeId;
 
-    private NMSReflector() throws ClassNotFoundException, NoSuchMethodException {
+    private NMSReflector() throws ClassNotFoundException, NoSuchMethodException { // TODO remove
         // get NMS classes
         cCraftItemStack = Class.forName(getCraftClass("inventory.CraftItemStack"));
         cNBTTagCompound = Class.forName(getServerClass("NBTTagCompound"));
@@ -70,12 +69,12 @@ public class NMSReflector {
         cNBTBase = Class.forName(getServerClass("NBTBase"));
 
         // init all getters and setters for the various NBTTag data values
-        NBTType.COMPOUND.setClassType(cNBTBase);
-        for (NBTType type : NBTType.values()) type.init(cNBTTagCompound);
+//        NBTType.COMPOUND.setClassType(cNBTBase);
+//        for (NBTType type : NBTType.values()) type.init(cNBTTagCompound);
 
         // get NMS methods
         masNMSCopy = cCraftItemStack.getMethod("asNMSCopy", ItemStack.class);
-        masBukkitCopy = cCraftItemStack.getMethod("asBukkitCopy", Class.forName(getServerClass("ItemStack")));
+        masBukkitCopy = cCraftItemStack.getMethod("asBukkitCopy", cItemStack);
         mgetTag = cItemStack.getMethod("getTag");
         msetTag = cItemStack.getMethod("setTag", cNBTTagCompound);
         mhasKey = cNBTTagCompound.getMethod("hasKey", String.class);
@@ -86,21 +85,21 @@ public class NMSReflector {
         } else mgetKeys = cNBTTagCompound.getMethod("getKeys");
 
         // initialize fake viewer using reflection (so that it can support spigot + craftbukkit)
-        Backpacks.FAKE_VIEWER = (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(),
-                new Class[]{FakeBackpackViewer.class},
-                (proxy, method, args) -> {
-                    Class type = method.getReturnType();
-
-                    if (type.equals(boolean.class)) return false;
-                    if (type.equals(int.class)) return 0;
-                    if (type.equals(double.class)) return 0D;
-                    if (type.equals(float.class)) return 0F;
-                    if (type.equals(long.class)) return 0L;
-                    if (type.equals(short.class)) return (short)0;
-                    if (type.equals(byte.class)) return (byte)0;
-
-                    return null;
-                });
+//        Backpacks.FAKE_VIEWER = (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(),
+//                new Class[]{FakeBackpackViewer.class},
+//                (proxy, method, args) -> {
+//                    Class type = method.getReturnType();
+//
+//                    if (type.equals(boolean.class)) return false;
+//                    if (type.equals(int.class)) return 0;
+//                    if (type.equals(double.class)) return 0D;
+//                    if (type.equals(float.class)) return 0F;
+//                    if (type.equals(long.class)) return 0L;
+//                    if (type.equals(short.class)) return (short)0;
+//                    if (type.equals(byte.class)) return (byte)0;
+//
+//                    return null;
+//                });
     }
 
     public static Object asNMSCopy(ItemStack item) throws InvocationTargetException, IllegalAccessException {

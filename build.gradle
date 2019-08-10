@@ -185,6 +185,9 @@ task makeJar(type: Jar) {
 task pack(dependsOn: ['clean', 'makeJar'])
 makeJar.mustRunAfter clean
 
+// whether or not to upload a release
+boolean uploadRelease = !(beta && !uploadBetas)
+
 githubRelease {
     token "${System.env.GITHUB_TOKEN}"
     owner githubOwner
@@ -197,13 +200,13 @@ githubRelease {
     releaseAssets "build/libs/${project.name}-${project.version}.jar"
     apiEndpoint "https://api.github.com"
 
-    // gets the last released commit from releaseplugin to calculate change log on its own (more control)
+    // gets the last released commit from releaseplugin to calculate change log on its own (more control) TODO do this without reflection (because gradle will deny it in future versions)
     Class c = Class.forName("com.github.breadmoirai.githubreleaseplugin.ChangeLogSupplier")
     Method m = c.getDeclaredMethod("getLastReleaseCommit")
     m.setAccessible(true)
     lastRelease = m.invoke(changelog())
 
-    if (System.env.TRAVIS != null) {
+    if (uploadRelease) {
         body "${getGitChanges(lastRelease)}"
     }
 }
@@ -211,7 +214,7 @@ githubRelease {
 // a dummy task so that the githubRelease task may be disable based on certain parameters
 task uploadArtifacts {}
 
-if (!(beta && !uploadBetas)) {
+if (uploadRelease) {
     println "Version qualified for a release."
     uploadArtifacts.finalizedBy tasks.githubRelease
 }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm.nms;
+package com.divisionind.bprm.nms.reflect;
 
 import java.lang.reflect.Method;
 
