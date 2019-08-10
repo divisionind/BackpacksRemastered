@@ -39,7 +39,7 @@ buildscript {
     dependencies {
         classpath group: 'com.divisionind',
                 name: 'i18nExtractor',
-                version: '2019.0.7'
+                version: '2019.0.8'
     }
 }
 
@@ -141,7 +141,7 @@ internationalize {
         @Override
         boolean shouldAdd(DiscoveredString st) {
             // exclude the names of backpacks from this (for now)
-            if (st.value == '&9Backpacks &7&l>>&r ' || st.value == '&aLinked') {
+            if (st.value == '&9Backpacks &7&l>>&r ' || st.value == '&aLinked' || st.value == 'Players=%s&BackpacksVersion=%s') {
                 return false
             }
 
@@ -161,7 +161,7 @@ internationalize {
             new RegexCorrectorMatcher(Pattern.compile("0x%02x", Pattern.LITERAL)),
             new RegexCorrectorMatcher(Pattern.compile("%.2f", Pattern.LITERAL)))
 
-    langs('es', 'it', 'fr')
+    langs('es', 'it', 'fr', 'zh-CN')
 }
 internationalize.dependsOn generateSources, generateResources
 compileJava.dependsOn internationalize
