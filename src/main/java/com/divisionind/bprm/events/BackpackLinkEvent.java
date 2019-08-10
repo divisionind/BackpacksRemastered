@@ -62,7 +62,7 @@ public class BackpackLinkEvent implements Listener {
                         }
                     }
                 }
-            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | IOException ex) {
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | IOException | NoSuchMethodException ex) {
                 ex.printStackTrace();
             }
         }

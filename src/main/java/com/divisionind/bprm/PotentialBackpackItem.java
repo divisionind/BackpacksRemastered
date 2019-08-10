@@ -29,7 +29,7 @@ public class PotentialBackpackItem extends NMSItemStack {
     public static final String FIELD_NAME_TYPE = "backpack_type";
     public static final String FIELD_NAME_DATA = "backpack_data";
 
-    public PotentialBackpackItem(ItemStack item) throws InvocationTargetException, IllegalAccessException, InstantiationException {
+    public PotentialBackpackItem(ItemStack item) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         super(item);
     }
 

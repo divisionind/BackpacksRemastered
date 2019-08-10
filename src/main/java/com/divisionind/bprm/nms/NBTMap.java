@@ -20,6 +20,7 @@ package com.divisionind.bprm.nms;
 
 import com.divisionind.bprm.nms.reflect.NBTType;
 import com.divisionind.bprm.nms.reflect.NMSClass;
+import com.divisionind.bprm.nms.reflect.NMSMethod;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
@@ -41,34 +42,36 @@ public class NBTMap {
     }
 
     public void setNBT(NBTType type, String key, Object value) throws InvocationTargetException, IllegalAccessException {
-        NMSReflector.setNBT(tagCompound, type, key, value);
+        type.getSet().invoke(tagCompound, key, value);
     }
 
     public Object getNBT(NBTType type, String key) throws InvocationTargetException, IllegalAccessException {
-        return NMSReflector.getNBT(tagCompound, type, key);
+        return type.getGet().invoke(tagCompound, key);
     }
 
     public void removeNBT(String key) throws InvocationTargetException, IllegalAccessException {
-        NMSReflector.removeNBT(tagCompound, key);
+        NMSMethod.removeTag.getMethod().invoke(tagCompound, key);
     }
 
     public void setAsMap(String key, NBTMap value) throws InvocationTargetException, IllegalAccessException {
-        NMSReflector.setAsMap(tagCompound, key, value);
+        setNBT(NBTType.COMPOUND, key, value.getTagCompound());
     }
 
     public NBTMap getAsMap(String key) throws InvocationTargetException, IllegalAccessException {
-        return NMSReflector.getAsMap(tagCompound, key);
+        Object nbtBase = getNBT(NBTType.COMPOUND, key);
+        return new NBTMap(NMSClass.NBTTagCompound.getClazz().cast(nbtBase));
     }
 
     public boolean hasNBT(String key) throws InvocationTargetException, IllegalAccessException {
-        return NMSReflector.hasNBTKey(tagCompound, key);
+        return (boolean) NMSMethod.hasKey.getMethod().invoke(tagCompound, key);
     }
 
     public Set<String> getKeys() throws InvocationTargetException, IllegalAccessException {
-        return NMSReflector.getKeys(tagCompound);
+        return (Set<String>)NMSMethod.getKeys.getMethod().invoke(tagCompound);
     }
 
     public byte getKeyInternalTypeId(String key) throws InvocationTargetException, IllegalAccessException {
-        return NMSReflector.getKeyInternalTypeId(tagCompound, key);
+        Object nbtBase = NBTType.COMPOUND.getGet().invoke(tagCompound, key);
+        return (byte)NMSMethod.getTypeId.getMethod().invoke(nbtBase);
     }
 }

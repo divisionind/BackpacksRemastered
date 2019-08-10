@@ -19,7 +19,7 @@
 package com.divisionind.bprm;
 
 import com.divisionind.bprm.backpacks.*;
-import com.divisionind.bprm.nms.NMSReflector;
+import com.divisionind.bprm.nms.NMSItemStack;
 import com.divisionind.bprm.nms.reflect.NBTType;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -103,8 +103,8 @@ public enum BackpackObject {
 
         // apply backpack_type nbt data
         try {
-            return NMSReflector.setNBTOnce(backpack, NBTType.INT, PotentialBackpackItem.FIELD_NAME_TYPE, type);
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            return NMSItemStack.setNBTOnce(backpack, NBTType.INT, PotentialBackpackItem.FIELD_NAME_TYPE, type);
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
             return null;
         }
     }

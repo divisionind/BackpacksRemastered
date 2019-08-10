@@ -58,7 +58,7 @@ public class BackpackInvClickEvent implements Listener {
                 // backpack nest event
                 PotentialBackpackItem clickedBackpack = new PotentialBackpackItem(clicked);
                 if (clickedBackpack.isBackpack() && !e.getWhoClicked().hasPermission("backpacks.nest")) e.setCancelled(true);
-            } catch (InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException ex) {
                 ex.printStackTrace();
             }
         }

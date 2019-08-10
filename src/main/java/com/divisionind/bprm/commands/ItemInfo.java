@@ -61,7 +61,7 @@ public class ItemInfo extends ACommand {
                 respondn(sender, s);
             }
             respondf(sender, "&eFound %s NBT data entries.", data.size());
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }

@@ -20,7 +20,7 @@ package com.divisionind.bprm;
 
 import com.divisionind.bprm.commands.*;
 import com.divisionind.bprm.events.*;
-import com.divisionind.bprm.nms.NMSReflector;
+import com.divisionind.bprm.nms.reflect.NMS;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -81,9 +81,9 @@ public class Backpacks extends JavaPlugin {
                 new BackpackLinkEvent(),
                 new BackpackInvClickEvent());
 
-        getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMSReflector.VERSION));
+        getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMS.VERSION));
         try {
-            NMSReflector.initialize();
+            NMS.initialize();
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             getLogger().severe("Error initializing NMS. Was the detected server wrong? If not, then NMS has changed significantly sense this plugin was released and therefore, it can not adapt.");
             e.printStackTrace();

@@ -18,6 +18,9 @@
 
 package com.divisionind.bprm.nms;
 
+import com.divisionind.bprm.nms.reflect.NBTType;
+import com.divisionind.bprm.nms.reflect.NMSClass;
+import com.divisionind.bprm.nms.reflect.NMSMethod;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
@@ -27,18 +30,18 @@ public class NMSItemStack extends NBTMap {
     private ItemStack item;
     private Object craftItemStack;
 
-    public NMSItemStack(ItemStack item) throws InvocationTargetException, IllegalAccessException, InstantiationException {
-        this(item, NMSReflector.asNMSCopy(item));
+    public NMSItemStack(ItemStack item) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+        this(item, NMSMethod.asNMSCopy.getMethod().invoke(null, item));
     }
 
-    private NMSItemStack(ItemStack item, Object craftItemStack) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        super(NMSReflector.getNBTTagCompound(craftItemStack));
+    private NMSItemStack(ItemStack item, Object craftItemStack) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
+        super(getNBTTagCompound(craftItemStack));
         this.item = item;
         this.craftItemStack = craftItemStack;
     }
 
     public ItemStack getModifiedItem() throws InvocationTargetException, IllegalAccessException {
-        return NMSReflector.asBukkitCopy(craftItemStack);
+        return (ItemStack) NMSMethod.asBukkitCopy.getMethod().invoke(null, craftItemStack);
     }
 
     public ItemStack getItem() {
@@ -47,5 +50,21 @@ public class NMSItemStack extends NBTMap {
 
     public Object getCraftItemStack() {
         return craftItemStack;
+    }
+
+    private static Object getNBTTagCompound(Object nmsItemStack) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+        Object nbtCompound = NMSMethod.getTag.getMethod().invoke(nmsItemStack);
+        if (nbtCompound == null) {
+            nbtCompound = NMSClass.NBTTagCompound.getClazz().getDeclaredConstructor().newInstance();
+            NMSMethod.setTag.getMethod().invoke(nmsItemStack, nbtCompound);
+        }
+        return nbtCompound;
+    }
+
+
+    public static ItemStack setNBTOnce(ItemStack item, NBTType type, String key, Object value) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+        NMSItemStack nmsItem = new NMSItemStack(item);
+        nmsItem.setNBT(type, key, value);
+        return nmsItem.getModifiedItem();
     }
 }

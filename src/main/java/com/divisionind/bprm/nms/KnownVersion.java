@@ -18,6 +18,8 @@
 
 package com.divisionind.bprm.nms;
 
+import com.divisionind.bprm.nms.reflect.NMS;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +51,7 @@ public enum KnownVersion {
      * @return result
      */
     public boolean isBefore() {
-        return equalsAny(NMSReflector.VERSION, getVersionsBefore());
+        return equalsAny(NMS.VERSION, getVersionsBefore());
     }
 
     public static boolean equalsAny(String in, KnownVersion... cmp) {

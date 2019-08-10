@@ -18,7 +18,7 @@
 
 package com.divisionind.bprm;
 
-import com.divisionind.bprm.nms.NMSReflector;
+import com.divisionind.bprm.nms.NMSItemStack;
 import com.divisionind.bprm.nms.reflect.NBTType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -57,8 +57,8 @@ public class BackpackRecipes {
         backpack_key_meta.setDisplayName(Backpacks.translate("&aBackpack Key"));
         BACKPACK_KEY.setItemMeta(backpack_key_meta);
         try {
-            BACKPACK_KEY = NMSReflector.setNBTOnce(BACKPACK_KEY, NBTType.BOOLEAN, "backpack_key", true);
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            BACKPACK_KEY = NMSItemStack.setNBTOnce(BACKPACK_KEY, NBTType.BOOLEAN, "backpack_key", true);
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
             return;
         }
         loadRecipeFromConfig(config, log, "backpack_key", BACKPACK_KEY);
