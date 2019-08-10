@@ -63,6 +63,9 @@ permissions:
   backpacks.split:
     description: Allows a player to use the split command.
     default: true
+  backpacks.nest:
+    description: Allows players to put one backpack inside of another.
+    default: true
   backpacks.materials:
     description: Allows players to use the materials command.
     default: op

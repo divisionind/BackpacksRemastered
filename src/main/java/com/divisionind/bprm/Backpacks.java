@@ -79,7 +79,6 @@ public class Backpacks extends JavaPlugin {
                 new BackpackCloseEvent(),
                 new BackpackOpenEvent(),
                 new BackpackLinkEvent(),
-                new BackpackKeyMoveEvent(),
                 new BackpackInvClickEvent());
 
         getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMSReflector.VERSION));

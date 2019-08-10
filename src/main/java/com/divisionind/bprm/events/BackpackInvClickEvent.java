@@ -19,12 +19,14 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.BackpackObject;
+import com.divisionind.bprm.BackpackRecipes;
 import com.divisionind.bprm.Backpacks;
 import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.backpacks.BPCombined;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -33,6 +35,15 @@ public class BackpackInvClickEvent implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         // if is backpack inventory
         if (Backpacks.isBackpackInventory(e.getInventory())) {
+            ItemStack clicked = e.getCurrentItem();
+
+            // key move event
+            if (BackpackRecipes.BACKPACK_KEY.equals(clicked)) {
+                e.setCancelled(true);
+                return;
+            }
+
+            // forward clicks to combined backpack click handler
             try {
                 PotentialBackpackItem backpack = new PotentialBackpackItem(e.getWhoClicked().getInventory().getChestplate());
                 if (backpack.isBackpack()) {
@@ -43,6 +54,10 @@ public class BackpackInvClickEvent implements Listener {
                         ((BPCombined)bpo.getHandler()).onClick(e);
                     }
                 }
+
+                // backpack nest event
+                PotentialBackpackItem clickedBackpack = new PotentialBackpackItem(clicked);
+                if (clickedBackpack.isBackpack() && !e.getWhoClicked().hasPermission("backpacks.nest")) e.setCancelled(true);
             } catch (InvocationTargetException | IllegalAccessException | InstantiationException ex) {
                 ex.printStackTrace();
             }
