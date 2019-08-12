@@ -1,13 +1,8 @@
-# BackpacksRemastered
+# BackpacksRemastered <[bukkit.org](https://dev.bukkit.org/projects/backpack-item)>
 [![](https://img.shields.io/travis/divisionind/BackpacksRemastered/master.svg?style=flat-square)](https://travis-ci.org/divisionind/BackpacksRemastered)
 ![](https://img.shields.io/github/repo-size/divisionind/BackpacksRemastered.svg?style=flat-square)
 ![](https://img.shields.io/badge/license-GPLv3-green.svg?style=flat-square)
 ![](https://img.shields.io/badge/dev%20status-active-brightgreen.svg?style=flat-square)
-
-## Info
-This is a remastered version of the popular Backpacks plugin. This project is based on the
-spigot boilerplate template by drew6017 on GitHub [here](https://github.com/divisionind/BoilerplateSpigot).
-
 
 ## Download
 Please download the plugin from the Official Bukkit page [here](https://dev.bukkit.org/projects/backpack-item). I do 
@@ -32,3 +27,17 @@ as this WILL result in errors.__
 
 Also, the i18nExtractor plugin is currently licensed as "All rights reserved" to Division Industries LLC. You may not
 copy or modify any code from it. However, there is an API for creating custom translators (which you are free to do).
+
+### Steps
+1. Find the section of the build file that looks like `langs('es', 'it', 'fr')` (If you are familiar with gradle, 
+   it should be under the internationalize task).
+2. Add your desired [valid Google translate language code](https://cloud.google.com/translate/docs/languages) to the
+   list.
+3. Build the plugin.
+4. You should now be able to use this same language code in the [config.yml](https://github.com/divisionind/BackpacksRemastered/blob/master/src/main/resources/config.yml) 
+   of Backpacks. (minus any -X extensions, e.g. "zh-CH" would be "zh")
+
+##### Notes
+* Translations are cached in the `.i18nExtractor` directory, delete the cache file corresponding to your desired language
+  to grab the latest translations of that language from google.
+* See above notes about 429 errors.
