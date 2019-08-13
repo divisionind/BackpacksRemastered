@@ -38,6 +38,6 @@ copy or modify any code from it. However, there is an API for creating custom tr
    of Backpacks. (minus any -X extensions, e.g. "zh-CH" would be "zh")
 
 ##### Notes
-* Translations are cached in the `.i18nExtractor` directory, delete the cache file corresponding to your desired language
+- Translations are cached in the `.i18nExtractor` directory, delete the cache file corresponding to your desired language
   to grab the latest translations of that language from google.
-* See above notes about 429 errors.
+- See above notes about 429 errors.
