@@ -4,11 +4,18 @@
 ![](https://img.shields.io/badge/license-GPLv3-green.svg?style=flat-square)
 ![](https://img.shields.io/badge/dev%20status-active-brightgreen.svg?style=flat-square)
 
+![](https://raw.githubusercontent.com/divisionind/BackpacksRemastered/master/screenshots/logo.png)
+> Backpacks is a very unique plugin meant to add backpacks to Minecraft without the use of any client side modifications. 
+Completely vanilla backpacks! This plugin is the first of its kind due to the fact that it adds backpacks as an item! Yes, 
+you can craft backpacks or obtain them through commands. Backpacks can also be dropped on the floor, stored in a chest, or 
+even stored in another backpack (configurable) and will always retain their inventory. Backpacks is also one of the only 
+plugins (I know of at least) that allows you to view the specific NBT tags on items.
+
 ## Download
 Please download the plugin from the Official Bukkit page [here](https://dev.bukkit.org/projects/backpack-item). I do 
 not get any ad revenue if you download the plugin from the releases page on GitHub. Those download links are only here 
 for convenience and to provide an archive of sources for particular versions if someone wishes to fork the project
-in the future.
+in the future (also I may remove the jar and only provide hashes for the jar in the future).
 
 
 ## Adding languages
