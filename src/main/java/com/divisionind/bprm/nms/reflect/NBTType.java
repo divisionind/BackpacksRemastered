@@ -73,6 +73,13 @@ public enum NBTType {
         return null;
     }
 
+    public static NBTType getByClass(Class clazz) {
+        for (NBTType type : values()) {
+            if (clazz.equals(type.classType)) return type;
+        }
+        return null;
+    }
+
     void init(Class cNBTTagCompound) throws NoSuchMethodException {
         set = cNBTTagCompound.getMethod(String.format("set%s", getType()), String.class, getClassType());
         get = cNBTTagCompound.getMethod(String.format("get%s", getType()), String.class);
