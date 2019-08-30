@@ -23,6 +23,11 @@ import com.divisionind.bprm.nms.reflect.NMS;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A list of known versions. This allows us to get the versions before our version and is useful
+ * for when NMS changes. Note: We can NOT reliably get the versions after a particular version
+ * because those are always changing.
+ */
 public enum KnownVersion {
 
     v1_9_R1,

@@ -26,6 +26,9 @@ import com.divisionind.i18n.api.corrector.RegexCorrectorMatcher
 import org.apache.tools.ant.filters.ReplaceTokens
 import java.lang.reflect.Method
 import org.gradle.internal.os.OperatingSystem
+//import com.backblaze.b2.client.B2StorageClient
+//import com.backblaze.b2.client.B2StorageClientFactory
+//import com.backblaze.b2.client.structures.B2UploadFileRequest
 
 import java.util.regex.Pattern
 
@@ -40,6 +43,12 @@ buildscript {
         classpath group: 'com.divisionind',
                 name: 'i18nExtractor',
                 version: '2019.0.8'
+
+        // https://mvnrepository.com/artifact/com.backblaze.b2/b2-sdk-core
+        //classpath group: 'com.backblaze.b2', name: 'b2-sdk-core', version: '3.1.0'
+
+        // https://mvnrepository.com/artifact/com.backblaze.b2/b2-sdk-httpclient
+        //classpath group: 'com.backblaze.b2', name: 'b2-sdk-httpclient', version: '3.1.0'
     }
 }
 
@@ -218,6 +227,18 @@ if (uploadRelease) {
     println "Version qualified for a release."
     uploadArtifacts.finalizedBy tasks.githubRelease
 }
+
+/* may add beta uploading from travis to my website, idk how many people would be interested in that though
+  task betaUpload {
+      B2StorageClient client = B2StorageClientFactory.createDefaultFactory().create(System.env.B2_KEY_ID, System.env.B2_KEY, "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0")
+      B2UploadFileRequest request = B2UploadFileRequest.builder("", "", "") // https://github.com/Backblaze/b2-sdk-java
+      client.uploadSmallFile()
+  }
+
+  if (System.env.B2_KEY != null && !uploadRelease) {
+      println "Version qualified for beta build upload."
+      uploadArtifacts.finalizedBy betaUpload
+  } */
 
 def sourceJar = "build/libs/${project.name}-${project.version}.jar"
 def dstJar = "${runningServerPluginsDir}/${project.name}.jar"
