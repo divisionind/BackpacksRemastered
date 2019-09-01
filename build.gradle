@@ -60,7 +60,7 @@ plugins {
 
 apply plugin: ExtractorPlugin
 
-def baseVersion = "2019.1.2"
+def baseVersion = "2019.1.3"
 def beta = true
 def uploadBetas = false
 

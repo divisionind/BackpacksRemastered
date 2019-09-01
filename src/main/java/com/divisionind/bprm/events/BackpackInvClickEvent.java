@@ -18,13 +18,11 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.BackpackObject;
-import com.divisionind.bprm.BackpackRecipes;
-import com.divisionind.bprm.Backpacks;
-import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.*;
 import com.divisionind.bprm.backpacks.BPCombined;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,8 +35,15 @@ public class BackpackInvClickEvent implements Listener {
         if (Backpacks.isBackpackInventory(e.getInventory())) {
             ItemStack clicked = e.getCurrentItem();
 
+            // if the click type was number key, resolve the item moved by it
+            // NOTE: This is possibly a bug with bukkit because getCurrentItem() returns the value of the destination item (rather than the source item) when moving items using number keys
+            if (e.getClick().equals(ClickType.NUMBER_KEY)) {
+                clicked = e.getWhoClicked().getInventory().getItem(e.getHotbarButton());
+            }
+
             // key move event
             if (BackpackRecipes.BACKPACK_KEY.equals(clicked)) {
+                ACommand.respond(e.getWhoClicked(), "setCancelled()");
                 e.setCancelled(true);
                 return;
             }
