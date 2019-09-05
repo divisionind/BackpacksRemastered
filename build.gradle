@@ -170,7 +170,7 @@ internationalize {
             new RegexCorrectorMatcher(Pattern.compile("0x%02x", Pattern.LITERAL)),
             new RegexCorrectorMatcher(Pattern.compile("%.2f", Pattern.LITERAL)))
 
-    langs('es', 'it', 'fr', 'zh-CN')
+    langs('es', 'it', 'fr', 'zh-CN', 'pl')
 }
 internationalize.dependsOn generateSources, generateResources
 compileJava.dependsOn internationalize
