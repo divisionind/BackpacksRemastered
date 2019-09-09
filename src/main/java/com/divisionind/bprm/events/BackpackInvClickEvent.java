@@ -43,7 +43,6 @@ public class BackpackInvClickEvent implements Listener {
 
             // key move event
             if (BackpackRecipes.BACKPACK_KEY.equals(clicked)) {
-                ACommand.respond(e.getWhoClicked(), "setCancelled()");
                 e.setCancelled(true);
                 return;
             }
