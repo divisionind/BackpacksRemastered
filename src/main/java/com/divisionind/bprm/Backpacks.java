@@ -96,9 +96,13 @@ public class Backpacks extends JavaPlugin {
         // TODO add a custom pie graph showing backpack popularity by the amount crafted
 
         // only send data to our servers if bstats is enabled
-        if (metrics.isEnabled()) {
-            snooper = new BPSnooper();
-        }
+//        if (metrics.isEnabled()) {
+//            snooper = new BPSnooper();
+//        }
+
+        // TODO implement an update notifier (will send messages to admins in game about updates to backpacks)
+        // New version of BackpacksRemastered available (as red "CURRENT")->(as green "NEW")! Would you like to update? YES, NO, LATER. (make this clickable)
+        // check for new update periodically and set a flag variable that is checked when an admin joins the game
 
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) was enabled in %.2fs!", VERSION, GIT_HASH, ((double)(System.currentTimeMillis() - startTime)) / 1000.0D));
     }

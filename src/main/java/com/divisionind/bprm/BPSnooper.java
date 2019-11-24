@@ -27,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+@Deprecated
 public class BPSnooper implements Runnable {
 
     public static final String ADDRESS = "https://bpsnoop.divisionind.com/snoop/"; // maybe /1, /2, etc for api version in future
