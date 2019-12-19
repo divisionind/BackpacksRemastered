@@ -1,6 +1,6 @@
 /*
  * BackpacksRemastered - remastered version of the popular Backpacks plugin
- * Copyright (C) 2019 Division Industries LLC
+ * Copyright (C) 2019, Andrew Howard, <divisionind.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

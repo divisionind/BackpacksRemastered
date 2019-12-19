@@ -1,6 +1,6 @@
 /*
  * BackpacksRemastered - remastered version of the popular Backpacks plugin
- * Copyright (C) 2019 Division Industries LLC
+ * Copyright (C) 2019, Andrew Howard, <divisionind.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,10 +46,10 @@ public class Info extends ACommand {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         respond(sender, "&e&lInfo");
-        respondn(sender, "&7Created by drew6017 as a remake of his original plugin with more features and optimizations.");
+        respondn(sender, "&7Created by drew6017 (Andrew Howard) as a remake of his original plugin with more features and optimizations.");
         respondnf(sender, " &eVersion: &a%s", Backpacks.VERSION);
         respondnf(sender, " &eGit Commit: &a%s", Backpacks.GIT_HASH);
         respondnf(sender, " &eGit Build: &a%s", Backpacks.GIT_NUM);
-        respondn(sender, " &eDownload Page: &ahttps://dev.bukkit.org/projects/backpack-item");
+        respondn(sender,  " &eDownload Page: &ahttps://dev.bukkit.org/projects/backpack-item");
     }
 }
