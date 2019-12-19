@@ -63,7 +63,7 @@ plugins {
 apply plugin: ExtractorPlugin
 
 def baseVersion = "2019.1.7"
-def beta = true
+def beta = false
 def uploadBetas = false
 
 def spigotVersion = "1.14.2"
