@@ -47,9 +47,9 @@ public class Info extends ACommand {
     public void execute(CommandSender sender, String label, String[] args) {
         respond(sender, "&e&lInfo");
         respondn(sender, "&7Created by drew6017 (Andrew Howard) as a remake of his original plugin with more features and optimizations.");
-        respondnf(sender, " &eVersion: &a%s", Backpacks.VERSION);
-        respondnf(sender, " &eGit Commit: &a%s", Backpacks.GIT_HASH);
-        respondnf(sender, " &eGit Build: &a%s", Backpacks.GIT_NUM);
-        respondn(sender,  " &eDownload Page: &ahttps://dev.bukkit.org/projects/backpack-item");
+        respondnf(sender, "&eVersion: &a%s", Backpacks.VERSION);
+        respondnf(sender, "&eGit Commit: &a%s", Backpacks.GIT_HASH);
+        respondnf(sender, "&eGit Build: &a%s", Backpacks.GIT_NUM);
+        respondn(sender,  "&eDownload Page: &ahttps://dev.bukkit.org/projects/backpack-item");
     }
 }
