@@ -18,7 +18,10 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.*;
+import com.divisionind.bprm.BackpackObject;
+import com.divisionind.bprm.BackpackRecipes;
+import com.divisionind.bprm.Backpacks;
+import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.backpacks.BPCombined;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

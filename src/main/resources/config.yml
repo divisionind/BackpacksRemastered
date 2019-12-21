@@ -1,5 +1,5 @@
 # the configuration version (do not change this)
-version: 6
+version: 7
 
 # How long (in ticks, 20ticks/second) to wait after someone opens a backpack before they can open it again
 openBackpackCooldown: 8
@@ -10,6 +10,10 @@ maxNumberOfCombinedBackpacks: 9
 # What language to set the plugin to. You can compile the plugin to support any languages you wish. For more info, see the github.
 # Current included languages are: en (English), es (Spanish), it (Italian), fr (French), zh (Chinese), pl (Polish)
 language: en
+
+# Uses a lot of extra resources
+# But, it allows for the furnace backpack to continue furnacing when placed in other inventories, on the ground, in combined backpacks, etc.
+trackFurnaceBackpacks: true
 
 recipes:
   small:
@@ -88,6 +92,18 @@ recipes:
       - "CBC"
       - "BAB"
       - "CBC"
+  furnace:
+    display_name: "&aFurnace Backpack"
+    lore:
+      - "A portable furnace in a backpack that will"
+      - "smelt so long as it is in your inventory."
+    ingredients:
+      A: LEATHER
+      B: FURNACE
+    shape:
+      - " A "
+      - "ABA"
+      - " A "
   backpack_key:
     ingredients:
       A: IRON_INGOT

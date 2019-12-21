@@ -80,7 +80,7 @@ public class BPCombined extends BackpackHandler {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(); // TODO respond that there was an error opening the backpack and to contact server admin
         }
     }
 

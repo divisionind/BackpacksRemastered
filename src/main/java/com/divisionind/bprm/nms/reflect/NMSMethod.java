@@ -34,10 +34,19 @@ public enum NMSMethod {
     hasKey(NBTTagCompound, "hasKey", String.class),
     removeTag(NBTTagCompound, "remove", String.class),
     getTypeId(NBTBase, "getTypeId"),
-    getKeys(() -> KnownVersion.v1_13_R1.isBefore() ? NBTTagCompound.getClazz().getMethod("c") : NBTTagCompound.getClazz().getMethod("getKeys"));
+    getKeys(() -> KnownVersion.v1_13_R1.isBefore() ? NBTTagCompound.getClazz().getMethod("c") : NBTTagCompound.getClazz().getMethod("getKeys")),
+    setWorld(TileEntity, "setWorld", World.getClazz()),
+    getServer(CraftServer, "getServer"),
+    getWorldServer(MinecraftServer, "getWorldServer", DimensionManager.getClazz()),
+    tick(TileEntityFurnace, "tick"),
+    isBurning(true, true, TileEntityFurnace, "isBurning"),
+    save(TileEntityFurnace, "save", NBTTagCompound.getClazz()),
+    load(TileEntityFurnace, "load", NBTTagCompound.getClazz()),
+    getInventory(CraftInventory, "getInventory");
 
     private Method method;
     private MethodInitializer methodInitializer;
+    private boolean methodPrivate;
 
     NMSMethod(NMSClass owner, String name, Class... params) {
         this(false, owner, name, params);
@@ -48,12 +57,18 @@ public enum NMSMethod {
                 () -> owner.getClazz().getMethod(name, params));
     }
 
+    NMSMethod(boolean methodPrivate, boolean declared, NMSClass owner, String name, Class... params) {
+        this(declared, owner, name, params); // declared must always be true if methodPrivate is
+        this.methodPrivate = methodPrivate;
+    }
+
     NMSMethod(MethodInitializer methodInitializer) {
         this.methodInitializer = methodInitializer;
     }
 
     void init() throws NoSuchMethodException {
         this.method = methodInitializer.init();
+        if (methodPrivate) this.method.setAccessible(true);
         this.methodInitializer = null; // so the initializer can be garbage collected, we will never need it again
     }
 

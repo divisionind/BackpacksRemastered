@@ -20,6 +20,7 @@ package com.divisionind.bprm;
 
 import com.divisionind.bprm.commands.*;
 import com.divisionind.bprm.events.*;
+import com.divisionind.bprm.events.custom.GameTickEvent;
 import com.divisionind.bprm.nms.reflect.NMS;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,7 +43,7 @@ public class Backpacks extends JavaPlugin {
     public static final String VERSION = "@DivisionVersion@";
     public static final String GIT_HASH = "@DivisionGitHash@";
     public static final String GIT_NUM = "@DivisionGitComm@";
-    public static final int CONFIGURATION_VERSION = 6;
+    public static final int CONFIGURATION_VERSION = 7;
 
     public static HumanEntity FAKE_VIEWER;
 
@@ -52,10 +53,9 @@ public class Backpacks extends JavaPlugin {
 
     private static List<ACommand> commands;
     private static Backpacks inst;
-    //private static BPSnooper snooper;
 
     @Override
-    public void onEnable() { // TODO for furnace backpack, using Server#iterateRecipes or something else to get all furnace recipes then run the furnace operations yourself
+    public void onEnable() {
         long startTime = System.currentTimeMillis();
         inst = this;
         commands = new ArrayList<>();
@@ -63,6 +63,9 @@ public class Backpacks extends JavaPlugin {
         // load / init config
         saveDefaultConfig();
         setupFromConfig();
+
+        // initialize game ticking with this plugin
+        GameTickEvent.initialize(this);
 
         registerCMDS(new Help(),
                 new Info(),
@@ -79,12 +82,13 @@ public class Backpacks extends JavaPlugin {
                 new BackpackCloseEvent(),
                 new BackpackOpenEvent(),
                 new BackpackLinkEvent(),
-                new BackpackInvClickEvent());
+                new BackpackInvClickEvent(),
+                new BackpackFurnaceTickEvent());
 
         getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMS.VERSION));
         try {
             NMS.initialize();
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException | IllegalAccessException e) {
             getLogger().severe("Error initializing NMS. Was the detected server wrong? If not, then NMS has changed significantly sense this plugin was released and therefore, it can not adapt.");
             e.printStackTrace();
         }
@@ -94,11 +98,6 @@ public class Backpacks extends JavaPlugin {
         // enable metrics collection
         Metrics metrics = new Metrics(this);
         // TODO add a custom pie graph showing backpack popularity by the amount crafted
-
-        // only send data to our servers if bstats is enabled
-//        if (metrics.isEnabled()) {
-//            snooper = new BPSnooper();
-//        }
 
         // TODO implement an update notifier (will send messages to admins in game about updates to backpacks)
         // New version of BackpacksRemastered available (as red "CURRENT")->(as green "NEW")! Would you like to update? YES, NO, LATER. (make this clickable)
@@ -110,8 +109,6 @@ public class Backpacks extends JavaPlugin {
     @Override
     public void onDisable() {
         // TODO look for any open backpacks and close them gracefully
-
-        //if (snooper != null) snooper.stop();
 
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) has been disabled.", VERSION, GIT_HASH));
     }

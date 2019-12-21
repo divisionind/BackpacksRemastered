@@ -22,6 +22,7 @@ import com.divisionind.bprm.Backpacks;
 import com.divisionind.bprm.FakeBackpackViewer;
 import org.bukkit.Bukkit;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 
 public class NMS {
@@ -30,7 +31,9 @@ public class NMS {
     public static final String SERVER = "net.minecraft.server." + VERSION + ".";
     public static final String CRAFT = "org.bukkit.craftbukkit." + VERSION + ".";
 
-    public static void initialize() throws ClassNotFoundException, NoSuchMethodException {
+    public static Object DIMENSION_MANAGER_OVERWORLD;
+
+    public static void initialize() throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
         // initialize classes
         for (NMSClass nmsClass : NMSClass.values()) nmsClass.init();
 
@@ -57,6 +60,9 @@ public class NMS {
 
                     return null;
                 });
+
+        Field overWorldField = NMSClass.DimensionManager.getClazz().getDeclaredField("OVERWORLD");
+        DIMENSION_MANAGER_OVERWORLD = overWorldField.get(null);
     }
 
     private static String getVersion() {

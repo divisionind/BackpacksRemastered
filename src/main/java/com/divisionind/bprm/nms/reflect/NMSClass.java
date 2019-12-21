@@ -26,7 +26,17 @@ public enum NMSClass {
     CraftItemStack(CRAFT, "inventory.CraftItemStack"),
     NBTTagCompound(SERVER, "NBTTagCompound"),
     ItemStack(SERVER, "ItemStack"),
-    NBTBase(SERVER, "NBTBase");
+    NBTBase(SERVER, "NBTBase"),
+    TileEntity(SERVER, "TileEntity"),
+    TileEntityFurnace(SERVER, "TileEntityFurnace"),
+    TileEntityFurnaceFurnace(SERVER, "TileEntityFurnaceFurnace"),
+    CraftServer(CRAFT, "CraftServer"),
+    DedicatedServer(SERVER, "DedicatedServer"),
+    MinecraftServer(SERVER, "MinecraftServer"),
+    World(SERVER, "World"),
+    DimensionManager(SERVER, "DimensionManager"),
+    CraftInventoryFurnace(CRAFT, "inventory.CraftInventoryFurnace"),
+    CraftInventory(CRAFT, "inventory.CraftInventory");
 
     private String path;
     private Class clazz;
