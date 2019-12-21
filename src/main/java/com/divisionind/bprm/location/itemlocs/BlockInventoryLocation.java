@@ -16,28 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm.itemlocs;
+package com.divisionind.bprm.location.itemlocs;
 
-import com.divisionind.bprm.ItemLocationType;
-import com.divisionind.bprm.exceptions.UnknownItemLocationException;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
-public class BackpackInventoryLocation extends InventoryLocation {
-
-    public BackpackInventoryLocation(int lastKnownSlot) {
-        super(ItemLocationType.BACKPACK_INVENTORY, lastKnownSlot);
-    }
-
-    @Override
-    public Inventory resolveInventory() {
-
-        return null;
-    }
-
-    @Override
-    public ItemStack update(ItemStack newItem, ItemStack oldItem) throws UnknownItemLocationException {
-
-        return super.update(newItem, oldItem);
-    }
+public class BlockInventoryLocation {
 }

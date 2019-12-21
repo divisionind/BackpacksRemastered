@@ -16,11 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm;
+package com.divisionind.bprm.location;
 
-public enum ItemLocationType {
-    BACKPACK_INVENTORY,
-    PLAYER_INVENTORY,
-    BLOCK_INVENTORY,
-    GROUND
+public interface ItemLocation {
 }

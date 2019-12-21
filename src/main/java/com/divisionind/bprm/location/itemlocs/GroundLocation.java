@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm.nitemlocs;
+package com.divisionind.bprm.location.itemlocs;
 
-public class InventoryLocation implements ItemLocation {
+public class GroundLocation {
 }

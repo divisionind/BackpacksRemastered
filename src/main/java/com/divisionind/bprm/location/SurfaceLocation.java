@@ -16,7 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm.nitemlocs;
+package com.divisionind.bprm.location;
 
-public interface ItemLocation {
+import com.divisionind.bprm.exceptions.UnknownItemLocationException;
+import org.bukkit.inventory.ItemStack;
+
+public abstract class SurfaceLocation implements ItemLocation {
+    // item that we are replacing should equal surface item
+    public abstract void replace(ItemStack newItem, ItemStack surfaceItem) throws UnknownItemLocationException;
 }

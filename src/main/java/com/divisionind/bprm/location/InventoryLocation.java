@@ -16,40 +16,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm.itemlocs;
+package com.divisionind.bprm.location;
 
-import com.divisionind.bprm.ItemLocationCallback;
-import com.divisionind.bprm.ItemLocationType;
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class InventoryLocation extends ItemLocationCallback {
+public abstract class InventoryLocation extends SurfaceLocation {
 
-    protected int lastKnownSlot;
+    public abstract Inventory resolveInventory() throws UnknownItemLocationException;
 
-    public InventoryLocation(ItemLocationType type, int lastKnownSlot) {
-        super(type);
+    private int lastKnownSlot;
+
+    public InventoryLocation(int lastKnownSlot) {
         this.lastKnownSlot = lastKnownSlot;
     }
 
-    public abstract Inventory resolveInventory();
-
     @Override
-    public ItemStack update(ItemStack newItem, ItemStack oldItem) throws UnknownItemLocationException {
+    public void replace(ItemStack newItem, ItemStack surfaceItem) throws UnknownItemLocationException {
         Inventory inv = resolveInventory();
         ItemStack itemAtLastLoc = inv.getItem(lastKnownSlot);
 
-        if (oldItem.equals(itemAtLastLoc)) {
+        if (surfaceItem.equals(itemAtLastLoc)) {
             inv.setItem(lastKnownSlot, newItem);
-            return null;
         } else {
             ItemStack[] contents = inv.getContents();
 
             for (int i = 0; i < contents.length; i++) {
-                if (oldItem.equals(contents[i])) {
+                if (surfaceItem.equals(contents[i])) {
                     inv.setItem(lastKnownSlot = i, newItem);
-                    return null;
+                    return;
                 }
             }
 

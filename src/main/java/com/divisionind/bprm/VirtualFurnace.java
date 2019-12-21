@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.location.ItemStackLocation;
 import com.divisionind.bprm.nms.reflect.NMSMethod;
 
 import java.lang.reflect.InvocationTargetException;

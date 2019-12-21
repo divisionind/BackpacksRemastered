@@ -16,11 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm;
+package com.divisionind.bprm.location;
 
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
-import com.divisionind.bprm.nitemlocs.BackpackLocation;
-import com.divisionind.bprm.nitemlocs.ItemLocation;
+import com.divisionind.bprm.location.itemlocs.BackpackLocation;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -47,11 +46,13 @@ public class ItemStackLocation {
     // TODO track the backpacks location, we need to track the last [ItemLocation] in chain that is an instance of [BackpackLocation]
 
     private List<ItemLocation> updateTree;
+    private SurfaceLocation surfaceLocation;
     private ItemStack surfaceItem;
-    private ItemStack oldFurnaceBackpack; // maybe make this an atomic reference (or volatile)
+    private ItemStack currentFurnaceBackpack; // maybe make this an atomic reference (or volatile)
 
-    public ItemStackLocation() {
+    public ItemStackLocation(ItemStack currentFurnaceBackpack) {
         this.updateTree = new ArrayList<>();
+        this.currentFurnaceBackpack = currentFurnaceBackpack;
     }
 
     /**
@@ -61,10 +62,13 @@ public class ItemStackLocation {
     public void update(ItemStack item) throws UnknownItemLocationException {
         int lastIndex = updateTree.size() - 1;
         // backpack locations do not contain enough information to fully update the rest of the tree
-        if (updateTree.get(lastIndex) instanceof BackpackLocation) throw new UnknownItemLocationException();
+        ItemLocation rawLastLoc = updateTree.get(lastIndex);
+        if (rawLastLoc instanceof BackpackLocation) throw new UnknownItemLocationException();
+        SurfaceLocation lastLoc = (SurfaceLocation) rawLastLoc;
 
-        for (int i = lastIndex; i > -1 ;i--) {
-            ItemLocation loc = updateTree.get(i);
+
+
+        for (int i = 0; i < lastIndex; i++) {
 
         }
     }
@@ -73,10 +77,11 @@ public class ItemStackLocation {
         return surfaceItem;
     }
 
-    public ItemStack getOldFurnaceBackpack() {
-        return oldFurnaceBackpack;
+    public ItemStack getCurrentFurnaceBackpack() {
+        return currentFurnaceBackpack;
     }
 
+    // we resolve this here so we dont have to do this look up every time we need the surface item (for tracking)
     private void updateSurfaceItem() {
         for (int i = 0; i < updateTree.size(); i++) {
             if (!(updateTree.get(i) instanceof BackpackLocation)) {
@@ -84,7 +89,7 @@ public class ItemStackLocation {
 
                 if (correctIndex == -1) {
                     // if there are no BackpackLocations in tree, surfaceItem == the item we are tracking
-                    surfaceItem = oldFurnaceBackpack;
+                    surfaceItem = currentFurnaceBackpack;
                 } else {
                     // else, surfaceItem will equal the last instance of a itemstack/backpack container location
                     surfaceItem = ((BackpackLocation)updateTree.get(correctIndex)).getCurrentBackpackItem();

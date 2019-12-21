@@ -18,7 +18,7 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.ItemStackLocation;
+import com.divisionind.bprm.location.ItemStackLocation;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;

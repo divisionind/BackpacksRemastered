@@ -16,23 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm.itemlocs;
+package com.divisionind.bprm.location.itemlocs;
 
-import com.divisionind.bprm.ItemLocationType;
-import org.bukkit.Location;
-import org.bukkit.inventory.Inventory;
+import com.divisionind.bprm.location.ItemLocation;
+import org.bukkit.inventory.ItemStack;
 
-public class BlockInventoryLocation extends InventoryLocation {
+public class BackpackLocation implements ItemLocation {
 
-    private Location blockLocation;
+    private ItemStack currentBackpackItem;
 
-    public BlockInventoryLocation(Location blockLocation, int lastKnownSlot) {
-        super(ItemLocationType.BLOCK_INVENTORY, lastKnownSlot);
-        this.blockLocation = blockLocation;
+    public BackpackLocation(ItemStack currentBackpackItem) {
+        this.currentBackpackItem = currentBackpackItem;
     }
 
-    @Override
-    public Inventory resolveInventory() {
-        return null;
+    public ItemStack getCurrentBackpackItem() {
+        return currentBackpackItem;
     }
 }

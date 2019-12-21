@@ -16,26 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm.itemlocs;
+package com.divisionind.bprm.location.itemlocs;
 
-import com.divisionind.bprm.ItemLocationCallback;
-import com.divisionind.bprm.ItemLocationType;
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
-import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
+import com.divisionind.bprm.location.InventoryLocation;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
-public class GroundLocation extends ItemLocationCallback {
+import java.util.UUID;
 
-    public static final int SEARCH_RADIUS = 10;
+public class PlayerInventoryLocation extends InventoryLocation {
 
-    private Location approximateLocation;
+    private UUID playerId;
 
-    public GroundLocation() {
-        super(ItemLocationType.GROUND);
+    public PlayerInventoryLocation(int lastKnownSlot, UUID playerId) {
+        super(lastKnownSlot);
+        this.playerId = playerId;
     }
 
     @Override
-    public ItemStack update(ItemStack newItem, ItemStack oldItem) throws UnknownItemLocationException {
-        return null;
+    public Inventory resolveInventory() throws UnknownItemLocationException {
+        Player player = Bukkit.getPlayer(playerId);
+        if (player == null) throw new UnknownItemLocationException();
+        return player.getInventory(); // could theoretically obtain the players inventory even if they are not online, but this will have to be something for a later update
     }
 }

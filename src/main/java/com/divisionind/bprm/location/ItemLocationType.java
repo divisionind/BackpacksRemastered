@@ -16,19 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm.nitemlocs;
+package com.divisionind.bprm.location;
 
-import org.bukkit.inventory.ItemStack;
-
-public class BackpackLocation implements ItemLocation {
-
-    private ItemStack currentBackpackItem;
-
-    public BackpackLocation(ItemStack currentBackpackItem) {
-        this.currentBackpackItem = currentBackpackItem;
-    }
-
-    public ItemStack getCurrentBackpackItem() {
-        return currentBackpackItem;
-    }
+public enum ItemLocationType {
+    BACKPACK_INVENTORY,
+    PLAYER_INVENTORY,
+    BLOCK_INVENTORY,
+    GROUND
 }
