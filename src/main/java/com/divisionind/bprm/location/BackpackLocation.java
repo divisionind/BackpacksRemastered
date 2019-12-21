@@ -18,17 +18,25 @@
 
 package com.divisionind.bprm.location;
 
+import com.divisionind.bprm.exceptions.UnknownItemLocationException;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class BackpackLocation {
+public class BackpackLocation extends InventoryLocation {
 
     private ItemStack currentBackpackItem;
 
-    public BackpackLocation(ItemStack currentBackpackItem) {
+    public BackpackLocation(int lastKnownSlot, ItemStack currentBackpackItem) {
+        super(lastKnownSlot);
         this.currentBackpackItem = currentBackpackItem;
     }
 
     public ItemStack getCurrentBackpackItem() {
         return currentBackpackItem;
+    }
+
+    @Override
+    public Inventory resolveInventory() throws UnknownItemLocationException {
+        return null;
     }
 }

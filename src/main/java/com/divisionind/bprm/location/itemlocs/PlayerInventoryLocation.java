@@ -28,7 +28,7 @@ import java.util.UUID;
 
 public class PlayerInventoryLocation extends InventoryLocation {
 
-    private UUID playerId;
+    protected UUID playerId;
 
     public PlayerInventoryLocation(int lastKnownSlot, UUID playerId) {
         super(lastKnownSlot);

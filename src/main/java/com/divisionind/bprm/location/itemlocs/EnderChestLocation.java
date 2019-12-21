@@ -19,12 +19,22 @@
 package com.divisionind.bprm.location.itemlocs;
 
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
-import com.divisionind.bprm.location.SurfaceLocation;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
-public class GroundLocation extends SurfaceLocation {
+import java.util.UUID;
+
+public class EnderChestLocation extends PlayerInventoryLocation {
+
+    public EnderChestLocation(int lastKnownSlot, UUID playerId) {
+        super(lastKnownSlot, playerId);
+    }
+
     @Override
-    public void replace(ItemStack newItem, ItemStack surfaceItem) throws UnknownItemLocationException {
-
+    public Inventory resolveInventory() throws UnknownItemLocationException {
+        Player player = Bukkit.getPlayer(playerId);
+        if (player == null) throw new UnknownItemLocationException();
+        return player.getEnderChest(); // could theoretically obtain the players inventory even if they are not online, but this will have to be something for a later update
     }
 }

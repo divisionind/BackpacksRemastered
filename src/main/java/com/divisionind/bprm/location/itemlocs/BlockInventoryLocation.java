@@ -18,5 +18,22 @@
 
 package com.divisionind.bprm.location.itemlocs;
 
-public class BlockInventoryLocation {
+import com.divisionind.bprm.exceptions.UnknownItemLocationException;
+import com.divisionind.bprm.location.InventoryLocation;
+import org.bukkit.Location;
+import org.bukkit.inventory.Inventory;
+
+public class BlockInventoryLocation extends InventoryLocation {
+
+    private Location blockLocation;
+
+    public BlockInventoryLocation(int lastKnownSlot, Location blockLocation) {
+        super(lastKnownSlot);
+        this.blockLocation = blockLocation;
+    }
+
+    @Override
+    public Inventory resolveInventory() throws UnknownItemLocationException {
+        return null;
+    }
 }
