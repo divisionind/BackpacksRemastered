@@ -19,24 +19,27 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import com.divisionind.bprm.Backpacks;
+import com.divisionind.bprm.VirtualFurnace;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-public class Help extends ACommand {
+import static com.divisionind.bprm.events.BackpackFurnaceTickEvent.VIRTUAL_FURNACES;
 
-    private static final int COMMANDS_PER_PAGE = 4;
+public class VFurnace extends ACommand {
+
+    public static final int RESULTS_PER_PAGE = 4;
 
     @Override
     public String alias() {
-        return "help";
+        return "vfurnace";
     }
 
     @Override
     public String desc() {
-        return "displays this help information";
+        return "lists virtual furnaces and their assumed backpack locations";
     }
 
     @Override
@@ -46,12 +49,11 @@ public class Help extends ACommand {
 
     @Override
     public String permission() {
-        return "backpacks.help";
+        return "backpacks.vfurnace";
     }
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        // determine what page of help to display
         int page;
         if (args.length > 1) {
             try {
@@ -62,35 +64,35 @@ public class Help extends ACommand {
             }
         } else page = 1;
 
-        int numberOfPages = calculateNumberOfPages();
+        int numberOfPages = (VIRTUAL_FURNACES.size() / RESULTS_PER_PAGE) + 1;
 
         if (page > numberOfPages) {
             respondf(sender, "&cError: This help page does not exist. The maximum help page is %s.", numberOfPages);
             return;
         }
 
-        List<ACommand> commands = getOnPage(page);
-
         respondf(sender, "&bPage (&e%s &b/ &e%s&b)", page, numberOfPages);
 
-        for (ACommand cmd : commands) {
-            respondnf(sender, "&e/%s %s %s\n  &7%s", label, cmd.alias(), cmd.usage() == null ? "" : cmd.usage(), cmd.desc());
+        for (Map.Entry<UUID, VirtualFurnace> entry : VIRTUAL_FURNACES.entrySet()) {
+            respondnf(sender, "&eID: %s -- Location:\n", entry.getKey().toString());
+            // TODO resolve the location to a string like [Player (drew6017) -> Combined Backpack]
         }
     }
+    public static Map<UUID, VirtualFurnace> getOnPage(int page) {
+        Map<UUID, VirtualFurnace> newMap = new HashMap<>();
 
-    public static int calculateNumberOfPages() {
-        return (Backpacks.getCommands().size() / COMMANDS_PER_PAGE) + 1;
-    }
+        int startCmd = (page - 1) * RESULTS_PER_PAGE;
+        for (int i = startCmd;(i<VIRTUAL_FURNACES.size() && (i - startCmd) < RESULTS_PER_PAGE);i++) {
 
-    public static List<ACommand> getOnPage(int page) {
-        List<ACommand> commands = Backpacks.getCommands();
-        List<ACommand> newCmds = new ArrayList<>();
-
-        int startCmd = (page - 1) * COMMANDS_PER_PAGE;
-
-        for (int i = startCmd;(i<commands.size() && (i - startCmd) < COMMANDS_PER_PAGE);i++) {
-            newCmds.add(commands.get(i));
+            int slot = 0;
+            for (Map.Entry<UUID, VirtualFurnace> entry : VIRTUAL_FURNACES.entrySet()) {
+                if (slot++ == i) {
+                    newMap.put(entry.getKey(), entry.getValue());
+                    break;
+                }
+            }
         }
-        return newCmds;
+
+        return newMap;
     }
 }
