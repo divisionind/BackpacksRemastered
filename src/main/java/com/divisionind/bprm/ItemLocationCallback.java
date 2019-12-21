@@ -40,5 +40,5 @@ public abstract class ItemLocationCallback {
      * @return the item the backpack was stored in (if it was stored in another item), else null
      * @throws UnknownItemLocationException if the item's location can not be resolved
      */
-    public abstract ItemStack update(ItemStack newItem, ItemStack oldItem) throws UnknownItemLocationException;
+    public abstract ItemStack update(ItemStack newItem, ItemStack oldItem) throws UnknownItemLocationException; // TODO return inventory here
 }
