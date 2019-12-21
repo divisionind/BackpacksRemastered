@@ -21,7 +21,7 @@ package com.divisionind.bprm.location;
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class SurfaceLocation implements ItemLocation {
+public abstract class SurfaceLocation {
     // item that we are replacing should equal surface item
     public abstract void replace(ItemStack newItem, ItemStack surfaceItem) throws UnknownItemLocationException;
 }

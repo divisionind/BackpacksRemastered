@@ -18,5 +18,17 @@
 
 package com.divisionind.bprm.location;
 
-public interface ItemLocation {
+import org.bukkit.inventory.ItemStack;
+
+public class BackpackLocation {
+
+    private ItemStack currentBackpackItem;
+
+    public BackpackLocation(ItemStack currentBackpackItem) {
+        this.currentBackpackItem = currentBackpackItem;
+    }
+
+    public ItemStack getCurrentBackpackItem() {
+        return currentBackpackItem;
+    }
 }
