@@ -34,6 +34,14 @@ public class VirtualFurnace {
         this.released = false;
     }
 
+    public ItemStackLocation getItemLocation() {
+        return itemLocation;
+    }
+
+    public void setItemLocation(ItemStackLocation itemLocation) {
+        this.itemLocation = itemLocation;
+    }
+
     public Object getFurnace() {
         return furnace;
     }

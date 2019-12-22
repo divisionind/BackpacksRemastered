@@ -51,4 +51,9 @@ public class GroundLocation extends SurfaceLocation {
 
         throw new UnknownItemLocationException();
     }
+
+    @Override
+    public String toString() {
+        return "World (" + lastWorld.getName() + ")";
+    }
 }

@@ -15,10 +15,6 @@ language: en
 # But, it allows for the furnace backpack to continue furnacing when placed in other inventories, on the ground, in combined backpacks, etc.
 trackFurnaceBackpacks: true
 
-# maximum depth in nested backpacks that the plugin will search for a tracked furnace backpack to
-# be updated upon the closing of a virtual furnace
-maxRecursiveSearchDepth: 3
-
 recipes:
   small:
     display_name: "&aSmall Backpack"

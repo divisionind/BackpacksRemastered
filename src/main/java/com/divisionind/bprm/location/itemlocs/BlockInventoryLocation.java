@@ -40,4 +40,9 @@ public class BlockInventoryLocation extends InventoryLocation {
         if (chestInv == null) throw new UnknownItemLocationException();
         return chestInv;
     }
+
+    @Override
+    public String toString() {
+        return "Block (" + storageBlock.getType().name() + ")";
+    }
 }

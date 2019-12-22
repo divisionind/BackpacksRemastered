@@ -23,6 +23,8 @@ import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.UpdateItemCallback;
 import com.divisionind.bprm.VirtualFurnace;
 import com.divisionind.bprm.events.BackpackFurnaceTickEvent;
+import com.divisionind.bprm.location.ItemStackLocation;
+import com.divisionind.bprm.location.itemlocs.PlayerInventoryLocation;
 import com.divisionind.bprm.nms.NBTMap;
 import com.divisionind.bprm.nms.reflect.NBTType;
 import com.divisionind.bprm.nms.reflect.NMS;
@@ -32,7 +34,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -83,6 +87,7 @@ public class BPFurnace extends BackpackHandler {
 
     @Override
     public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception {
+        // ((CraftInventory)inv).getInventory() == IInventory which is our instance of TileEntityFurnace, we use this for identifying
         Inventory inv = e.getInventory();
         //TileEntityFurnace furnace = (TileEntityFurnace) ((CraftInventory)inv).getInventory();
         Object craftInventory = NMSClass.CraftInventory.getClazz().cast(inv);
@@ -96,16 +101,24 @@ public class BPFurnace extends BackpackHandler {
             vFurnaceEntry.getValue().setReleased(true);
         }
 
+        updateFurnaceDataTo(furnace, backpack);
+
+        ItemStack modifiedItem = backpack.getModifiedItem();
+
+        vFurnaceEntry.getValue().setItemLocation(new ItemStackLocation(
+                modifiedItem,
+                new PlayerInventoryLocation(102, e.getPlayer().getUniqueId()))); // 102 == chestplate slot, where the backpack should always be if opened by this method
+
+        // update item post NBT modification
+        callback.update(modifiedItem);
+    }
+
+    public static void updateFurnaceDataTo(Object furnace, NBTMap backpack) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         // update backpack contents with inventory
         NBTMap nbtMap = new NBTMap();
         //furnace.save((NBTTagCompound) nbtMap.getTagCompound());
         NMSMethod.save.getMethod().invoke(furnace, nbtMap.getTagCompound());
         backpack.setAsMap("furnace_data", nbtMap);
-
-        // ((CraftInventory)inv).getInventory() == IInventory which is our instance of TileEntityFurnace, we use this for identifying
-
-        // update item post NBT modification
-        callback.update(backpack.getModifiedItem());
     }
 
     public static Map.Entry<UUID, VirtualFurnace> locateVirtualFurnace(Object furnace) {

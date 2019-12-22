@@ -19,10 +19,14 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.VirtualFurnace;
+import com.divisionind.bprm.backpacks.BPFurnace;
 import com.divisionind.bprm.events.custom.GameTickEvent;
+import com.divisionind.bprm.exceptions.UnknownItemLocationException;
+import com.divisionind.bprm.nms.NMSItemStack;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +43,22 @@ public class BackpackFurnaceTickEvent implements Listener {
             if (!value.isBurning() && value.isReleased()) {
                 // TODO need to at least try to update the furnace backpack's NBT data before exiting here
                 // also need to attempt to update NBT data on reload/shutdown
-                VIRTUAL_FURNACES.remove(key);
+                VirtualFurnace virtualFurnace = VIRTUAL_FURNACES.remove(key);
+
+                if (virtualFurnace.getItemLocation() != null) {
+                    try {
+                        NMSItemStack nmsItemStack = new NMSItemStack(virtualFurnace.getItemLocation().getSurfaceItem());
+                        BPFurnace.updateFurnaceDataTo(virtualFurnace.getFurnace(), nmsItemStack);
+                        try {
+                            virtualFurnace.getItemLocation().update(nmsItemStack.getModifiedItem());
+                        } catch (UnknownItemLocationException e) {
+                            // very likely error here (as tracking is not perfect), ignore it for now
+                            e.printStackTrace();
+                        }
+                    } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+                        e.printStackTrace();
+                    }
+                }
             } else {
                 try {
                     // will throw inconsequential exception when trying to set blockstate to lit or unlit

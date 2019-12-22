@@ -75,7 +75,8 @@ public class Backpacks extends JavaPlugin {
                 new ConfigReload(),
                 new Split(),
                 new MaterialsList(),
-                new MaterialsSearch());
+                new MaterialsSearch(),
+                new VFurnace());
 
         registerEvents(new BackpackCraftEvent(),
                 new BackpackDamageEvent(),
@@ -84,6 +85,11 @@ public class Backpacks extends JavaPlugin {
                 new BackpackLinkEvent(),
                 new BackpackInvClickEvent(),
                 new BackpackFurnaceTickEvent());
+
+        // register these events if enabled
+        if (getConfig().getBoolean("trackFurnaceBackpacks")) {
+            registerEvents(new BackpackTrackEvents());
+        }
 
         getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMS.VERSION));
         try {

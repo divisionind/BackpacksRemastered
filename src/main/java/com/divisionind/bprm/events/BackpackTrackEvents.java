@@ -18,15 +18,12 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.location.ItemStackLocation;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.Listener;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+public class BackpackTrackEvents implements Listener {
 
-public class BackpackTrackEvents {
-
-    public static Map<ItemStack, ItemStackLocation> TRACKED_BACKPACKS = new ConcurrentHashMap<>();
+    //public static Map<ItemStack, ItemStackLocation> TRACKED_BACKPACKS = new ConcurrentHashMap<>();
+    // dont need this, about as fast to just look in VirtualFurnaces table
 
     /*
         Events Needed:

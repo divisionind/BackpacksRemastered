@@ -37,4 +37,12 @@ public class EnderChestLocation extends PlayerInventoryLocation {
         if (player == null) throw new UnknownItemLocationException();
         return player.getEnderChest(); // could theoretically obtain the players inventory even if they are not online, but this will have to be something for a later update
     }
+
+    @Override
+    public String toString() {
+        String playerName;
+        Player player = Bukkit.getPlayer(playerId);
+        playerName = player == null ? "offline" : player.getDisplayName();
+        return "Enderchest (" + playerName + ")";
+    }
 }
