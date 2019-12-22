@@ -18,22 +18,26 @@
 
 package com.divisionind.bprm.location.itemlocs;
 
+import com.divisionind.bprm.backpacks.BPLinked;
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import com.divisionind.bprm.location.InventoryLocation;
-import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.Inventory;
 
 public class BlockInventoryLocation extends InventoryLocation {
 
-    private Location blockLocation;
+    private Block storageBlock;
 
-    public BlockInventoryLocation(int lastKnownSlot, Location blockLocation) {
+    public BlockInventoryLocation(int lastKnownSlot, Block storageBlock) {
         super(lastKnownSlot);
-        this.blockLocation = blockLocation;
+        this.storageBlock = storageBlock;
     }
 
     @Override
     public Inventory resolveInventory() throws UnknownItemLocationException {
-        return null;
+        // TODO attempt to support other block types here as well
+        Inventory chestInv = BPLinked.getChestInventory(storageBlock);
+        if (chestInv == null) throw new UnknownItemLocationException();
+        return chestInv;
     }
 }

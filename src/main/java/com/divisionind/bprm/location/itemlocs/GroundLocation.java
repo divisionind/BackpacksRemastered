@@ -20,11 +20,35 @@ package com.divisionind.bprm.location.itemlocs;
 
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import com.divisionind.bprm.location.SurfaceLocation;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 public class GroundLocation extends SurfaceLocation {
+
+    private World lastWorld;
+
+    public GroundLocation(World lastWorld) {
+        this.lastWorld = lastWorld;
+    }
+
     @Override
     public void replace(ItemStack newItem, ItemStack surfaceItem) throws UnknownItemLocationException {
+        List<Entity> entityList = lastWorld.getEntities();
+        entityList.removeIf(entity -> !entity.getType().equals(EntityType.DROPPED_ITEM));
 
+        for (Entity ent : entityList) {
+            Item item = (Item) ent;
+            if (surfaceItem.equals(item.getItemStack())) {
+                item.setItemStack(newItem);
+                return;
+            }
+        }
+
+        throw new UnknownItemLocationException();
     }
 }

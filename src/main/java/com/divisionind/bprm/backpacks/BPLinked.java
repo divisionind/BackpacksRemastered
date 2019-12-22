@@ -57,7 +57,7 @@ public class BPLinked extends BackpackHandler {
     @Override
     public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception { }
 
-    private Inventory getChestInventory(Block block) {
+    public static Inventory getChestInventory(Block block) {
         BlockState blockState = block.getState();
         if (blockState instanceof Chest) {
             Chest chest = (Chest)blockState;
