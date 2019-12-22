@@ -41,8 +41,9 @@ public class BackpackFurnaceTickEvent implements Listener {
     public void onGameTick(GameTickEvent event) {
         VIRTUAL_FURNACES.forEach((key, value) -> {
             if (!value.isBurning() && value.isReleased()) {
-                // TODO need to at least try to update the furnace backpack's NBT data before exiting here
-                // also need to attempt to update NBT data on reload/shutdown
+                // we need to at least try to update the furnace backpack's NBT data before exiting here
+                // in order to preserve what the furnace did during this time (not a big deal if it doesnt
+                // it is just kinda annoying)
                 VirtualFurnace virtualFurnace = VIRTUAL_FURNACES.remove(key);
 
                 if (virtualFurnace.getItemLocation() != null) {
@@ -53,7 +54,7 @@ public class BackpackFurnaceTickEvent implements Listener {
                             virtualFurnace.getItemLocation().update(nmsItemStack.getModifiedItem());
                         } catch (UnknownItemLocationException e) {
                             // very likely error here (as tracking is not perfect), ignore it for now
-                            e.printStackTrace();
+                            //e.printStackTrace(); // for debugging purposes
                         }
                     } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
                         e.printStackTrace();

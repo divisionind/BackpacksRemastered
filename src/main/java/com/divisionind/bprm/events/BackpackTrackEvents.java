@@ -24,6 +24,7 @@ public class BackpackTrackEvents implements Listener {
 
     //public static Map<ItemStack, ItemStackLocation> TRACKED_BACKPACKS = new ConcurrentHashMap<>();
     // dont need this, about as fast to just look in VirtualFurnaces table
+    // TODO actually implement the tracking
 
     /*
         Events Needed:
