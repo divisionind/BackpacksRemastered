@@ -23,6 +23,9 @@ import com.divisionind.bprm.nms.reflect.NMSMethod;
 
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Part of the magic that makes the furnace backpack work
+ */
 public class VirtualFurnace {
 
     private Object furnace;
