@@ -19,7 +19,7 @@ in the future (also I may remove the jar and only provide hashes for the jar in 
 
 
 ## Adding languages
-This plugin uses the i18nExtractor plugin written by me (drew6017) to automatically extract / translating
+This plugin uses the i18nExtractor gradle plugin written by me (drew6017) for automatically extracting / translating
 strings into other languages. You can specify any language supported by Google Translate in the last line
 under the internationalize task.
 
