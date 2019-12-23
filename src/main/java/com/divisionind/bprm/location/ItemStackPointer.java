@@ -21,7 +21,7 @@ package com.divisionind.bprm.location;
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemStackLocation {
+public class ItemStackPointer {
 
     // first - last in tree
     // last - (e.g. chest) in tree
@@ -44,7 +44,7 @@ public class ItemStackLocation {
     private SurfaceLocation surfaceLocation;
     private ItemStack surfaceItem;
 
-    public ItemStackLocation(ItemStack surfaceItem, SurfaceLocation surfaceLocation) {
+    public ItemStackPointer(ItemStack surfaceItem, SurfaceLocation surfaceLocation) {
         this.surfaceItem = surfaceItem;
         this.surfaceLocation = surfaceLocation;
     }

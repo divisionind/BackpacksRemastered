@@ -18,31 +18,41 @@
 
 package com.divisionind.bprm.location.itemlocs;
 
-import com.divisionind.bprm.backpacks.BPLinked;
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import com.divisionind.bprm.location.InventoryLocation;
-import org.bukkit.block.Block;
+import com.divisionind.bprm.location.ItemPointerType;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public class BlockInventoryLocation extends InventoryLocation {
+import java.util.UUID;
 
-    private Block storageBlock;
+public class InventoryLocationPlayer extends InventoryLocation {
 
-    public BlockInventoryLocation(int lastKnownSlot, Block storageBlock) {
-        super(lastKnownSlot);
-        this.storageBlock = storageBlock;
+    protected UUID playerId;
+
+    public InventoryLocationPlayer(int lastKnownSlot, UUID playerId) {
+        super(ItemPointerType.PLAYER, lastKnownSlot);
+        this.playerId = playerId;
+    }
+
+    protected InventoryLocationPlayer(int lastKnownSlot, UUID playerId, ItemPointerType itemPointerType) {
+        super(itemPointerType, lastKnownSlot);
+        this.playerId = playerId;
     }
 
     @Override
     public Inventory resolveInventory() throws UnknownItemLocationException {
-        // TODO attempt to support other block types here as well
-        Inventory chestInv = BPLinked.getChestInventory(storageBlock);
-        if (chestInv == null) throw new UnknownItemLocationException();
-        return chestInv;
+        Player player = Bukkit.getPlayer(playerId);
+        if (player == null) throw new UnknownItemLocationException();
+        return player.getInventory(); // could theoretically obtain the players inventory even if they are not online, but this will have to be something for a later update
     }
 
     @Override
     public String toString() {
-        return "Block (" + storageBlock.getType().name() + ")";
+        String playerName;
+        Player player = Bukkit.getPlayer(playerId);
+        playerName = player == null ? "offline" : player.getDisplayName();
+        return "Player (" + playerName + ")";
     }
 }

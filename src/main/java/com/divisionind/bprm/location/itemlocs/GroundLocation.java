@@ -19,6 +19,7 @@
 package com.divisionind.bprm.location.itemlocs;
 
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
+import com.divisionind.bprm.location.ItemPointerType;
 import com.divisionind.bprm.location.SurfaceLocation;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -33,6 +34,7 @@ public class GroundLocation extends SurfaceLocation {
     private World lastWorld;
 
     public GroundLocation(World lastWorld) {
+        super(ItemPointerType.GROUND);
         this.lastWorld = lastWorld;
     }
 

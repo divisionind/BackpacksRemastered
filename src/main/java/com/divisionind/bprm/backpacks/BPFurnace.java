@@ -23,8 +23,8 @@ import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.UpdateItemCallback;
 import com.divisionind.bprm.VirtualFurnace;
 import com.divisionind.bprm.events.BackpackFurnaceTickEvent;
-import com.divisionind.bprm.location.ItemStackLocation;
-import com.divisionind.bprm.location.itemlocs.PlayerInventoryLocation;
+import com.divisionind.bprm.location.ItemStackPointer;
+import com.divisionind.bprm.location.itemlocs.InventoryLocationPlayer;
 import com.divisionind.bprm.nms.NBTMap;
 import com.divisionind.bprm.nms.reflect.NBTType;
 import com.divisionind.bprm.nms.reflect.NMS;
@@ -64,7 +64,7 @@ public class BPFurnace extends BackpackHandler {
             // furnace = new TileEntityFurnaceFurnace();
             furnace = NMSClass.TileEntityFurnaceFurnace.getClazz().getDeclaredConstructor().newInstance();
             // assign it a dimension
-            //furnace.setWorld(((CraftServer)Bukkit.getServer()).getServer().getWorldServer(DimensionManager.OVERWORLD));
+            //furnace.setWorld(((CraftServer)Bukkit.getServer()).getServer().getWorldServer(DimensionManager.OVERWORLD)); // note: this is used because the alternative method is depreciated
             Object craftServer = NMSClass.CraftServer.getClazz().cast(Bukkit.getServer());
             Object dedicatedServer = NMSMethod.getServer.getMethod().invoke(craftServer);
             Object worldServer = NMSMethod.getWorldServer.getMethod().invoke(dedicatedServer, NMS.DIMENSION_MANAGER_OVERWORLD);
@@ -105,9 +105,9 @@ public class BPFurnace extends BackpackHandler {
 
         ItemStack modifiedItem = backpack.getModifiedItem();
 
-        vFurnaceEntry.getValue().setItemLocation(new ItemStackLocation(
+        vFurnaceEntry.getValue().setItemLocation(new ItemStackPointer(
                 modifiedItem,
-                new PlayerInventoryLocation(102, e.getPlayer().getUniqueId()))); // 102 == chestplate slot, where the backpack should always be if opened by this method
+                new InventoryLocationPlayer(102, e.getPlayer().getUniqueId()))); // 102 == chestplate slot, good first place to look
 
         // update item post NBT modification
         callback.update(modifiedItem);

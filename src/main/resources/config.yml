@@ -12,7 +12,8 @@ maxNumberOfCombinedBackpacks: 9
 language: en
 
 # Uses a lot of extra resources
-# But, it allows for the furnace backpack to continue furnacing when placed in other inventories, on the ground, in combined backpacks, etc.
+# But, it allows for the furnace backpack to continue smelting when placed in other inventories, on the ground, in combined backpacks, etc.
+# Note: the backpack will always be located if it remains in the player who started the smelting operation's inventory
 trackFurnaceBackpacks: true
 
 recipes:

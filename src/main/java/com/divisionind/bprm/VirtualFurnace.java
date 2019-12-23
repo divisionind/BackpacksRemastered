@@ -18,7 +18,7 @@
 
 package com.divisionind.bprm;
 
-import com.divisionind.bprm.location.ItemStackLocation;
+import com.divisionind.bprm.location.ItemStackPointer;
 import com.divisionind.bprm.nms.reflect.NMSMethod;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,18 +30,18 @@ public class VirtualFurnace {
 
     private Object furnace;
     private boolean released; // if not opened, the backpack is released -> then when it stops burning, it can be removed from the TickEvent
-    private ItemStackLocation itemLocation;
+    private ItemStackPointer itemLocation;
 
     public VirtualFurnace(Object furnace) {
         this.furnace = furnace;
         this.released = false;
     }
 
-    public ItemStackLocation getItemLocation() {
+    public ItemStackPointer getItemLocation() {
         return itemLocation;
     }
 
-    public void setItemLocation(ItemStackLocation itemLocation) {
+    public void setItemLocation(ItemStackPointer itemLocation) {
         this.itemLocation = itemLocation;
     }
 

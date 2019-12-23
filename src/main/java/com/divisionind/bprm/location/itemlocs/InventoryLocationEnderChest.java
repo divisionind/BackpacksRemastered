@@ -19,16 +19,17 @@
 package com.divisionind.bprm.location.itemlocs;
 
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
+import com.divisionind.bprm.location.ItemPointerType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.util.UUID;
 
-public class EnderChestLocation extends PlayerInventoryLocation {
+public class InventoryLocationEnderChest extends InventoryLocationPlayer {
 
-    public EnderChestLocation(int lastKnownSlot, UUID playerId) {
-        super(lastKnownSlot, playerId);
+    public InventoryLocationEnderChest(int lastKnownSlot, UUID playerId) {
+        super(lastKnownSlot, playerId, ItemPointerType.ENDER_CHEST);
     }
 
     @Override

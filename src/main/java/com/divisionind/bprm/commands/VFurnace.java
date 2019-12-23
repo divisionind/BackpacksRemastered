@@ -20,7 +20,7 @@ package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.VirtualFurnace;
-import com.divisionind.bprm.location.ItemStackLocation;
+import com.divisionind.bprm.location.ItemStackPointer;
 import org.bukkit.command.CommandSender;
 
 import java.util.HashMap;
@@ -75,8 +75,8 @@ public class VFurnace extends ACommand {
         respondf(sender, "&bPage (&e%s &b/ &e%s&b)", page, numberOfPages);
 
         for (Map.Entry<UUID, VirtualFurnace> entry : getOnPage(page).entrySet()) {
-            ItemStackLocation itemStackLocation = entry.getValue().getItemLocation();
-            respondnf(sender, "&eID:&7 %s &r&e-- Location: &7[%s]&r", entry.getKey().toString(), itemStackLocation == null ? "unknown" : itemStackLocation.getSurfaceLocation().toString());
+            ItemStackPointer itemStackPointer = entry.getValue().getItemLocation();
+            respondnf(sender, "&eID:&7 %s &r&e-- Location: &7[%s]&r", entry.getKey().toString(), itemStackPointer == null ? "unknown" : itemStackPointer.getSurfaceLocation().toString());
         }
     }
     public static Map<UUID, VirtualFurnace> getOnPage(int page) {

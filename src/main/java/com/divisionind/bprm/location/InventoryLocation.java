@@ -28,7 +28,8 @@ public abstract class InventoryLocation extends SurfaceLocation {
 
     private int lastKnownSlot;
 
-    public InventoryLocation(int lastKnownSlot) {
+    public InventoryLocation(ItemPointerType itemPointerType, int lastKnownSlot) {
+        super(itemPointerType);
         this.lastKnownSlot = lastKnownSlot;
     }
 

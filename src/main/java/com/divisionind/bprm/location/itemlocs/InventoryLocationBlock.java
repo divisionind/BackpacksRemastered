@@ -18,35 +18,32 @@
 
 package com.divisionind.bprm.location.itemlocs;
 
+import com.divisionind.bprm.backpacks.BPLinked;
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import com.divisionind.bprm.location.InventoryLocation;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import com.divisionind.bprm.location.ItemPointerType;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.Inventory;
 
-import java.util.UUID;
+public class InventoryLocationBlock extends InventoryLocation {
 
-public class PlayerInventoryLocation extends InventoryLocation {
+    private Block storageBlock;
 
-    protected UUID playerId;
-
-    public PlayerInventoryLocation(int lastKnownSlot, UUID playerId) {
-        super(lastKnownSlot);
-        this.playerId = playerId;
+    public InventoryLocationBlock(int lastKnownSlot, Block storageBlock) {
+        super(ItemPointerType.BLOCK, lastKnownSlot);
+        this.storageBlock = storageBlock;
     }
 
     @Override
     public Inventory resolveInventory() throws UnknownItemLocationException {
-        Player player = Bukkit.getPlayer(playerId);
-        if (player == null) throw new UnknownItemLocationException();
-        return player.getInventory(); // could theoretically obtain the players inventory even if they are not online, but this will have to be something for a later update
+        // TODO attempt to support other block types here as well DISPENSER, DROPPER, HOPPER, SHULKER_BOX, BARREL:
+        Inventory chestInv = BPLinked.getChestInventory(storageBlock);
+        if (chestInv == null) throw new UnknownItemLocationException();
+        return chestInv;
     }
 
     @Override
     public String toString() {
-        String playerName;
-        Player player = Bukkit.getPlayer(playerId);
-        playerName = player == null ? "offline" : player.getDisplayName();
-        return "Player (" + playerName + ")";
+        return "Block (" + storageBlock.getType().name() + ")";
     }
 }
