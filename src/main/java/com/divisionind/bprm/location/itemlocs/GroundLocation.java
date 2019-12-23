@@ -56,6 +56,6 @@ public class GroundLocation extends SurfaceLocation {
 
     @Override
     public String toString() {
-        return "World (" + lastWorld.getName() + ")";
+        return "Ground (" + lastWorld.getName() + ")";
     }
 }
