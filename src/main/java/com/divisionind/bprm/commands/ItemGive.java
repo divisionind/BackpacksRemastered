@@ -20,6 +20,7 @@ package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.BackpackObject;
+import com.divisionind.bprm.BackpackRecipes;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemGive extends ACommand {
+
+    public static final String KEY_NAME = "KEY";
+
     @Override
     public String alias() {
         return "item:give";
@@ -71,7 +75,12 @@ public class ItemGive extends ACommand {
         // attempt to resolve backpack type
         BackpackObject item = BackpackObject.getByName(args[1]);
         if (item == null) {
-            respondf(sender, "&cBackpack of type \"%s\" was not found.", args[1]);
+            if (KEY_NAME.equalsIgnoreCase(args[1])) {
+                p.getInventory().addItem(BackpackRecipes.BACKPACK_KEY);
+                respond(sender, "&eGave the player a backpack key.");
+            } else {
+                respondf(sender, "&cBackpack of type \"%s\" was not found.", args[1]);
+            }
             return;
         }
 
@@ -85,10 +94,14 @@ public class ItemGive extends ACommand {
             List<String> parts = new ArrayList<>();
             if (args[1].equals("")) {
                 for (BackpackObject item : BackpackObject.values()) parts.add(item.name());
+                parts.add(KEY_NAME);
             } else {
+                String typedLowercase = args[1].toLowerCase();
                 for (BackpackObject item : BackpackObject.values()) {
-                    if (item.name().toLowerCase().startsWith(args[1].toLowerCase())) parts.add(item.name());
+                    if (item.name().toLowerCase().startsWith(typedLowercase)) parts.add(item.name());
                 }
+
+                if (KEY_NAME.toLowerCase().startsWith(typedLowercase)) parts.add(KEY_NAME);
             }
             return parts;
         } else return null;

@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class ACommand {
 
@@ -40,6 +41,13 @@ public abstract class ACommand {
     public abstract String permission();
 
     public abstract void execute(CommandSender sender, String label, String[] args);
+
+    // TODO ensure that commands are processed on a single thread before doing this
+//    protected CommandSender currentSender;
+//
+//    protected void respond(String msg) {
+//        respond(currentSender, msg);
+//    }
 
     // recursively do these as to always have tab complete available
     // if null, displays online players | if empty list, displays nothing
@@ -114,6 +122,7 @@ public abstract class ACommand {
     public void call(CommandSender sender, String label, String[] args) {
         if (hasPerm(sender)) {
             try {
+                //this.currentSender = sender;
                 execute(sender, label, args);
             } catch (PlayerRequiredException e) {
                 respond(sender, "&cYou must be a player to use this command.");

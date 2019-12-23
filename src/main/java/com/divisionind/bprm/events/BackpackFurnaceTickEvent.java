@@ -33,8 +33,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BackpackFurnaceTickEvent implements Listener {
 
-    // does not necessarily have to be a ConcurrentHashMap because this is run in the game loop
-    // with inventory actions (only this way because of inefficient removal of entries)
+    // does not necessarily have to be a ConcurrentHashMap because this is only accessed in the game loop
+    // with inventory actions (only this way because of inefficient removal of entries during iteration)
     public static Map<UUID, VirtualFurnace> VIRTUAL_FURNACES = new ConcurrentHashMap<>();
 
     @EventHandler
