@@ -76,7 +76,7 @@ public class VFurnace extends ACommand {
 
         for (Map.Entry<UUID, VirtualFurnace> entry : getOnPage(page).entrySet()) {
             ItemStackPointer itemStackPointer = entry.getValue().getItemLocation();
-            respondnf(sender, "&eID:&7 %s &r&e-- Location: &7[%s]&r", entry.getKey().toString(), itemStackPointer == null ? "unknown" : itemStackPointer.getSurfaceLocation().toString());
+            respondnf(sender, "&eID:&7 %s &r&e\n| Location: &7[%s]&r", entry.getKey().toString(), itemStackPointer == null ? "unknown" : itemStackPointer.getSurfaceLocation().toString());
         }
     }
     public static Map<UUID, VirtualFurnace> getOnPage(int page) {
