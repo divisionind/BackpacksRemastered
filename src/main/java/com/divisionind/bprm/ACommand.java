@@ -41,7 +41,9 @@ public abstract class ACommand {
 
     public abstract void execute(CommandSender sender, String label, String[] args);
 
-    // TODO ensure that commands are processed on a single thread before doing this
+    // TODO
+    // Commands are processed synchronously in the gameloop, therefore, this is safe
+
 //    protected CommandSender currentSender;
 //
 //    protected void respond(String msg) {
@@ -114,9 +116,9 @@ public abstract class ACommand {
     /**
      * Calls the command only if the sender has permission.
      *
-     * @param sender
-     * @param label
-     * @param args
+     * @param sender thing performing the command
+     * @param label what actual text was typed that triggered this command (if the command has aliases, which one was used)
+     * @param args arguments passed into the command (args[0] is always equal to {@link ACommand#alias()})
      */
     public void call(CommandSender sender, String label, String[] args) {
         if (hasPerm(sender)) {

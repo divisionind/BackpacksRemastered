@@ -23,23 +23,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemStackPointer {
 
-    // first - last in tree
-    // last - (e.g. chest) in tree
-
-    //   || as the actual furnace backpack is not actually included in the updateTree
-    // e.g. |Furnace Backpack| -> Combined Backpack -> Large Backpack -> Chest
-    // ---------------------------------------------------------------------
-    // so, to update the furnace item, we need to:
-    // - [get the chest inventory]
-    // - locate the backpack item,          [get its inventory]
-    // - locate the combined backpack item, [get its inventory]
-    // - locate the furnace backpack, then replace it
-    // --------------------------------------------------------
-    // - [replace combined backpack with new]
-    // - [replace large backpack with new]
-    // - done.
-
-    // TODO track the backpacks location, we need to track the last [ItemLocation] in chain that is an instance of [BackpackLocation]
+    // TODO support furnace backpacks in other backpacks
 
     private SurfaceLocation surfaceLocation;
     private ItemStack surfaceItem;

@@ -102,12 +102,14 @@ public class BPFurnace extends BackpackHandler {
         }
 
         updateFurnaceDataTo(furnace, backpack);
-
         ItemStack modifiedItem = backpack.getModifiedItem();
 
-        vFurnaceEntry.getValue().setItemLocation(new ItemStackPointer(
-                modifiedItem,
-                new InventoryLocationPlayer(102, e.getPlayer().getUniqueId()))); // 102 == chestplate slot, good first place to look
+        // need to check again for null
+        if (vFurnaceEntry != null) {
+            vFurnaceEntry.getValue().setItemLocation(new ItemStackPointer(
+                    modifiedItem,
+                    new InventoryLocationPlayer(102, e.getPlayer().getUniqueId()))); // 102 == chestplate slot, good first place to look
+        }
 
         // update item post NBT modification
         callback.update(modifiedItem);
