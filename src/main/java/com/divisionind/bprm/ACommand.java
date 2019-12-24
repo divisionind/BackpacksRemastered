@@ -42,7 +42,8 @@ public abstract class ACommand {
     public abstract void execute(CommandSender sender, String label, String[] args);
 
     // TODO
-    // Commands are processed synchronously in the gameloop, therefore, this is safe
+    // Commands are processed synchronously in the gameloop for bukkit, therefore, this is safe
+    // verify this is the case on all common mc servers
 
 //    protected CommandSender currentSender;
 //
