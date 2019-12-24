@@ -36,7 +36,10 @@ public enum NMSClass {
     World(SERVER, "World"),
     DimensionManager(SERVER, "DimensionManager"),
     CraftInventoryFurnace(CRAFT, "inventory.CraftInventoryFurnace"),
-    CraftInventory(CRAFT, "inventory.CraftInventory");
+    CraftInventory(CRAFT, "inventory.CraftInventory"),
+    EntityPlayer(SERVER, "EntityPlayer"),
+    PlayerInteractManager(SERVER, "PlayerInteractManager"),
+    WorldServer(SERVER, "WorldServer");
 
     private String path;
     private Class clazz;

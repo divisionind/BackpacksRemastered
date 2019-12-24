@@ -42,7 +42,8 @@ public enum NMSMethod {
     isBurning(true, true, TileEntityFurnace, "isBurning"),
     save(TileEntityFurnace, "save", NBTTagCompound.getClazz()),
     load(TileEntityFurnace, "load", NBTTagCompound.getClazz()),
-    getInventory(CraftInventory, "getInventory");
+    getInventory(CraftInventory, "getInventory"),
+    getBukkitEntity(EntityPlayer, "getBukkitEntity");
 
     private Method method;
     private MethodInitializer methodInitializer;
