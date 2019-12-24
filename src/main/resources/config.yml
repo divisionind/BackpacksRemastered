@@ -8,11 +8,10 @@ openBackpackCooldown: 8
 maxNumberOfCombinedBackpacks: 9
 
 # What language to set the plugin to. You can compile the plugin to support any languages you wish. For more info, see the github.
-# Current included languages are: en (English), es (Spanish), it (Italian), fr (French), zh (Chinese), pl (Polish)
+# Current included languages are: en (English), es (Spanish), it (Italian), fr (French), zh (Chinese), pl (Polish), de (German)
 language: en
 
-# Uses a lot of extra resources
-# But, it allows for the furnace backpack to continue smelting when placed in other inventories, on the ground, in combined backpacks, etc.
+# Uses extra resources but will track furnace backpacks wherever they go to update them on the completion of the smelting operation
 # Note: the backpack will always be located if it remains in the player who started the smelting operation's inventory
 trackFurnaceBackpacks: true
 
