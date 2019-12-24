@@ -35,7 +35,6 @@ public enum NMSMethod {
     removeTag(NBTTagCompound, "remove", String.class),
     getTypeId(NBTBase, "getTypeId"),
     getKeys(() -> KnownVersion.v1_13_R1.isBefore() ? NBTTagCompound.getClazz().getMethod("c") : NBTTagCompound.getClazz().getMethod("getKeys")),
-    setWorld(TileEntity, "setWorld", World.getClazz()),
     getServer(CraftServer, "getServer"),
     getWorldServer(MinecraftServer, "getWorldServer", DimensionManager.getClazz()),
     tick(TileEntityFurnace, "tick"),
