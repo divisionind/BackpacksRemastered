@@ -24,6 +24,8 @@ import org.bukkit.Bukkit;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NMS {
 
@@ -33,16 +35,36 @@ public class NMS {
 
     public static Object DIMENSION_MANAGER_OVERWORLD;
 
-    public static void initialize() throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
+    public static List<Exception> initialize() {
+        List<Exception> exceptions = new ArrayList<>();
+
         // initialize classes
-        for (NMSClass nmsClass : NMSClass.values()) nmsClass.init();
+        for (NMSClass nmsClass : NMSClass.values()) {
+            try {
+                nmsClass.init();
+            } catch (Exception e) {
+                exceptions.add(e);
+            }
+        }
 
         // init all getters and setters for the various NBTTag data values
         NBTType.COMPOUND.setClassType(NMSClass.NBTBase.getClazz());
-        for (NBTType type : NBTType.values()) type.init(NMSClass.NBTTagCompound.getClazz());
+        for (NBTType type : NBTType.values()) {
+            try {
+                type.init(NMSClass.NBTTagCompound.getClazz());
+            } catch (Exception e) {
+                exceptions.add(e);
+            }
+        }
 
         // initialize methods
-        for (NMSMethod nmsMethod : NMSMethod.values()) nmsMethod.init();
+        for (NMSMethod nmsMethod : NMSMethod.values()) {
+            try {
+                nmsMethod.init();
+            } catch (Exception e) {
+                exceptions.add(e);
+            }
+        }
 
         // initialize fake viewer using reflection (so that it can support spigot + craftbukkit)
         Backpacks.FAKE_VIEWER = (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(),
@@ -61,8 +83,14 @@ public class NMS {
                     return null;
                 });
 
-        Field overWorldField = NMSClass.DimensionManager.getClazz().getDeclaredField("OVERWORLD");
-        DIMENSION_MANAGER_OVERWORLD = overWorldField.get(null);
+        try {
+            Field overWorldField = NMSClass.DimensionManager.getClazz().getDeclaredField("OVERWORLD");
+            DIMENSION_MANAGER_OVERWORLD = overWorldField.get(null);
+        } catch (Exception e) {
+            exceptions.add(e);
+        }
+
+        return exceptions;
     }
 
     private static String getVersion() {

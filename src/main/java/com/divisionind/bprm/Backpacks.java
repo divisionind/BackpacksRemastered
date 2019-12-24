@@ -92,11 +92,10 @@ public class Backpacks extends JavaPlugin {
         }
 
         getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMS.VERSION));
-        try {
-            NMS.initialize();
-        } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException | IllegalAccessException e) {
-            getLogger().severe("Error initializing NMS. Was the detected server wrong? If not, then NMS has changed significantly sense this plugin was released and therefore, it can not adapt.");
-            e.printStackTrace();
+        List<Exception> nmsExceptions = NMS.initialize();
+        if (nmsExceptions.size() > 0) {
+            getLogger().severe(nmsExceptions.size() + " error(s) initializing NMS. Was the detected server wrong? If not, then NMS has changed significantly sense this plugin was released and therefore, it can not fully adapt.");
+            for (Exception ex : nmsExceptions) ex.printStackTrace();
         }
 
         BackpackRecipes.registerRecipes(getConfig(), getLogger());
