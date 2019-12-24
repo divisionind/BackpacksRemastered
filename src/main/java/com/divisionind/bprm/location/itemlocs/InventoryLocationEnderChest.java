@@ -20,7 +20,6 @@ package com.divisionind.bprm.location.itemlocs;
 
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import com.divisionind.bprm.location.ItemPointerType;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -34,16 +33,13 @@ public class InventoryLocationEnderChest extends InventoryLocationPlayer {
 
     @Override
     public Inventory resolveInventory() throws UnknownItemLocationException {
-        Player player = Bukkit.getPlayer(playerId);
+        Player player = alwaysPlayer.resolvePlayer();
         if (player == null) throw new UnknownItemLocationException();
         return player.getEnderChest(); // could theoretically obtain the players inventory even if they are not online, but this will have to be something for a later update
     }
 
     @Override
     public String toString() {
-        String playerName;
-        Player player = Bukkit.getPlayer(playerId);
-        playerName = player == null ? "offline" : player.getDisplayName();
-        return "Enderchest (" + playerName + ")";
+        return "Enderchest (" + alwaysPlayer.getName() + ")";
     }
 }

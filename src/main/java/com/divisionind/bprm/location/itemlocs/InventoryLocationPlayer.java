@@ -18,41 +18,45 @@
 
 package com.divisionind.bprm.location.itemlocs;
 
+import com.divisionind.bprm.AlwaysPlayer;
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import com.divisionind.bprm.location.InventoryLocation;
 import com.divisionind.bprm.location.ItemPointerType;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
 public class InventoryLocationPlayer extends InventoryLocation {
 
-    protected UUID playerId;
+    protected AlwaysPlayer alwaysPlayer;
 
     public InventoryLocationPlayer(int lastKnownSlot, UUID playerId) {
         super(ItemPointerType.PLAYER, lastKnownSlot);
-        this.playerId = playerId;
+        this.alwaysPlayer = new AlwaysPlayer(playerId);
     }
 
     protected InventoryLocationPlayer(int lastKnownSlot, UUID playerId, ItemPointerType itemPointerType) {
         super(itemPointerType, lastKnownSlot);
-        this.playerId = playerId;
+        this.alwaysPlayer = new AlwaysPlayer(playerId);
     }
 
     @Override
     public Inventory resolveInventory() throws UnknownItemLocationException {
-        Player player = Bukkit.getPlayer(playerId);
+        Player player = alwaysPlayer.resolvePlayer();
         if (player == null) throw new UnknownItemLocationException();
-        return player.getInventory(); // could theoretically obtain the players inventory even if they are not online, but this will have to be something for a later update
+        return player.getInventory();
+    }
+
+    @Override
+    public void replace(ItemStack newItem, ItemStack surfaceItem) throws UnknownItemLocationException {
+        super.replace(newItem, surfaceItem);
+        alwaysPlayer.safeSave(); // must save the player data if it is an instance we created ourselves
     }
 
     @Override
     public String toString() {
-        String playerName;
-        Player player = Bukkit.getPlayer(playerId);
-        playerName = player == null ? "offline" : player.getDisplayName();
-        return "Player (" + playerName + ")";
+        return "Player (" + alwaysPlayer.getName() + ")";
     }
 }
