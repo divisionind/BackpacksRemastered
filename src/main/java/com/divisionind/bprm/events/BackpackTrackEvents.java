@@ -30,7 +30,6 @@ import com.divisionind.bprm.location.itemlocs.InventoryLocationPlayer;
 import com.divisionind.bprm.nms.reflect.NBTType;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -48,15 +47,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 public class BackpackTrackEvents implements Listener {
-
-    /*
-        Events Needed:
-        - Item Move
-
-        We can ignore player join/leave because:
-            - leave: the uuid will become invalid and the location pointer wont resolve
-            - join: nothing really to do if you think about it (especially if I add offline player inventory item locations in the future)
-     */
 
     @EventHandler
     public void onItemMove(InventoryClickEvent e) {
@@ -92,14 +82,12 @@ public class BackpackTrackEvents implements Listener {
             case ENDER_CHEST:
                 checkAndUpdate(item, previous -> new InventoryLocationEnderChest(slot, playerId));
                 break;
-            case CHEST: case DISPENSER: case DROPPER: case HOPPER: case SHULKER_BOX: case BARREL:
+            default: // set to default to support any future inventory containing blocks
                 InventoryHolder holder = inv.getHolder();
                 if (holder instanceof BlockInventoryHolder) {
-                    Block block = ((BlockInventoryHolder) holder).getBlock();
-                    checkAndUpdate(item, previous -> new InventoryLocationBlock(slot, block));
+                    BlockInventoryHolder blockHolder = (BlockInventoryHolder) holder;
+                    checkAndUpdate(item, previous -> new InventoryLocationBlock(slot, blockHolder));
                 }
-                break;
-            default:
                 break;
         }
     }

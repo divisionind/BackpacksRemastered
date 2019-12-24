@@ -18,32 +18,31 @@
 
 package com.divisionind.bprm.location.itemlocs;
 
-import com.divisionind.bprm.backpacks.BPLinked;
-import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import com.divisionind.bprm.location.InventoryLocation;
 import com.divisionind.bprm.location.ItemPointerType;
 import org.bukkit.block.Block;
+import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
 
 public class InventoryLocationBlock extends InventoryLocation {
 
-    private Block storageBlock;
+    private BlockInventoryHolder storageBlockInvHolder;
 
-    public InventoryLocationBlock(int lastKnownSlot, Block storageBlock) {
+    public InventoryLocationBlock(int lastKnownSlot, BlockInventoryHolder storageBlockInvHolder) {
         super(ItemPointerType.BLOCK, lastKnownSlot);
-        this.storageBlock = storageBlock;
+        this.storageBlockInvHolder = storageBlockInvHolder;
     }
 
     @Override
-    public Inventory resolveInventory() throws UnknownItemLocationException {
-        // TODO attempt to support other block types here as well DISPENSER, DROPPER, HOPPER, SHULKER_BOX, BARREL:
-        Inventory chestInv = BPLinked.getChestInventory(storageBlock);
-        if (chestInv == null) throw new UnknownItemLocationException();
-        return chestInv;
+    public Inventory resolveInventory() {
+        // this should support any future inventory containing blocks
+        // note: even if the block is changed to something else, the inventory stored in this state persists
+        return storageBlockInvHolder.getInventory();
     }
 
     @Override
     public String toString() {
-        return "Block (" + storageBlock.getType().name() + ")";
+        Block storageBlock = storageBlockInvHolder.getBlock();
+        return "Block ([" + storageBlock.getType().name() + "/" + storageBlock.getWorld().getName() + "]" + storageBlock.getX() + ", " + storageBlock.getY() + ", " + storageBlock.getZ() + ")";
     }
 }
