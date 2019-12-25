@@ -21,6 +21,7 @@ package com.divisionind.bprm;
 import com.divisionind.bprm.commands.*;
 import com.divisionind.bprm.events.*;
 import com.divisionind.bprm.events.custom.GameTickEvent;
+import com.divisionind.bprm.nms.KnownVersion;
 import com.divisionind.bprm.nms.reflect.NMS;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -89,6 +90,11 @@ public class Backpacks extends JavaPlugin {
         // register these events if enabled
         if (getConfig().getBoolean("trackFurnaceBackpacks")) {
             registerEvents(new BackpackTrackEvents());
+            if (!KnownVersion.v1_14_R1.isBefore()) {
+                registerEvents(new BackpackTrackEvents.InventoryClickTrackEvent());
+            } else {
+                getLogger().warning("Backpack tracking is enabled but not fully supported in this version. Please consider upgrading.");
+            }
         }
 
         getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMS.VERSION));

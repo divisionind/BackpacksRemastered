@@ -18,6 +18,8 @@
 
 package com.divisionind.bprm.nms.reflect;
 
+import com.divisionind.bprm.nms.KnownVersion;
+
 import static com.divisionind.bprm.nms.reflect.NMS.CRAFT;
 import static com.divisionind.bprm.nms.reflect.NMS.SERVER;
 
@@ -29,7 +31,7 @@ public enum NMSClass {
     NBTBase(SERVER, "NBTBase"),
     TileEntity(SERVER, "TileEntity"),
     TileEntityFurnace(SERVER, "TileEntityFurnace"),
-    TileEntityFurnaceFurnace(SERVER, "TileEntityFurnaceFurnace"),
+    TileEntityFurnaceFurnace(SERVER, "TileEntityFurnaceFurnace", KnownVersion.v1_14_R1),
     CraftServer(CRAFT, "CraftServer"),
     DedicatedServer(SERVER, "DedicatedServer"),
     MinecraftServer(SERVER, "MinecraftServer"),
@@ -48,8 +50,16 @@ public enum NMSClass {
         this.path = base + path;
     }
 
+    /**
+     * Does not load the class specified if the version is before the specified
+     */
+    NMSClass(String base, String path, KnownVersion before) {
+        this(base, path);
+        if (before.isBefore()) this.path = null; // bit of a hack but ehh, ive been planning on recoding the nms stuff for a while so ill fix it later
+    }
+
     void init() throws ClassNotFoundException {
-        this.clazz = Class.forName(path);
+        if (path != null) this.clazz = Class.forName(path);
     }
 
     public Class getClazz() {

@@ -25,6 +25,7 @@ import com.divisionind.bprm.VirtualFurnace;
 import com.divisionind.bprm.events.BackpackFurnaceTickEvent;
 import com.divisionind.bprm.location.ItemStackPointer;
 import com.divisionind.bprm.location.itemlocs.InventoryLocationPlayer;
+import com.divisionind.bprm.nms.KnownVersion;
 import com.divisionind.bprm.nms.NBTMap;
 import com.divisionind.bprm.nms.reflect.NBTType;
 import com.divisionind.bprm.nms.reflect.NMS;
@@ -61,8 +62,13 @@ public class BPFurnace extends BackpackHandler {
         // contains the magic that makes our virtual furnace
         if (furnace == null) {
             // create fake furnace tile entity
-            // furnace = new TileEntityFurnaceFurnace();
-            furnace = NMSClass.TileEntityFurnaceFurnace.getClazz().getDeclaredConstructor().newInstance();
+            if (KnownVersion.v1_14_R1.isBefore()) {
+                // furnace = new TileEntityFurnace();
+                furnace = NMSClass.TileEntityFurnace.getClazz().getDeclaredConstructor().newInstance();
+            } else {
+                // furnace = new TileEntityFurnaceFurnace();
+                furnace = NMSClass.TileEntityFurnaceFurnace.getClazz().getDeclaredConstructor().newInstance();
+            }
             // assign it a dimension
             //furnace.setWorld(((CraftServer)Bukkit.getServer()).getServer().getWorldServer(DimensionManager.OVERWORLD)); // note: this is used because the alternative method is depreciated
             Object craftServer = NMSClass.CraftServer.getClazz().cast(Bukkit.getServer());

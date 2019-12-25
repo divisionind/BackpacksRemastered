@@ -38,7 +38,6 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -48,47 +47,50 @@ import java.util.UUID;
 
 public class BackpackTrackEvents implements Listener {
 
-    @EventHandler
-    public void onItemMove(InventoryClickEvent e) {
-        if (!e.isCancelled() && e.getClickedInventory() != null) {
-            switch (e.getAction()) {
-                case PLACE_ALL: case SWAP_WITH_CURSOR: // pick and place
-                    itemMoveHandler(e.getClickedInventory(), e.getSlot(), e.getCursor(), e.getWhoClicked());
-                    break;
-                case MOVE_TO_OTHER_INVENTORY: // shift to move
-                    // corrects the inventory that the item has been placed in
-                    Inventory inv;
-                    if (e.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
-                        inv = e.getView().getTopInventory();
-                    } else {
-                        inv = e.getView().getBottomInventory();
-                    }
+    // this is done in a separate class so it can just not be registered if the versions are incorrect
+    public static class InventoryClickTrackEvent implements Listener {
+        @EventHandler
+        public void onItemMove(InventoryClickEvent e) {
+            if (!e.isCancelled() && e.getClickedInventory() != null) {
+                switch (e.getAction()) {
+                    case PLACE_ALL: case SWAP_WITH_CURSOR: // pick and place
+                        itemMoveHandler(e.getClickedInventory(), e.getSlot(), e.getCursor(), e.getWhoClicked());
+                        break;
+                    case MOVE_TO_OTHER_INVENTORY: // shift to move
+                        // corrects the inventory that the item has been placed in
+                        Inventory inv;
+                        if (e.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
+                            inv = e.getView().getTopInventory();
+                        } else {
+                            inv = e.getView().getBottomInventory();
+                        }
 
-                    // slot will equal first free slot in inv, not the result of e.getSlot(). it is more efficient to not include slot
-                    itemMoveHandler(inv, 0, e.getCurrentItem(), e.getWhoClicked());
-                    break;
-                default:
-                    break;
+                        // slot will equal first free slot in inv, not the result of e.getSlot(). it is more efficient to not include slot
+                        itemMoveHandler(inv, 0, e.getCurrentItem(), e.getWhoClicked());
+                        break;
+                    default:
+                        break;
+                }
             }
         }
-    }
 
-    private void itemMoveHandler(Inventory inv, int slot, ItemStack item, HumanEntity entity) {
-        UUID playerId = entity.getUniqueId();
-        switch (inv.getType()) {
-            case PLAYER:
-                checkAndUpdate(item, previous -> new InventoryLocationPlayer(slot, playerId));
-                break;
-            case ENDER_CHEST:
-                checkAndUpdate(item, previous -> new InventoryLocationEnderChest(slot, playerId));
-                break;
-            default: // set to default to support any future inventory containing blocks
-                InventoryHolder holder = inv.getHolder();
-                if (holder instanceof BlockInventoryHolder) {
-                    BlockInventoryHolder blockHolder = (BlockInventoryHolder) holder;
-                    checkAndUpdate(item, previous -> new InventoryLocationBlock(slot, blockHolder));
-                }
-                break;
+        private void itemMoveHandler(Inventory inv, int slot, ItemStack item, HumanEntity entity) {
+            UUID playerId = entity.getUniqueId();
+            switch (inv.getType()) {
+                case PLAYER:
+                    checkAndUpdate(item, previous -> new InventoryLocationPlayer(slot, playerId));
+                    break;
+                case ENDER_CHEST:
+                    checkAndUpdate(item, previous -> new InventoryLocationEnderChest(slot, playerId));
+                    break;
+                default: // set to default to support any future inventory containing blocks
+                    InventoryHolder holder = inv.getHolder();
+                    if (holder instanceof org.bukkit.inventory.BlockInventoryHolder) {
+                        org.bukkit.inventory.BlockInventoryHolder blockHolder = (org.bukkit.inventory.BlockInventoryHolder) holder;
+                        checkAndUpdate(item, previous -> new InventoryLocationBlock(slot, blockHolder));
+                    }
+                    break;
+            }
         }
     }
 
@@ -116,7 +118,7 @@ public class BackpackTrackEvents implements Listener {
     }
 
 
-    private VirtualFurnace getActiveVFurnace(ItemStack item) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+    private static VirtualFurnace getActiveVFurnace(ItemStack item) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         // quickly filter out majority of items here
         if (!item.getType().equals(Material.LEATHER_CHESTPLATE)) return null;
 
@@ -134,7 +136,7 @@ public class BackpackTrackEvents implements Listener {
         return null;
     }
 
-    private void checkAndUpdate(ItemStack item, UpdateAction action) {
+    private static void checkAndUpdate(ItemStack item, UpdateAction action) {
         try {
             VirtualFurnace vfurnace = getActiveVFurnace(item);
             if (vfurnace != null) {
