@@ -63,7 +63,7 @@ public class BPFurnace extends BackpackHandler {
         if (furnace == null) {
             // create fake furnace tile entity
             if (KnownVersion.v1_14_R1.isBefore()) {
-                // furnace = new TileEntityFurnace();
+                // furnace = new TileEntityFurnace(); // only works pre-1.14
                 furnace = NMSClass.TileEntityFurnace.getClazz().getDeclaredConstructor().newInstance();
             } else {
                 // furnace = new TileEntityFurnaceFurnace();
