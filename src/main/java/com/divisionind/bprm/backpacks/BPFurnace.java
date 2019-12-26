@@ -73,7 +73,7 @@ public class BPFurnace extends BackpackHandler {
             //furnace.setWorld(((CraftServer)Bukkit.getServer()).getServer().getWorldServer(DimensionManager.OVERWORLD)); // note: this is used because the alternative method is depreciated
             Object craftServer = NMSClass.CraftServer.getClazz().cast(Bukkit.getServer());
             Object dedicatedServer = NMSMethod.getServer.getMethod().invoke(craftServer);
-            Object worldServer = NMSMethod.getWorldServer.getMethod().invoke(dedicatedServer, NMS.DIMENSION_MANAGER_OVERWORLD);
+            Object worldServer = NMS.getWorldServer(dedicatedServer);
             NMS.TileEntity_world.set(furnace, worldServer);
 
             if (backpack.hasNBT("furnace_data")) {

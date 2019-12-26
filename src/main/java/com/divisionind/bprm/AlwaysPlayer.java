@@ -56,7 +56,7 @@ public class AlwaysPlayer {
                 try {
                     Object craftServer = NMSClass.CraftServer.getClazz().cast(Bukkit.getServer());
                     Object dedicatedServer = NMSMethod.getServer.getMethod().invoke(craftServer);
-                    Object worldServer = NMSMethod.getWorldServer.getMethod().invoke(dedicatedServer, NMS.DIMENSION_MANAGER_OVERWORLD);
+                    Object worldServer = NMS.getWorldServer(dedicatedServer);
                     Object playerInteractManager = NMSClass.PlayerInteractManager.getClazz()
                             .getConstructor(NMSClass.WorldServer.getClazz())
                             .newInstance(worldServer);

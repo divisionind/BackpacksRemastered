@@ -20,9 +20,11 @@ package com.divisionind.bprm.nms.reflect;
 
 import com.divisionind.bprm.Backpacks;
 import com.divisionind.bprm.FakeBackpackViewer;
+import com.divisionind.bprm.nms.KnownVersion;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ public class NMS {
     public static final String SERVER = "net.minecraft.server." + VERSION + ".";
     public static final String CRAFT = "org.bukkit.craftbukkit." + VERSION + ".";
 
-    public static Object DIMENSION_MANAGER_OVERWORLD;
+    private static Object DIMENSION_MANAGER_OVERWORLD;
     public static Field TileEntity_world;
     // TODO add NMSField and NMSConstructor managers
 
@@ -96,6 +98,14 @@ public class NMS {
         }
 
         return exceptions;
+    }
+
+    public static Object getWorldServer(Object dedicatedServer) throws InvocationTargetException, IllegalAccessException {
+        if (KnownVersion.v1_13_R1.isBefore()) {
+            return NMSMethod.getWorldServer.getMethod().invoke(dedicatedServer, 0);
+        } else {
+            return NMSMethod.getWorldServer.getMethod().invoke(dedicatedServer, NMS.DIMENSION_MANAGER_OVERWORLD);
+        }
     }
 
     private static String getVersion() {
