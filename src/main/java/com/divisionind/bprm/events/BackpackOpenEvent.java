@@ -59,7 +59,7 @@ public class BackpackOpenEvent implements Listener {
                         } else {
                             // opening backpack, while it opens, disable this code from running
                             UUID playerId = e.getPlayer().getUniqueId();
-                            if (openingBackpacks.contains(playerId)) return; // TODO add an option for disabling nesting of backpacks
+                            if (openingBackpacks.contains(playerId)) return;
                             openingBackpacks.add(playerId);
                             // 8ticks = 0.4s should be enough time for the backpack to open (unless someone is lagging)
                             Bukkit.getScheduler().scheduleSyncDelayedTask(Backpacks.getInstance(), () -> openingBackpacks.remove(playerId), Backpacks.openBackpackCooldown);
