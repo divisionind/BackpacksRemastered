@@ -96,7 +96,7 @@ recipes:
     display_name: "&aFurnace Backpack"
     lore:
       - "A portable furnace in a backpack that will"
-      - "smelt so long as it is in your inventory."
+      - "smelt all your items."
     ingredients:
       A: LEATHER
       B: FURNACE
