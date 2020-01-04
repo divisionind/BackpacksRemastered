@@ -35,7 +35,7 @@ public class InventoryLocationEnderChest extends InventoryLocationPlayer {
     public Inventory resolveInventory() throws UnknownItemLocationException {
         Player player = alwaysPlayer.resolvePlayer();
         if (player == null) throw new UnknownItemLocationException();
-        return player.getEnderChest(); // could theoretically obtain the players inventory even if they are not online, but this will have to be something for a later update
+        return player.getEnderChest();
     }
 
     @Override
