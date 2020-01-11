@@ -28,7 +28,6 @@ import com.divisionind.bprm.location.itemlocs.InventoryLocationBlock;
 import com.divisionind.bprm.location.itemlocs.InventoryLocationEnderChest;
 import com.divisionind.bprm.location.itemlocs.InventoryLocationPlayer;
 import com.divisionind.bprm.nms.reflect.NBTType;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -119,8 +118,8 @@ public class BackpackTrackEvents implements Listener {
 
 
     private static VirtualFurnace getActiveVFurnace(ItemStack item) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
-        // quickly filter out majority of items here
-        if (!item.getType().equals(Material.LEATHER_CHESTPLATE)) return null;
+        // quickly filter out majority of items here (this was removed to allow for the tracking of non-leather chestplate backpack)
+        //if (!item.getType().equals(Material.LEATHER_CHESTPLATE)) return null;
 
         // is it a furnace backpack?
         PotentialBackpackItem potentialBackpack = new PotentialBackpackItem(item);
