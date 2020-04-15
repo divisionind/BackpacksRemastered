@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.nms.reflect.NMS;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -56,7 +57,7 @@ public abstract class BackpackHandler {
      * @throws Exception if there was a problem finalizing the opening of the backpack
      */
     public void finalizeBackpackOpen(HumanEntity p, Inventory inv) throws Exception {
-        inv.getViewers().add(Backpacks.FAKE_VIEWER);
+        inv.getViewers().add(NMS.FAKE_VIEWER);
         p.openInventory(inv);
     }
 }

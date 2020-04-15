@@ -18,10 +18,10 @@
 
 package com.divisionind.bprm.nms.reflect;
 
-import com.divisionind.bprm.Backpacks;
 import com.divisionind.bprm.FakeBackpackViewer;
 import com.divisionind.bprm.nms.KnownVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -35,9 +35,11 @@ public class NMS {
     public static final String SERVER = "net.minecraft.server." + VERSION + ".";
     public static final String CRAFT = "org.bukkit.craftbukkit." + VERSION + ".";
 
-    private static Object DIMENSION_MANAGER_OVERWORLD;
+    public static HumanEntity FAKE_VIEWER;
     public static Field TileEntity_world;
     // TODO add NMSField and NMSConstructor managers
+
+    private static Object DIMENSION_MANAGER_OVERWORLD;
 
     public static List<Exception> initialize() {
         List<Exception> exceptions = new ArrayList<>();
@@ -71,7 +73,7 @@ public class NMS {
         }
 
         // initialize fake viewer using reflection (so that it can support spigot + craftbukkit)
-        Backpacks.FAKE_VIEWER = (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(),
+        FAKE_VIEWER = (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(),
                 new Class[]{FakeBackpackViewer.class},
                 (proxy, method, args) -> {
                     Class type = method.getReturnType();

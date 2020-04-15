@@ -63,32 +63,29 @@ public class Help extends ACommand {
         } else page = 1;
 
         int numberOfPages = calculateNumberOfPages();
-
         if (page > numberOfPages) {
             respondf(sender, "&cError: This help page does not exist. The maximum help page is %s.", numberOfPages);
             return;
         }
 
-        List<ACommand> commands = getOnPage(page);
-
         respondf(sender, "&bPage (&e%s &b/ &e%s&b)", page, numberOfPages);
-
+        List<ACommand> commands = getOnPage(page);
         for (ACommand cmd : commands) {
             respondnf(sender, "&e/%s %s %s\n  &7%s", label, cmd.alias(), cmd.usage() == null ? "" : cmd.usage(), cmd.desc());
         }
     }
 
-    public static int calculateNumberOfPages() {
-        return (Backpacks.getCommands().size() / COMMANDS_PER_PAGE) + 1;
+    private int calculateNumberOfPages() {
+        return (Backpacks.getInstance().getCommands().size() / COMMANDS_PER_PAGE) + 1;
     }
 
-    public static List<ACommand> getOnPage(int page) {
-        List<ACommand> commands = Backpacks.getCommands();
+    private List<ACommand> getOnPage(int page) {
+        List<ACommand> commands = Backpacks.getInstance().getCommands();
         List<ACommand> newCmds = new ArrayList<>();
 
         int startCmd = (page - 1) * COMMANDS_PER_PAGE;
 
-        for (int i = startCmd;(i<commands.size() && (i - startCmd) < COMMANDS_PER_PAGE);i++) {
+        for (int i = startCmd; (i < commands.size() && (i - startCmd) < COMMANDS_PER_PAGE); i++) {
             newCmds.add(commands.get(i));
         }
         return newCmds;

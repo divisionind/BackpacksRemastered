@@ -20,7 +20,7 @@ package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.BackpackObject;
-import com.divisionind.bprm.BackpackRecipes;
+import com.divisionind.bprm.Backpacks;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -76,7 +76,7 @@ public class ItemGive extends ACommand {
         BackpackObject item = BackpackObject.getByName(args[1]);
         if (item == null) {
             if (KEY_NAME.equalsIgnoreCase(args[1])) {
-                p.getInventory().addItem(BackpackRecipes.BACKPACK_KEY);
+                p.getInventory().addItem(Backpacks.getInstance().getBackpackRecipes().getBackpackKey());
                 respond(sender, "&eGave the player a backpack key.");
             } else {
                 respondf(sender, "&cBackpack of type \"%s\" was not found.", args[1]);

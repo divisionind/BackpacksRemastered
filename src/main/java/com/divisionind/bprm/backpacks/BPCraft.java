@@ -19,18 +19,22 @@
 package com.divisionind.bprm.backpacks;
 
 import com.divisionind.bprm.BackpackHandler;
-import com.divisionind.bprm.Backpacks;
 import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.UpdateItemCallback;
+import com.divisionind.bprm.nms.reflect.NMS;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 public class BPCraft extends BackpackHandler {
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
-        return p.openWorkbench(null, true).getTopInventory();
+        InventoryView inventoryView = p.openWorkbench(null, true);
+        if (inventoryView != null) {
+            return inventoryView.getTopInventory();
+        } else return null;
     }
 
     @Override
@@ -40,6 +44,6 @@ public class BPCraft extends BackpackHandler {
 
     @Override
     public void finalizeBackpackOpen(HumanEntity p, Inventory inv) throws Exception {
-        inv.getViewers().add(Backpacks.FAKE_VIEWER); // we do not want to open the backpack here because it was probably already opened
+        inv.getViewers().add(NMS.FAKE_VIEWER); // we do not want to open the backpack here because it was probably already opened
     }
 }

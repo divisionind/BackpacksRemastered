@@ -66,7 +66,6 @@ public class VFurnace extends ACommand {
         } else page = 1;
 
         int numberOfPages = (VIRTUAL_FURNACES.size() / RESULTS_PER_PAGE) + 1;
-
         if (page > numberOfPages) {
             respondf(sender, "&cError: This help page does not exist. The maximum help page is %s.", numberOfPages);
             return;
@@ -79,7 +78,8 @@ public class VFurnace extends ACommand {
             respondnf(sender, "&eID:&7 %s &r&e\n| Location: &7[%s]&r", entry.getKey().toString(), itemStackPointer == null ? "unknown" : itemStackPointer.getSurfaceLocation().toString());
         }
     }
-    public static Map<UUID, VirtualFurnace> getOnPage(int page) {
+
+    private Map<UUID, VirtualFurnace> getOnPage(int page) {
         Map<UUID, VirtualFurnace> newMap = new HashMap<>();
 
         int startCmd = (page - 1) * RESULTS_PER_PAGE;

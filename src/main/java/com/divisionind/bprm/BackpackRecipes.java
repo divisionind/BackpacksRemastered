@@ -34,11 +34,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+// TODO redo this whole system using a registry style item storage system for easier crafting/giving/etc.
 public class BackpackRecipes {
 
-    public static ItemStack BACKPACK_KEY;
+    private ItemStack backpackKey;
 
-    public static void registerRecipes(FileConfiguration config, Logger log) {
+    public BackpackRecipes(FileConfiguration config, Logger log) {
         // load backpacks
         for (BackpackObject backpack : BackpackObject.values()) {
             String backpack_name = backpack.name().toLowerCase();
@@ -52,19 +53,23 @@ public class BackpackRecipes {
         }
 
         // create backpack key
-        BACKPACK_KEY = new ItemStack(Material.FEATHER);
-        ItemMeta backpack_key_meta = BACKPACK_KEY.getItemMeta();
+        backpackKey = new ItemStack(Material.FEATHER);
+        ItemMeta backpack_key_meta = backpackKey.getItemMeta();
         backpack_key_meta.setDisplayName(Backpacks.translate("&aBackpack Key"));
-        BACKPACK_KEY.setItemMeta(backpack_key_meta);
+        backpackKey.setItemMeta(backpack_key_meta);
         try {
-            BACKPACK_KEY = NMSItemStack.setNBTOnce(BACKPACK_KEY, NBTType.BOOLEAN, "backpack_key", true);
+            backpackKey = NMSItemStack.setNBTOnce(backpackKey, NBTType.BOOLEAN, "backpack_key", true);
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
             return;
         }
-        loadRecipeFromConfig(config, log, "backpack_key", BACKPACK_KEY);
+        loadRecipeFromConfig(config, log, "backpack_key", backpackKey);
     }
 
-    private static void loadRecipeFromConfig(FileConfiguration config, Logger log, String recipeName, ItemStack item) {
+    public ItemStack getBackpackKey() {
+        return backpackKey;
+    }
+
+    private void loadRecipeFromConfig(FileConfiguration config, Logger log, String recipeName, ItemStack item) {
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(Backpacks.getInstance(), recipeName), item); // to add pre 1.12 version backwards compatibility, change this namespaced key stuff
 
         // ensures section exists in config
@@ -81,7 +86,7 @@ public class BackpackRecipes {
         // parses ingredients from config
         Map<String, Object> ingredients = section.getValues(false);
         ingredients.forEach((k, v) -> {
-            Material m = Material.getMaterial((String)v);
+            Material m = Material.getMaterial((String) v);
             if (m == null) {
                 log.warning(String.format("The material %s does not exist. Please use a valid spigot material.", v));
                 return;

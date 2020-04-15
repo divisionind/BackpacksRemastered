@@ -46,13 +46,15 @@ public class Backpacks extends JavaPlugin {
     public static final String GIT_NUM = "@DivisionGitComm@";
     public static final int CONFIGURATION_VERSION = 7;
 
-    public static HumanEntity FAKE_VIEWER;
     public static ResourceBundle bundle;
     public static long OPEN_BACKPACK_COOLDOWN;
     public static int MAX_COMBINED_BACKPACKS;
 
-    private static List<ACommand> commands;
     private static Backpacks instance;
+
+    private List<ACommand> commands;
+    private Metrics metrics;
+    private BackpackRecipes backpackRecipes;
 
     @Override
     public void onEnable() {
@@ -67,7 +69,7 @@ public class Backpacks extends JavaPlugin {
         // initialize game ticking with this plugin
         GameTickEvent.initialize(this);
 
-        registerCMDS(new Help(),
+        registerCommands(new Help(),
                 new Info(),
                 new ItemInfo(),
                 new ItemInfoGet(),
@@ -103,11 +105,11 @@ public class Backpacks extends JavaPlugin {
             for (Exception ex : nmsExceptions) ex.printStackTrace();
         }
 
-        BackpackRecipes.registerRecipes(getConfig(), getLogger());
+        // register custom recipes
+        backpackRecipes = new BackpackRecipes(getConfig(), getLogger());
 
         // enable metrics collection
-        Metrics metrics = new Metrics(this);
-        // TODO add a custom pie graph showing backpack popularity by the amount crafted
+        metrics = new Metrics(this);
 
         // TODO implement an update notifier (will send messages to admins in game about updates to backpacks)
         // New version of BackpacksRemastered available (as red "CURRENT")->(as green "NEW")! Would you like to update? YES, NO, LATER. (make this clickable)
@@ -150,7 +152,6 @@ public class Backpacks extends JavaPlugin {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) { // see https://hub.spigotmc.org/javadocs/spigot/org/bukkit/plugin/java/JavaPlugin.html#onTabComplete-org.bukkit.command.CommandSender-org.bukkit.command.Command-java.lang.String-java.lang.String:A-
-
         List<String> entries = new ArrayList<>();
 
         if (args.length > 1) {
@@ -217,7 +218,7 @@ public class Backpacks extends JavaPlugin {
         }
     }
 
-    public static void registerCMDS(ACommand... cmds) {
+    public void registerCommands(ACommand... cmds) {
         commands.addAll(Arrays.asList(cmds));
     }
 
@@ -225,8 +226,12 @@ public class Backpacks extends JavaPlugin {
         for (Listener lis : listeners) Bukkit.getPluginManager().registerEvents(lis, this);
     }
 
-    public static List<ACommand> getCommands() {
+    public List<ACommand> getCommands() {
         return commands;
+    }
+
+    public BackpackRecipes getBackpackRecipes() {
+        return backpackRecipes;
     }
 
     public static String translate(String in) {
