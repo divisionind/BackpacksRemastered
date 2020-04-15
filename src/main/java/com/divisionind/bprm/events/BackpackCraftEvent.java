@@ -40,7 +40,7 @@ import java.util.List;
 
 public class BackpackCraftEvent implements Listener {
 
-    public static final List<Material> COMBINABLE;
+    private static final List<Material> COMBINABLE;
 
     static {
         COMBINABLE = new ArrayList<>();
