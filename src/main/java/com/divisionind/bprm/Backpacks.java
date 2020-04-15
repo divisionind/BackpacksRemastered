@@ -47,18 +47,17 @@ public class Backpacks extends JavaPlugin {
     public static final int CONFIGURATION_VERSION = 7;
 
     public static HumanEntity FAKE_VIEWER;
-
     public static ResourceBundle bundle;
-    public static long openBackpackCooldown;
-    public static int maxNumberOfCombinedBackpacks;
+    public static long OPEN_BACKPACK_COOLDOWN;
+    public static int MAX_COMBINED_BACKPACKS;
 
     private static List<ACommand> commands;
-    private static Backpacks inst;
+    private static Backpacks instance;
 
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
-        inst = this;
+        instance = this;
         commands = new ArrayList<>();
 
         // load / init config
@@ -205,9 +204,9 @@ public class Backpacks extends JavaPlugin {
         Locale.setDefault(loc);
         bundle = ResourceBundle.getBundle("lang");
 
-        openBackpackCooldown = getConfig().getLong("openBackpackCooldown");
-        maxNumberOfCombinedBackpacks = getConfig().getInt("maxNumberOfCombinedBackpacks");
-        if (maxNumberOfCombinedBackpacks > 9 || maxNumberOfCombinedBackpacks < 1) maxNumberOfCombinedBackpacks = 9;
+        OPEN_BACKPACK_COOLDOWN = getConfig().getLong("openBackpackCooldown");
+        MAX_COMBINED_BACKPACKS = getConfig().getInt("maxNumberOfCombinedBackpacks");
+        if (MAX_COMBINED_BACKPACKS > 9 || MAX_COMBINED_BACKPACKS < 1) MAX_COMBINED_BACKPACKS = 9;
     }
 
     private int parseIntSilent(String in) {
@@ -235,7 +234,7 @@ public class Backpacks extends JavaPlugin {
     }
 
     public static Backpacks getInstance() {
-        return inst;
+        return instance;
     }
 
     // we can no longer check if the viewer equals the fake backpack viewer instance because that will always be false

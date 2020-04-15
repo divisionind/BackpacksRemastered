@@ -32,11 +32,12 @@ import java.util.UUID;
 public class BPCombined extends BackpackHandler {
 
     public static final String NAME = "Combined Backpack";
-    private HashMap<UUID, Integer> openBackpacks = new HashMap<>();
 
     public static Inventory createInv() {
         return Bukkit.createInventory(null, 9, NAME);
     }
+
+    private HashMap<UUID, Integer> openBackpacks = new HashMap<>();
 
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {

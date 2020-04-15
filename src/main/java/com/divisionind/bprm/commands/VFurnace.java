@@ -83,7 +83,7 @@ public class VFurnace extends ACommand {
         Map<UUID, VirtualFurnace> newMap = new HashMap<>();
 
         int startCmd = (page - 1) * RESULTS_PER_PAGE;
-        for (int i = startCmd;(i<VIRTUAL_FURNACES.size() && (i - startCmd) < RESULTS_PER_PAGE);i++) {
+        for (int i = startCmd; (i < VIRTUAL_FURNACES.size() && (i - startCmd) < RESULTS_PER_PAGE); i++) {
 
             int slot = 0;
             for (Map.Entry<UUID, VirtualFurnace> entry : VIRTUAL_FURNACES.entrySet()) {

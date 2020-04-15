@@ -20,15 +20,11 @@
 import com.divisionind.i18n.DiscoveredString
 import com.divisionind.i18n.ExtractorPlugin
 import com.divisionind.i18n.GoogleTranslator
-import com.divisionind.i18n.api.StringDecider
 import com.divisionind.i18n.api.FileScanUtils
+import com.divisionind.i18n.api.StringDecider
 import com.divisionind.i18n.api.corrector.RegexCorrectorMatcher
 import org.apache.tools.ant.filters.ReplaceTokens
-import java.lang.reflect.Method
 import org.gradle.internal.os.OperatingSystem
-//import com.backblaze.b2.client.B2StorageClient
-//import com.backblaze.b2.client.B2StorageClientFactory
-//import com.backblaze.b2.client.structures.B2UploadFileRequest
 
 import java.util.regex.Pattern
 
@@ -43,33 +39,20 @@ buildscript {
         classpath group: 'com.divisionind',
                 name: 'i18nExtractor',
                 version: '2019.0.8'
-
-        // https://mvnrepository.com/artifact/com.backblaze.b2/b2-sdk-core
-        //classpath group: 'com.backblaze.b2', name: 'b2-sdk-core', version: '3.1.0'
-
-        // https://mvnrepository.com/artifact/com.backblaze.b2/b2-sdk-httpclient
-        //classpath group: 'com.backblaze.b2', name: 'b2-sdk-httpclient', version: '3.1.0'
     }
 }
 
 plugins {
     id 'java'
-
-    id "com.github.breadmoirai.github-release" version "2.2.9"
-
-    id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
 apply plugin: ExtractorPlugin
 
 def baseVersion = "2020.0.3"
 def beta = true
-def uploadBetas = false
 
 def spigotVersion = "1.15.1"
-def githubOwner = "divisionind"
 def runningServerPluginsDir = System.env.DEV_SERVER
-def wslCommand = "kali"
 
 group 'com.divisionind'
 sourceCompatibility = 1.8
@@ -112,9 +95,6 @@ def getGitChanges = { shash ->
 
 // what format the version info should take
 version baseVersion + (beta ? "-beta.${getGitCommitNum('HEAD')}" : "")
-
-// must be used after githubRelease, could be used for providing changelog to other destinations than github
-def lastRelease
 
 // generates sources by replacing these strings (surrounded by @, e.g. @DivisionVersion@)
 task generateSources(type: Copy) {
@@ -159,7 +139,7 @@ internationalize {
             // return yes for any colored string
             if (colorPat.matcher(st.value).results().count() > 0) return true
 
-            // these string values are not colored and would not be picked up otherwise
+            // these string values are not colored and would not be picked up for translation otherwise
             if (st.locationFile.getParentFile().equals(commandsFile)) {
                 String prevLine = FileScanUtils.getLine(st.locationFile, st.line)
                 return prevLine.contains("String desc()")
@@ -189,90 +169,26 @@ task makeJar(type: Jar) {
                 'Implementation-Version': version
     }
     baseName = project.name
-    from { configurations.compile.filter{ it.getName().endsWith(".jar") }.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
 task pack(dependsOn: ['clean', 'makeJar'])
 makeJar.mustRunAfter clean
 
-// whether or not to upload a release
-boolean uploadRelease = !(beta && !uploadBetas)
-if (System.env.TRAVIS != null) uploadRelease = false
-String generatedChangelog = ""
-
-githubRelease {
-    token "${System.env.GITHUB_TOKEN == null ? "" : System.env.GITHUB_TOKEN}"
-    owner githubOwner
-    repo project.name
-    tagName "v${project.version}"
-    targetCommitish "master"
-    releaseName "v${project.version}"
-    draft false
-    prerelease beta
-    releaseAssets "build/libs/${project.name}-${project.version}.jar"
-    apiEndpoint "https://api.github.com"
-
-    // gets the last released commit from releaseplugin to calculate change log on its own (more control) TODO do this without reflection (because gradle will deny it in future versions)
-    Class c = Class.forName("com.github.breadmoirai.githubreleaseplugin.ChangeLogSupplier")
-    Method m = c.getDeclaredMethod("getLastReleaseCommit")
-    m.setAccessible(true)
-    lastRelease = m.invoke(changelog())
-
-    if (uploadRelease) {
-        body "${generatedChangelog = getGitChanges(lastRelease)}"
-    }
-}
-
-curseforge {
-    apiKey = System.env.CURSE_API_KEY == null ? "" : System.env.CURSE_API_KEY
-
-    project {
-        mainArtifact(makeJar) {
-            displayName = "BackpacksRemastered-$project.version"
-        }
-        
-        id = '92714'
-        releaseType = 'release'
-        changelogType = 'markdown'
-        changelog = generatedChangelog
-        addGameVersion '1.14'
-        addGameVersion '1.13'
-        addGameVersion '1.12'
-    }
-}
-
-// a dummy task so that the githubRelease task may be disable based on certain parameters
-task uploadArtifacts {}
-
-if (uploadRelease) {
-    println "Version qualified for a release."
-    uploadArtifacts.finalizedBy tasks.githubRelease
-    //tasks.githubRelease.finalizedBy curseforge
-}
-
-/* may add beta uploading from travis to my website, idk how many people would be interested in that though
-  task betaUpload {
-      B2StorageClient client = B2StorageClientFactory.createDefaultFactory().create(System.env.B2_KEY_ID, System.env.B2_KEY, "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0")
-      B2UploadFileRequest request = B2UploadFileRequest.builder("", "", "") // https://github.com/Backblaze/b2-sdk-java
-      client.uploadSmallFile()
-  }
-
-  if (System.env.B2_KEY != null && !uploadRelease) {
-      println "Version qualified for beta build upload."
-      uploadArtifacts.finalizedBy betaUpload
-  } */
-
 def sourceJar = "build/libs/${project.name}-${project.version}.jar"
-def dstJar = "${runningServerPluginsDir}/${project.name}.jar"
+def dstJar = runningServerPluginsDir == null ? null : "${runningServerPluginsDir}/${project.name}.jar"
 
 task update {
     doLast {
+        if (dstJar == null) {
+            println "Error updating server jar. System environment variable DEV_SERVER was not specified."
+            return
+        }
         println "moving $sourceJar => $dstJar"
         OperatingSystem os = OperatingSystem.current()
         if (os.isWindows()) {
             exec {
-                commandLine wslCommand, 'run', "mv $sourceJar $dstJar"
+                commandLine "wsl", '--', "mv", "$sourceJar", "$dstJar"
             }
         } else
         if (os.isLinux()) {

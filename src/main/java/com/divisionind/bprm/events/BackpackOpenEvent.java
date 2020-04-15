@@ -62,7 +62,7 @@ public class BackpackOpenEvent implements Listener {
                             if (openingBackpacks.contains(playerId)) return;
                             openingBackpacks.add(playerId);
                             // 8ticks = 0.4s should be enough time for the backpack to open (unless someone is lagging)
-                            Bukkit.getScheduler().scheduleSyncDelayedTask(Backpacks.getInstance(), () -> openingBackpacks.remove(playerId), Backpacks.openBackpackCooldown);
+                            Bukkit.getScheduler().scheduleSyncDelayedTask(Backpacks.getInstance(), () -> openingBackpacks.remove(playerId), Backpacks.OPEN_BACKPACK_COOLDOWN);
 
                             // actually open the backpack (along with adding fake viewer for identification)
                             BackpackHandler handler = backpack.getHandler();

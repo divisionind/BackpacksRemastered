@@ -128,7 +128,7 @@ public class BackpackCraftEvent implements Listener {
                            }
 
                            // verify no more than 9 backpacks have been added
-                           if (totalBackpacks >= Backpacks.maxNumberOfCombinedBackpacks) return;
+                           if (totalBackpacks >= Backpacks.MAX_COMBINED_BACKPACKS) return;
 
                            // most centered index
                            int center = getMostCenteredNull(combinedInv.getContents());
