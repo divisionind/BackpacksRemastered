@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Vector;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -98,7 +99,7 @@ public class Split extends ACommand {
                         backpack.setData(BackpackSerialization.toByteArrayInventory(combinedInv, BPCombined.NAME));
                         p.getInventory().setItemInMainHand(backpack.getModifiedItem());
 
-                        p.getInventory().addItem(item);
+                        safeAddItem(p, item);
                         respond(sender, "&eRemoved backpack from combined backpack.");
                         return;
                     }
@@ -124,11 +125,21 @@ public class Split extends ACommand {
                 p.getInventory().setItemInMainHand(oldBackpack);
 
                 // add new backpack to inventory
-                p.getInventory().addItem(newBackpack.getModifiedItem());
+                safeAddItem(p, newBackpack.getModifiedItem());
                 respond(sender, "&eSplit backpack from what it was combined with.");
             } else respond(sender, "&cThis item is not a backpack.");
         } catch (InvocationTargetException | IllegalAccessException | InstantiationException | IOException | ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void safeAddItem(Player player, ItemStack item) {
+        if (player.getInventory().firstEmpty() < 0) {
+            player.getLocation().getWorld()
+                    .dropItem(player.getLocation(), item)
+                    .setVelocity(new Vector(0, 0, 0));
+        } else {
+            player.getInventory().addItem(item);
         }
     }
 }
