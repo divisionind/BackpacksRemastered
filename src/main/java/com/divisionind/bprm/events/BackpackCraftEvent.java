@@ -59,6 +59,7 @@ public class BackpackCraftEvent implements Listener {
     @EventHandler
     public void onCraftEvent(CraftItemEvent e) {
         if (e.isCancelled()) return;
+
         try {
             ItemStack item = e.getCurrentItem();
             HumanEntity ent = e.getWhoClicked();

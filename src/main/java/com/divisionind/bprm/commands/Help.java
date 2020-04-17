@@ -79,7 +79,7 @@ public class Help extends ACommand {
         return (Backpacks.getInstance().getCommands().size() / COMMANDS_PER_PAGE) + 1;
     }
 
-    private List<ACommand> getOnPage(int page) {
+    private static List<ACommand> getOnPage(int page) {
         List<ACommand> commands = Backpacks.getInstance().getCommands();
         List<ACommand> newCmds = new ArrayList<>();
 

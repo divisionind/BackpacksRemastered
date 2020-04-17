@@ -79,13 +79,13 @@ public class VFurnace extends ACommand {
         }
     }
 
-    private Map<UUID, VirtualFurnace> getOnPage(int page) {
+    private static Map<UUID, VirtualFurnace> getOnPage(int page) {
         Map<UUID, VirtualFurnace> newMap = new HashMap<>();
 
         int startCmd = (page - 1) * RESULTS_PER_PAGE;
         for (int i = startCmd; (i < VIRTUAL_FURNACES.size() && (i - startCmd) < RESULTS_PER_PAGE); i++) {
-
             int slot = 0;
+
             for (Map.Entry<UUID, VirtualFurnace> entry : VIRTUAL_FURNACES.entrySet()) {
                 if (slot++ == i) {
                     newMap.put(entry.getKey(), entry.getValue());
