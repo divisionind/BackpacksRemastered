@@ -48,3 +48,39 @@ copy or modify any code from it. However, there is an API for creating custom tr
 - Translations are cached in the `.i18nExtractor` directory, delete the cache file corresponding to your desired language
   to grab the latest translations of that language from google.
 - See above notes about 429 errors.
+
+## Building
+Requirements:
+  - Gradle
+  - Java 8 **and** 11 (if on windows try AdoptOpenJDK)
+  - Git
+  
+One major note which needs to be made is that the i18nExtractor plugin uses Java 11 features. This means that Gradle must be
+run with Java 11. However, most Minecraft servers are still on Java 8, so, the final plugin must be built for Java 8.
+
+#### Setting up Gradle:
+##### The Console
+1. install both JDKs
+2. set Java 11 as your default
+3. proceed with the build normally
+
+##### IntelliJ IDEA
+1. again, install both JDKs
+2. go to `File->Project Structure`
+3. change "Project SDK" to Java 11
+4. change "Project language level" to Java 8
+
+For other IDEs, try the console method or just otherwise configure it to run Gradle with Java 11. Gradle should figure
+out that it needs to build for Java 8 on its own.
+
+#### The steps
+*NOTE: These steps will be for building from the console. Most IDEs will simply provide you with a way to run Gradle
+tasks, just add an entry for the task "pack".*
+1. clone the repo `git clone https://github.com/divisionind/BackpacksRemastered.git`
+2. enter repo dir `cd BackpacksRemastered`
+3. run the build task `gradlew pack`
+4. The final plugin jar will be located in `build/libs/BackpacksRemastered*.jar`
+
+The first build will translate all of the strings from the project using google translate (see *Adding languages*)
+this may fail as the project is very large. If it does, wait a few hours to a day and try to build again to get the
+rest of the strings. If you don't want this to be an issue, remove some languages.
