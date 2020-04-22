@@ -2,7 +2,6 @@
 [![](https://img.shields.io/travis/divisionind/BackpacksRemastered/master.svg?style=flat-square)](https://travis-ci.org/divisionind/BackpacksRemastered)
 ![](https://img.shields.io/github/repo-size/divisionind/BackpacksRemastered.svg?style=flat-square)
 ![](https://img.shields.io/badge/license-GPLv3-green.svg?style=flat-square)
-![](https://img.shields.io/badge/dev%20status-active-brightgreen.svg?style=flat-square)
 
 ![](https://raw.githubusercontent.com/divisionind/BackpacksRemastered/master/screenshots/logo.png)
 > Backpacks is a very unique plugin meant to add backpacks to Minecraft without the use of any client side modifications. 
