@@ -25,7 +25,7 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Help extends ACommand {
+public class CHelp extends ACommand {
 
     private static final int COMMANDS_PER_PAGE = 4;
 
@@ -75,7 +75,7 @@ public class Help extends ACommand {
         }
     }
 
-    private int calculateNumberOfPages() {
+    private static int calculateNumberOfPages() {
         return (Backpacks.getInstance().getCommands().size() / COMMANDS_PER_PAGE) + 1;
     }
 

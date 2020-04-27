@@ -29,7 +29,7 @@ import java.util.UUID;
 
 import static com.divisionind.bprm.events.BackpackFurnaceTickEvent.VIRTUAL_FURNACES;
 
-public class VFurnace extends ACommand {
+public class CVFurnace extends ACommand {
 
     public static final int RESULTS_PER_PAGE = 4;
 

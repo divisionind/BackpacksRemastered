@@ -30,7 +30,7 @@ import java.util.UUID;
 
 public class InventoryLocationPlayer extends InventoryLocation {
 
-    protected AlwaysPlayer alwaysPlayer;
+    protected final AlwaysPlayer alwaysPlayer;
 
     public InventoryLocationPlayer(int lastKnownSlot, UUID playerId) {
         super(ItemPointerType.PLAYER, lastKnownSlot);

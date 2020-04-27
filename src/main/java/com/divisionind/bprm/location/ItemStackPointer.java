@@ -26,7 +26,7 @@ public class ItemStackPointer {
     // TODO support furnace backpacks in other backpacks
 
     private SurfaceLocation surfaceLocation;
-    private ItemStack surfaceItem;
+    private final ItemStack surfaceItem;
 
     public ItemStackPointer(ItemStack surfaceItem, SurfaceLocation surfaceLocation) {
         this.surfaceItem = surfaceItem;

@@ -26,7 +26,7 @@ import org.bukkit.inventory.Inventory;
 
 public class InventoryLocationBlock extends InventoryLocation {
 
-    private BlockInventoryHolder storageBlockInvHolder;
+    private final BlockInventoryHolder storageBlockInvHolder;
 
     public InventoryLocationBlock(int lastKnownSlot, BlockInventoryHolder storageBlockInvHolder) {
         super(ItemPointerType.BLOCK, lastKnownSlot);

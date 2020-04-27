@@ -19,23 +19,18 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import com.divisionind.bprm.nms.NMSItemStack;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
-
-public class ItemInfo extends ACommand {
+public class CMaterialsList extends ACommand {
     @Override
     public String alias() {
-        return "item:info";
+        return "materials";
     }
 
     @Override
     public String desc() {
-        return "displays a list of NBT data for the item you are holding";
+        return "lists materials available to use in backpack recipes";
     }
 
     @Override
@@ -45,24 +40,21 @@ public class ItemInfo extends ACommand {
 
     @Override
     public String permission() {
-        return "backpacks.item.info";
+        return "backpacks.materials";
     }
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        Player p = validatePlayer(sender);
-        ItemStack item = p.getInventory().getItemInMainHand();
+        StringBuilder sb = new StringBuilder();
+        renderList(sb, Material.values());
+        respond(sender, sb.toString());
+    }
 
-        try {
-            NMSItemStack nmsItem = new NMSItemStack(item);
-            // show all nbt data
-            Set<String> data = nmsItem.getKeys();
-            for (String s : data) {
-                respondn(sender, s);
-            }
-            respondf(sender, "&eFound %s NBT data entries.", data.size());
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
-            e.printStackTrace();
+    private static void renderList(StringBuilder sb, Material[] mats) {
+        sb.append("&eMaterials: &7");
+        for (int i = 0; i < mats.length; i++) {
+            sb.append(mats[i].name());
+            if ((i + 1) != mats.length) sb.append(", ");
         }
     }
 }

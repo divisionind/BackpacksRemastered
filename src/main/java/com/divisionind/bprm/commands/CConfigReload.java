@@ -19,18 +19,18 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import org.bukkit.Material;
+import com.divisionind.bprm.Backpacks;
 import org.bukkit.command.CommandSender;
 
-public class MaterialsList extends ACommand {
+public class CConfigReload extends ACommand {
     @Override
     public String alias() {
-        return "materials";
+        return "config:reload";
     }
 
     @Override
     public String desc() {
-        return "lists materials available to use in backpack recipes";
+        return "reloads the yml configuration";
     }
 
     @Override
@@ -40,21 +40,15 @@ public class MaterialsList extends ACommand {
 
     @Override
     public String permission() {
-        return "backpacks.materials";
+        return "backpacks.config.reload";
     }
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        StringBuilder sb = new StringBuilder();
-        renderList(sb, Material.values());
-        ACommand.respond(sender, sb.toString());
-    }
-
-    public static void renderList(StringBuilder sb, Material[] mats) {
-        sb.append("&eMaterials: &7");
-        for (int i = 0;i<mats.length;i++) {
-            sb.append(mats[i].name());
-            if ((i + 1) != mats.length) sb.append(", ");
-        }
+        respond(sender, "&cWARNING: This command is not fully supported. Only use this for testing new configurations and ensure to reload the server once you are done.");
+        respond(sender, "&eReloading the configuration...");
+        Backpacks.getInstance().reloadConfig();
+        Backpacks.getInstance().setupFromConfig();
+        respond(sender, "&eConfiguration has been reloaded.");
     }
 }

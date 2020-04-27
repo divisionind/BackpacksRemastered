@@ -23,10 +23,10 @@ import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.VirtualFurnace;
 import com.divisionind.bprm.location.ItemStackPointer;
 import com.divisionind.bprm.location.SurfaceLocation;
-import com.divisionind.bprm.location.itemlocs.GroundLocation;
 import com.divisionind.bprm.location.itemlocs.InventoryLocationBlock;
 import com.divisionind.bprm.location.itemlocs.InventoryLocationEnderChest;
 import com.divisionind.bprm.location.itemlocs.InventoryLocationPlayer;
+import com.divisionind.bprm.location.itemlocs.LocationGround;
 import com.divisionind.bprm.nms.reflect.NBTType;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -112,7 +112,7 @@ public class BackpackTrackEvents implements Listener {
         // should encompass chest breaking and player item dropping
         if (!e.isCancelled()) {
             final World lastWorld = e.getEntity().getWorld();
-            checkAndUpdate(e.getEntity().getItemStack(), previous -> new GroundLocation(lastWorld));
+            checkAndUpdate(e.getEntity().getItemStack(), previous -> new LocationGround(lastWorld));
         }
     }
 

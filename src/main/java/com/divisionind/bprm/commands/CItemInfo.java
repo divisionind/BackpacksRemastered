@@ -19,18 +19,23 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import com.divisionind.bprm.Backpacks;
+import com.divisionind.bprm.nms.NMSItemStack;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-public class Info extends ACommand {
+import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
+
+public class CItemInfo extends ACommand {
     @Override
     public String alias() {
-        return "info";
+        return "item:info";
     }
 
     @Override
     public String desc() {
-        return "displays info about the plugin";
+        return "displays a list of NBT data for the item you are holding";
     }
 
     @Override
@@ -40,16 +45,24 @@ public class Info extends ACommand {
 
     @Override
     public String permission() {
-        return "backpacks.info";
+        return "backpacks.item.info";
     }
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        respond(sender, "&e&lInfo");
-        respondn(sender, "&7Created by drew6017 (Andrew Howard) as a remake of his original plugin with more features and optimizations.");
-        respondnf(sender, "&eVersion: &a%s", Backpacks.VERSION);
-        respondnf(sender, "&eGit Commit: &a%s", Backpacks.GIT_HASH);
-        respondnf(sender, "&eGit Build: &a%s", Backpacks.GIT_NUM);
-        respondn(sender,  "&eDownload Page: &ahttps://dev.bukkit.org/projects/backpack-item");
+        Player p = validatePlayer(sender);
+        ItemStack item = p.getInventory().getItemInMainHand();
+
+        try {
+            NMSItemStack nmsItem = new NMSItemStack(item);
+            // show all nbt data
+            Set<String> data = nmsItem.getKeys();
+            for (String s : data) {
+                respondn(sender, s);
+            }
+            respondf(sender, "&eFound %s NBT data entries.", data.size());
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 }

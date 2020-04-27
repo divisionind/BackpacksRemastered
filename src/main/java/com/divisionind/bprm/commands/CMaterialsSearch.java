@@ -19,36 +19,53 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import com.divisionind.bprm.Backpacks;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
-public class ConfigReload extends ACommand {
+import java.util.ArrayList;
+import java.util.List;
+
+public class CMaterialsSearch extends ACommand {
     @Override
     public String alias() {
-        return "config:reload";
+        return "materials:search";
     }
 
     @Override
     public String desc() {
-        return "reloads the yml configuration";
+        return "searches available materials to return a list of results";
     }
 
     @Override
     public String usage() {
-        return null;
+        return "<string>";
     }
 
     @Override
     public String permission() {
-        return "backpacks.config.reload";
+        return "backpacks.materials.search";
     }
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        respond(sender, "&cWARNING: This command is not fully supported. Only use this for testing new configurations and ensure to reload the server once you are done.");
-        respond(sender, "&eReloading the configuration...");
-        Backpacks.getInstance().reloadConfig();
-        Backpacks.getInstance().setupFromConfig();
-        respond(sender, "&eConfiguration has been reloaded.");
+        validateArgsLength(args, 2);
+
+        StringBuilder sb = new StringBuilder();
+        List<Material> results = new ArrayList<>();
+
+        for (Material mat : Material.values()) {
+            if (mat.name().toLowerCase().contains(args[1].toLowerCase())) results.add(mat);
+        }
+
+        renderList(sb, results.toArray(new Material[results.size()]));
+        ACommand.respond(sender, sb.toString());
+    }
+
+    public static void renderList(StringBuilder sb, Material[] mats) {
+        sb.append("&eMaterials: &7");
+        for (int i = 0;i<mats.length;i++) {
+            sb.append(mats[i].name());
+            if ((i + 1) != mats.length) sb.append(", ");
+        }
     }
 }

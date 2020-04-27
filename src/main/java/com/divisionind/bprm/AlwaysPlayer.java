@@ -34,7 +34,7 @@ import java.util.UUID;
  */
 public class AlwaysPlayer {
 
-    private UUID playerId;
+    private final UUID playerId;
 
     private Player lastPlayer;
     private boolean isOfflinePlayer;

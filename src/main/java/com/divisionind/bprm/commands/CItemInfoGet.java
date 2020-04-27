@@ -27,7 +27,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class ItemInfoGet extends ACommand {
+public class CItemInfoGet extends ACommand {
     @Override
     public String alias() {
         return "item:info:get";

@@ -29,7 +29,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemGive extends ACommand {
+public class CItemGive extends ACommand {
 
     public static final String KEY_NAME = "KEY";
 

@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-public class Split extends ACommand {
+public class CSplit extends ACommand {
     @Override
     public String alias() {
         return "split";

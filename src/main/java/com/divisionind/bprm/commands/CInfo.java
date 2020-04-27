@@ -19,53 +19,37 @@
 package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
-import org.bukkit.Material;
+import com.divisionind.bprm.Backpacks;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MaterialsSearch extends ACommand {
+public class CInfo extends ACommand {
     @Override
     public String alias() {
-        return "materials:search";
+        return "info";
     }
 
     @Override
     public String desc() {
-        return "searches available materials to return a list of results";
+        return "displays info about the plugin";
     }
 
     @Override
     public String usage() {
-        return "<string>";
+        return null;
     }
 
     @Override
     public String permission() {
-        return "backpacks.materials.search";
+        return "backpacks.info";
     }
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        validateArgsLength(args, 2);
-
-        StringBuilder sb = new StringBuilder();
-        List<Material> results = new ArrayList<>();
-
-        for (Material mat : Material.values()) {
-            if (mat.name().toLowerCase().contains(args[1].toLowerCase())) results.add(mat);
-        }
-
-        renderList(sb, results.toArray(new Material[results.size()]));
-        ACommand.respond(sender, sb.toString());
-    }
-
-    public static void renderList(StringBuilder sb, Material[] mats) {
-        sb.append("&eMaterials: &7");
-        for (int i = 0;i<mats.length;i++) {
-            sb.append(mats[i].name());
-            if ((i + 1) != mats.length) sb.append(", ");
-        }
+        respond(sender, "&e&lInfo");
+        respondn(sender, "&7Created by drew6017 (Andrew Howard) as a remake of his original plugin with more features and optimizations.");
+        respondnf(sender, "&eVersion: &a%s", Backpacks.VERSION);
+        respondnf(sender, "&eGit Commit: &a%s", Backpacks.GIT_HASH);
+        respondnf(sender, "&eGit Build: &a%s", Backpacks.GIT_NUM);
+        respondn(sender,  "&eDownload Page: &ahttps://dev.bukkit.org/projects/backpack-item");
     }
 }

@@ -29,11 +29,11 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class GroundLocation extends SurfaceLocation {
+public class LocationGround extends SurfaceLocation {
 
-    private World lastWorld;
+    private final World lastWorld;
 
-    public GroundLocation(World lastWorld) {
+    public LocationGround(World lastWorld) {
         super(ItemPointerType.GROUND);
         this.lastWorld = lastWorld;
     }

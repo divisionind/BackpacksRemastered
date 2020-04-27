@@ -55,12 +55,14 @@ public class Backpacks extends JavaPlugin {
     private List<ACommand> commands;
     private Metrics metrics;
     private BackpackRecipes backpackRecipes;
+    private AdaptorManager adaptorManager;
 
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
         instance = this;
         commands = new ArrayList<>();
+        adaptorManager = new AdaptorManager(this);
 
         // load / init config
         saveDefaultConfig();
@@ -69,16 +71,18 @@ public class Backpacks extends JavaPlugin {
         // initialize game ticking with this plugin
         GameTickEvent.initialize(this);
 
-        registerCommands(new Help(),
-                new Info(),
-                new ItemInfo(),
-                new ItemInfoGet(),
-                new ItemGive(),
-                new ConfigReload(),
-                new Split(),
-                new MaterialsList(),
-                new MaterialsSearch(),
-                new VFurnace());
+        commands.addAll(Arrays.asList(new CHelp(),
+                new CInfo(),
+                new CItemInfo(),
+                new CItemInfoGet(),
+                new CItemGive(),
+                new CConfigReload(),
+                new CSplit(),
+                new CMaterialsList(),
+                new CMaterialsSearch(),
+                new CVFurnace()));
+
+        getAdaptorManager().registerAdaptors("GriefPrevention");
 
         registerEvents(new BackpackCraftEvent(),
                 new BackpackDamageEvent(),
@@ -111,6 +115,9 @@ public class Backpacks extends JavaPlugin {
         // enable metrics collection
         metrics = new Metrics(this);
 
+        // add task for post load
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::onPostLoad);
+
         // TODO implement an update notifier (will send messages to admins in game about updates to backpacks)
         // New version of BackpacksRemastered available (as red "CURRENT")->(as green "NEW")! Would you like to update? YES, NO, LATER. (make this clickable)
         // check for new update periodically and set a flag variable that is checked when an admin joins the game
@@ -140,12 +147,12 @@ public class Backpacks extends JavaPlugin {
                 // no command found by sub, attempts to parse as int for help pages
                 try {
                     int hpage = Integer.parseInt(subcmd);
-                    new Help().call(sender, label, new String[] {"help", Integer.toString(hpage)});
+                    new CHelp().call(sender, label, new String[] {"help", Integer.toString(hpage)});
                 } catch (NumberFormatException e) {
                     // not an int, idk wtf they were doing then
                     ACommand.respondf(sender, "&cError: Command \"%s\" not found.", subcmd);
                 }
-            } else new Help().call(sender, label, args);
+            } else new CHelp().call(sender, label, args);
         }
         return true;
     }
@@ -177,6 +184,11 @@ public class Backpacks extends JavaPlugin {
         }
 
         return entries;
+    }
+
+    public void onPostLoad() {
+        // this code is executed after every plugin has been loaded
+        getAdaptorManager().loadAdaptors();
     }
 
     public void setupFromConfig() {
@@ -218,10 +230,6 @@ public class Backpacks extends JavaPlugin {
         }
     }
 
-    public void registerCommands(ACommand... cmds) {
-        commands.addAll(Arrays.asList(cmds));
-    }
-
     private void registerEvents(Listener... listeners) {
         for (Listener lis : listeners) Bukkit.getPluginManager().registerEvents(lis, this);
     }
@@ -240,6 +248,10 @@ public class Backpacks extends JavaPlugin {
 
     public static Backpacks getInstance() {
         return instance;
+    }
+
+    public static AdaptorManager getAdaptorManager() {
+        return instance.adaptorManager;
     }
 
     // we can no longer check if the viewer equals the fake backpack viewer instance because that will always be false

@@ -44,6 +44,8 @@ public abstract class ACommand {
     // TODO
     // Commands are processed synchronously in the gameloop for bukkit, therefore, this is safe
     // verify this is the case on all common mc servers
+    // however, it may be better to just create a new "executor" instance that contains the player
+    // and other info (would be a whole lot safer for future versions)
 
 //    protected CommandSender currentSender;
 //

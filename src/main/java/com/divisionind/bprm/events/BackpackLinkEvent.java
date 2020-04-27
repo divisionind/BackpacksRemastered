@@ -37,6 +37,7 @@ public class BackpackLinkEvent implements Listener {
     @EventHandler
     public void onLinkBackpack(PlayerInteractEvent e) {
         if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
+
             ItemStack inhand = e.getPlayer().getInventory().getItemInMainHand();
 
             try {
@@ -47,8 +48,18 @@ public class BackpackLinkEvent implements Listener {
                         // the player is left clicking a block with a linked backpack in hand, this is lookin guuuuuddd
 
                         Block block = e.getClickedBlock();
+                        if (block == null) return;
                         Material blockMat = block.getType();
                         if (blockMat.equals(Material.CHEST) || blockMat.equals(Material.TRAPPED_CHEST) || blockMat.equals(Material.FURNACE)) {
+                            // there is no centralized/clean way of checking for container access that I can think of
+                            // so, im going to have to do it on a per-plugin basis
+                            // check with the plugin specific adaptor ability to see if the player has access to the container
+                            AdaptorAbility hasContainerAccess = Backpacks.getAdaptorManager().getAbility("hasAccessToContainer");
+                            if (hasContainerAccess != null && !hasContainerAccess.call(boolean.class, e.getPlayer(), block.getLocation())) {
+                                ACommand.respond(e.getPlayer(), "&cAccess to this container was denied.");
+                                return;
+                            }
+
                             backpack.setData(BackpackSerialization.toByteArrayLocation(block.getLocation()));
                             ItemStack newBackpack = backpack.getModifiedItem();
                             ItemMeta meta = newBackpack.getItemMeta();
