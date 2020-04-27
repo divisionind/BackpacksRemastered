@@ -32,7 +32,11 @@ public class PluginAdaptorLoader {
      * @throws ClassNotFoundException
      */
     public PluginAdaptorLoader(String adaptorName) throws ClassNotFoundException {
-        this.adaptorClass = Class.forName(ADAPTOR_PREFIX + adaptorName);
+        this(Class.forName(ADAPTOR_PREFIX + adaptorName));
+    }
+
+    public PluginAdaptorLoader(Class<?> adaptorClass) {
+        this.adaptorClass = adaptorClass;
     }
 
     /**

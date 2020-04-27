@@ -26,5 +26,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface PluginAdaptorTarget { // TODO this is a placeholder class for multiple adapters per the same plugin for different versions
-    String value();
+    String[] versionRange() default {};
 }
