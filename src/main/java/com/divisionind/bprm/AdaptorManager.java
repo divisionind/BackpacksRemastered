@@ -62,7 +62,7 @@ public class AdaptorManager {
                 try {
                     adaptor = loader.load(this);
                 } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    plugin.getLogger().severe("Failed to create plugin adaptor instance for: " + plugin.getName());
+                    this.plugin.getLogger().severe("Failed to create plugin adaptor instance for: " + plugin.getName());
                     e.printStackTrace();
                     continue;
                 }
@@ -71,13 +71,14 @@ public class AdaptorManager {
                 try {
                     adaptor.init(plugin);
                 } catch (Exception e) {
-                    plugin.getLogger().severe("Failed to load plugin adaptor for: " + plugin.getName());
+                    this.plugin.getLogger().severe("Failed to load plugin adaptor for: " + plugin.getName());
                     e.printStackTrace();
                     continue;
                 }
 
                 // add adaptor to the registry of loaded adaptors
                 pluginAdaptors.put(plugin.getName(), adaptor);
+                this.plugin.getLogger().info("Loaded adaptor for: " + plugin.getName());
             }
         }
     }
