@@ -18,7 +18,7 @@
 
 package com.divisionind.bprm.adapters;
 
-import com.divisionind.bprm.AdaptorAbilityAction;
+import com.divisionind.bprm.AbilityFunction;
 import com.divisionind.bprm.AdaptorManager;
 import com.divisionind.bprm.PluginAdaptor;
 import com.divisionind.bprm.PluginAdaptorLoader;
@@ -44,7 +44,7 @@ public class AdaptorGriefPrevention extends PluginAdaptor {
         registerAbility("hasAccessToContainer", Player.class, Location.class);
     }
 
-    @AdaptorAbilityAction
+    @AbilityFunction
     public boolean hasAccessToContainer(Player player, Location location) {
         /*
                     claim = this.dataStore.getClaimAt(clickedBlock.getLocation(), false, playerData.lastClaim);

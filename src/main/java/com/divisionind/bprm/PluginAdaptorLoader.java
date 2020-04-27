@@ -22,18 +22,38 @@ import java.lang.reflect.InvocationTargetException;
 
 public class PluginAdaptorLoader {
 
+    private static final String ADAPTOR_PREFIX = "com.divisionind.bprm.adapters.Adaptor";
+
     private final Class<?> adaptorClass;
 
+    /**
+     * Creates an adaptor loader using the specified adaptor name.
+     * @param adaptorName
+     * @throws ClassNotFoundException
+     */
     public PluginAdaptorLoader(String adaptorName) throws ClassNotFoundException {
-        this.adaptorClass = Class.forName("com.divisionind.bprm.adapters.Adaptor" + adaptorName);
+        this.adaptorClass = Class.forName(ADAPTOR_PREFIX + adaptorName);
     }
 
+    /**
+     * Creates a new instance of the adaptor using the supplied manager.
+     * @param manager
+     * @return
+     * @throws NoSuchMethodException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
     public PluginAdaptor load(AdaptorManager manager) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         return (PluginAdaptor) adaptorClass
                 .getConstructor(AdaptorManager.class, PluginAdaptorLoader.class)
                 .newInstance(manager, this);
     }
 
+    /**
+     * Gets the class of the actual adaptor implementation.
+     * @return
+     */
     public Class<?> getAdaptorClass() {
         return adaptorClass;
     }

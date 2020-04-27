@@ -39,6 +39,12 @@ public class AdaptorManager {
         this.adaptorAbilities = new HashMap<>();
     }
 
+    /**
+     * Creates/Registers loaders for the specified adaptors.
+     * Note: This must be called in any plugins onEnable()
+     *
+     * @param adaptors array of strings which are the names of the defined adaptors
+     */
     public void registerAdaptors(String... adaptors) {
         for (String adaptorName : adaptors) {
             try {
@@ -50,6 +56,11 @@ public class AdaptorManager {
         }
     }
 
+    /**
+     * Loads adaptors using the loaders created by {@link AdaptorManager#registerAdaptors(String...)}.
+     * Note: This must be called after all plugins have been loaded. You can do this by scheduling it
+     * in the onEnable() with {@link org.bukkit.scheduler.BukkitScheduler#scheduleSyncDelayedTask(Plugin, Runnable)}
+     */
     public void loadAdaptors() {
         // initialize plugin adaptors
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
@@ -83,14 +94,29 @@ public class AdaptorManager {
         }
     }
 
+    /**
+     * Gets an adaptor by its name.
+     * @param name
+     * @return
+     */
     public PluginAdaptor getAdaptor(String name) {
         return pluginAdaptors.get(name);
     }
 
+    /**
+     * Registers an adaptor ability.
+     * @param name
+     * @param ability
+     */
     public void registerAbility(String name, AdaptorAbility ability) {
         adaptorAbilities.put(name, ability);
     }
 
+    /**
+     * Gets an adaptor ability by name.
+     * @param name
+     * @return
+     */
     public AdaptorAbility getAbility(String name) {
         return adaptorAbilities.get(name);
     }

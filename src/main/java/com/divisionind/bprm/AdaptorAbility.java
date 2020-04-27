@@ -24,6 +24,14 @@ import com.divisionind.bprm.exceptions.InvalidAdaptorAbilityException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * These are essentially just specialized functions which can be looked up at runtime.
+ * The advantages of these over traditional method calls is that nothing is hard-coded
+ * and their implementation/parameters/etc. can vary depending on other plugins in the
+ * system (e.g. they are more dynamic).
+ *
+ * Each adaptor can create/overwrite the other's abilities.
+ */
 public class AdaptorAbility {
 
     private final PluginAdaptor pluginAdaptor;
@@ -33,11 +41,16 @@ public class AdaptorAbility {
         this.pluginAdaptor = pluginAdaptor;
         this.ability = pluginAdaptor.getLoader().getAdaptorClass().getDeclaredMethod(method, params);
 
-        if (!this.ability.isAnnotationPresent(AdaptorAbilityAction.class)) {
+        if (!this.ability.isAnnotationPresent(AbilityFunction.class)) {
             throw new InvalidAdaptorAbilityException("The supplied adaptor ability does not have the correct annotations.");
         }
     }
 
+    /**
+     * Calls the ability with the given parameters.
+     * @param params
+     * @return
+     */
     public Object call(Object... params) {
         try {
             return ability.invoke(pluginAdaptor, params);
@@ -46,7 +59,16 @@ public class AdaptorAbility {
         }
     }
 
+    /**
+     * Wraps {@link AdaptorAbility#call(Object...)} and casts the return value to
+     * the specified type.
+     * @param returnType
+     * @param params
+     * @param <T>
+     * @return
+     */
     public <T> T call(Class<T> returnType, Object... params) {
+        // returnType specified here to make the cast type more explicit
         return (T) call(params);
     }
 }
