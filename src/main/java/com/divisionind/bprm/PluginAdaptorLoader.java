@@ -22,19 +22,12 @@ import java.lang.reflect.InvocationTargetException;
 
 public class PluginAdaptorLoader {
 
-    private static final String ADAPTOR_PREFIX = "com.divisionind.bprm.adapters.Adaptor";
-
     private final Class<?> adaptorClass;
 
     /**
-     * Creates an adaptor loader using the specified adaptor name.
-     * @param adaptorName
-     * @throws ClassNotFoundException
+     * Creates an adaptor loader using the specified adapter class.
+     * @param adaptorClass
      */
-    public PluginAdaptorLoader(String adaptorName) throws ClassNotFoundException {
-        this(Class.forName(ADAPTOR_PREFIX + adaptorName));
-    }
-
     public PluginAdaptorLoader(Class<?> adaptorClass) {
         this.adaptorClass = adaptorClass;
     }

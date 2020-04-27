@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.adapters.AdaptorGriefPrevention;
 import com.divisionind.bprm.commands.*;
 import com.divisionind.bprm.events.*;
 import com.divisionind.bprm.events.custom.GameTickEvent;
@@ -82,7 +83,7 @@ public class Backpacks extends JavaPlugin {
                 new CMaterialsSearch(),
                 new CVFurnace()));
 
-        getAdaptorManager().registerAdaptors("GriefPrevention");
+        getAdaptorManager().registerAdaptors(AdaptorGriefPrevention.class);
 
         registerEvents(new BackpackCraftEvent(),
                 new BackpackDamageEvent(),

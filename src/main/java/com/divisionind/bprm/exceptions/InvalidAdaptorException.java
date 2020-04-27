@@ -16,15 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm;
+package com.divisionind.bprm.exceptions;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface PluginAdaptorTarget { // TODO this is a placeholder class for multiple adapters per the same plugin for different versions
-    String[] versionRange() default {};
+public class InvalidAdaptorException extends RuntimeException {
+    public InvalidAdaptorException(String message) {
+        super(message);
+    }
 }

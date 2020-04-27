@@ -19,6 +19,7 @@
 package com.divisionind.bprm;
 
 import com.divisionind.bprm.exceptions.InvalidAdaptorAbilityException;
+import com.divisionind.bprm.exceptions.InvalidAdaptorException;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -45,21 +46,20 @@ public class AdaptorManager {
      * Creates/Registers loaders for the specified adaptors.
      * Note: This must be called in any plugins onEnable()
      *
-     * @param adaptors array of strings which are the names of the defined adaptors
+     * @param adaptors array of plugin adaptor classes
      */
-    public void registerAdaptors(String... adaptors) {
-        for (String adaptorName : adaptors) {
-            try {
-                pluginAdaptorLoaders.put(adaptorName, new PluginAdaptorLoader(adaptorName));
-            } catch (ClassNotFoundException e) {
-                plugin.getLogger().severe("Failed to find plugin adaptor: " + adaptorName);
-                e.printStackTrace();
-            }
+    @SafeVarargs
+    public final void registerAdaptors(Class<? extends PluginAdaptor>... adaptors) {
+        for (Class<? extends PluginAdaptor> adaptor : adaptors) {
+            if (adaptor.isAnnotationPresent(PluginAdaptorMeta.class)) {
+                PluginAdaptorMeta meta = adaptor.getAnnotation(PluginAdaptorMeta.class);
+                pluginAdaptorLoaders.put(meta.name(), new PluginAdaptorLoader(adaptor));
+            } else throw new InvalidAdaptorException(String.format("The class \"%s\" does not have the @PluginAdaptorMeta annotation but requires it.", adaptor.getName()));
         }
     }
 
     /**
-     * Loads adaptors using the loaders created by {@link AdaptorManager#registerAdaptors(String...)}.
+     * Loads adaptors using the loaders created by {@link AdaptorManager#registerAdaptors(Class[])}.
      * Note: This must be called after all plugins have been loaded. You can do this by scheduling it
      * in the onEnable() with {@link org.bukkit.scheduler.BukkitScheduler#scheduleSyncDelayedTask(Plugin, Runnable)}
      */

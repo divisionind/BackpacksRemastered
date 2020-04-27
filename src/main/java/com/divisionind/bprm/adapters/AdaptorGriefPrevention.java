@@ -20,6 +20,7 @@ package com.divisionind.bprm.adapters;
 
 import com.divisionind.bprm.AbilityFunction;
 import com.divisionind.bprm.PluginAdaptor;
+import com.divisionind.bprm.PluginAdaptorMeta;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
@@ -27,6 +28,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+@PluginAdaptorMeta(name = "GriefPrevention")
 public class AdaptorGriefPrevention extends PluginAdaptor {
 
     private GriefPrevention parent;
