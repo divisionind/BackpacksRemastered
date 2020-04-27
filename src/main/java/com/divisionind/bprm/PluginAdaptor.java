@@ -18,7 +18,6 @@
 
 package com.divisionind.bprm;
 
-import com.divisionind.bprm.exceptions.InvalidAdaptorAbilityException;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -32,13 +31,8 @@ public abstract class PluginAdaptor {
      */
     public abstract void init(Plugin parent) throws Exception;
 
-    private final AdaptorManager manager;
-    private final PluginAdaptorLoader loader;
-
-    public PluginAdaptor(AdaptorManager manager, PluginAdaptorLoader loader) {
-        this.manager = manager;
-        this.loader = loader;
-    }
+    private AdaptorManager manager;
+    private PluginAdaptorLoader loader;
 
     public AdaptorManager getManager() {
         return manager;
@@ -48,11 +42,11 @@ public abstract class PluginAdaptor {
         return loader;
     }
 
-    public void registerAbility(String name, String method, Class<?>... params) throws NoSuchMethodException, InvalidAdaptorAbilityException {
-        getManager().registerAbility(name, new AdaptorAbility(this, method, params));
+    protected void setManager(AdaptorManager manager) {
+        this.manager = manager;
     }
 
-    public void registerAbility(String id, Class<?>... params) throws NoSuchMethodException, InvalidAdaptorAbilityException {
-        registerAbility(id, id, params);
+    protected void setLoader(PluginAdaptorLoader loader) {
+        this.loader = loader;
     }
 }

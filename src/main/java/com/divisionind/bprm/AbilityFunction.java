@@ -26,4 +26,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface AbilityFunction {
+    /**
+     * This is the name of the ability. If left as default, the name will be set to the
+     * name of the method to which this annotation is applied.
+     * @return
+     */
+    String value() default "";
 }

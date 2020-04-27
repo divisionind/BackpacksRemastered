@@ -19,9 +19,7 @@
 package com.divisionind.bprm.adapters;
 
 import com.divisionind.bprm.AbilityFunction;
-import com.divisionind.bprm.AdaptorManager;
 import com.divisionind.bprm.PluginAdaptor;
-import com.divisionind.bprm.PluginAdaptorLoader;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
@@ -33,33 +31,13 @@ public class AdaptorGriefPrevention extends PluginAdaptor {
 
     private GriefPrevention parent;
 
-    public AdaptorGriefPrevention(AdaptorManager manager, PluginAdaptorLoader loader) {
-        super(manager, loader);
-    }
-
     @Override
     public void init(Plugin parent) throws Exception {
         this.parent = (GriefPrevention) parent;
-
-        registerAbility("hasAccessToContainer", Player.class, Location.class);
     }
 
     @AbilityFunction
     public boolean hasAccessToContainer(Player player, Location location) {
-        /*
-                    claim = this.dataStore.getClaimAt(clickedBlock.getLocation(), false, playerData.lastClaim);
-                    if (claim != null) {
-                        playerData.lastClaim = claim;
-                        noBuildReason = claim.allowContainers(player);
-                        if (noBuildReason != null) {
-                            event.setCancelled(true);
-                            var10000 = this.instance;
-                            GriefPrevention.sendMessage(player, TextMode.Err, noBuildReason);
-                            return;
-                        }
-                    }
-             */
-
         PlayerData data = parent.dataStore.getPlayerData(player.getUniqueId());
         Claim claim = parent.dataStore.getClaimAt(location, false, data.lastClaim);
 

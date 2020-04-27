@@ -18,10 +18,13 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.exceptions.InvalidAdaptorAbilityException;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,6 +88,21 @@ public class AdaptorManager {
                     this.plugin.getLogger().severe("Failed to load plugin adaptor for: " + plugin.getName());
                     e.printStackTrace();
                     continue;
+                }
+
+                // setup adaptor abilities
+                for (Method method : loader.getAdaptorClass().getDeclaredMethods()) {
+                    if (method.isAnnotationPresent(AbilityFunction.class)) {
+                        // this method is an ability, register it
+                        AbilityFunction abilityFunction = method.getAnnotation(AbilityFunction.class);
+
+                        try {
+                            registerAbility(abilityFunction.value().equals("") ? method.getName() : abilityFunction.value(),
+                                    new AdaptorAbility(adaptor, method));
+                        } catch (InvalidAdaptorAbilityException e) {
+                            e.printStackTrace(); // this could never happen
+                        }
+                    }
                 }
 
                 // add adaptor to the registry of loaded adaptors

@@ -37,13 +37,17 @@ public class AdaptorAbility {
     private final PluginAdaptor pluginAdaptor;
     private final Method ability;
 
-    public AdaptorAbility(PluginAdaptor pluginAdaptor, String method, Class<?>... params) throws NoSuchMethodException, InvalidAdaptorAbilityException {
+    public AdaptorAbility(PluginAdaptor pluginAdaptor, Method ability) throws InvalidAdaptorAbilityException {
         this.pluginAdaptor = pluginAdaptor;
-        this.ability = pluginAdaptor.getLoader().getAdaptorClass().getDeclaredMethod(method, params);
+        this.ability = ability;
 
         if (!this.ability.isAnnotationPresent(AbilityFunction.class)) {
             throw new InvalidAdaptorAbilityException("The supplied adaptor ability does not have the correct annotations.");
         }
+    }
+
+    public AdaptorAbility(PluginAdaptor pluginAdaptor, String method, Class<?>... params) throws NoSuchMethodException, InvalidAdaptorAbilityException {
+        this(pluginAdaptor, pluginAdaptor.getLoader().getAdaptorClass().getDeclaredMethod(method, params));
     }
 
     /**
