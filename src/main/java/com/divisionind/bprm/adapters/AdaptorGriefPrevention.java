@@ -47,7 +47,7 @@ public class AdaptorGriefPrevention extends PluginAdaptor {
     @AdaptorAbilityAction
     public boolean hasAccessToContainer(Player player, Location location) {
         /*
-            claim = this.dataStore.getClaimAt(clickedBlock.getLocation(), false, playerData.lastClaim);
+                    claim = this.dataStore.getClaimAt(clickedBlock.getLocation(), false, playerData.lastClaim);
                     if (claim != null) {
                         playerData.lastClaim = claim;
                         noBuildReason = claim.allowContainers(player);
