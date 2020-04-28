@@ -18,18 +18,25 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.exceptions.InvalidAdaptorException;
+
 import java.lang.reflect.InvocationTargetException;
 
 public class PluginAdaptorLoader {
 
-    private final Class<?> adaptorClass;
+    private final Class<? extends PluginAdaptor> adaptorClass;
 
     /**
      * Creates an adaptor loader using the specified adapter class.
      * @param adaptorClass
+     * @throws InvalidAdaptorException
      */
-    public PluginAdaptorLoader(Class<?> adaptorClass) {
+    public PluginAdaptorLoader(Class<? extends PluginAdaptor> adaptorClass) throws InvalidAdaptorException {
         this.adaptorClass = adaptorClass;
+
+        if (!adaptorClass.isAnnotationPresent(PluginAdaptorMeta.class)) {
+            throw new InvalidAdaptorException(String.format("The class \"%s\" does not have the @PluginAdaptorMeta annotation but requires it.", adaptorClass.getName()));
+        }
     }
 
     /**
@@ -42,7 +49,7 @@ public class PluginAdaptorLoader {
      * @throws InvocationTargetException
      */
     public PluginAdaptor load(AdaptorManager manager) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        PluginAdaptor adaptor = (PluginAdaptor) adaptorClass.getConstructor().newInstance();
+        PluginAdaptor adaptor = adaptorClass.getConstructor().newInstance();
         adaptor.setManager(manager);
         adaptor.setLoader(this);
 
@@ -53,7 +60,11 @@ public class PluginAdaptorLoader {
      * Gets the class of the actual adaptor implementation.
      * @return
      */
-    public Class<?> getAdaptorClass() {
+    public Class<? extends PluginAdaptor> getAdaptorClass() {
         return adaptorClass;
+    }
+
+    public PluginAdaptorMeta getMeta() {
+        return adaptorClass.getAnnotation(PluginAdaptorMeta.class);
     }
 }

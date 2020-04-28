@@ -47,14 +47,13 @@ public class AdaptorManager {
      * Note: This must be called in any plugins onEnable()
      *
      * @param adaptors array of plugin adaptor classes
+     * @throws InvalidAdaptorException
      */
     @SafeVarargs
-    public final void registerAdaptors(Class<? extends PluginAdaptor>... adaptors) {
+    public final void registerAdaptors(Class<? extends PluginAdaptor>... adaptors) throws InvalidAdaptorException {
         for (Class<? extends PluginAdaptor> adaptor : adaptors) {
-            if (adaptor.isAnnotationPresent(PluginAdaptorMeta.class)) {
-                PluginAdaptorMeta meta = adaptor.getAnnotation(PluginAdaptorMeta.class);
-                pluginAdaptorLoaders.put(meta.name(), new PluginAdaptorLoader(adaptor));
-            } else throw new InvalidAdaptorException(String.format("The class \"%s\" does not have the @PluginAdaptorMeta annotation but requires it.", adaptor.getName()));
+            PluginAdaptorLoader loader = new PluginAdaptorLoader(adaptor);
+            pluginAdaptorLoaders.put(loader.getMeta().name(), loader);
         }
     }
 
@@ -63,7 +62,11 @@ public class AdaptorManager {
      * Note: This must be called after all plugins have been loaded. You can do this by scheduling it
      * in the onEnable() with {@link org.bukkit.scheduler.BukkitScheduler#scheduleSyncDelayedTask(Plugin, Runnable)}
      */
-    public void loadAdaptors() {
+    public void reloadAdaptors() {
+        // discard any previously loaded adaptors
+        pluginAdaptors.clear();
+        adaptorAbilities.clear();
+
         // initialize plugin adaptors
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
 
@@ -106,8 +109,13 @@ public class AdaptorManager {
 
                 // add adaptor to the registry of loaded adaptors
                 pluginAdaptors.put(plugin.getName(), adaptor);
-                this.plugin.getLogger().info("Loaded adaptor for: " + plugin.getName());
             }
+        }
+
+        if (pluginAdaptors.size() > 0) {
+            StringBuilder msg = new StringBuilder("Loaded adaptor(s) for: ");
+            for (String adaptor : pluginAdaptors.keySet()) msg.append(adaptor).append(", ");
+            this.plugin.getLogger().info(msg.substring(0, msg.length() - 2));
         }
     }
 

@@ -75,4 +75,20 @@ public class AdaptorAbility {
         // returnType specified here to make the cast type more explicit
         return (T) call(params);
     }
+
+    /**
+     * Gets the adaptor which created this ability.
+     * @return
+     */
+    public PluginAdaptor getOwner() {
+        return pluginAdaptor;
+    }
+
+    /**
+     * Gets the underlying reflection instance.
+     * @return
+     */
+    public Method getRaw() {
+        return ability;
+    }
 }

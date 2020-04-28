@@ -189,7 +189,7 @@ public class Backpacks extends JavaPlugin {
 
     public void onPostLoad() {
         // this code is executed after every plugin has been loaded
-        getAdaptorManager().loadAdaptors();
+        getAdaptorManager().reloadAdaptors();
     }
 
     public void setupFromConfig() {
