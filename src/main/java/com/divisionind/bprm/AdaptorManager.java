@@ -145,4 +145,8 @@ public class AdaptorManager {
     public AdaptorAbility getAbility(String name) {
         return adaptorAbilities.get(name);
     }
+
+    public Plugin getPlugin() {
+        return plugin;
+    }
 }

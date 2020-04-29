@@ -10,44 +10,6 @@ you can craft backpacks or obtain them through commands. Backpacks can also be d
 even stored in another backpack (configurable) and will always retain their inventory. Backpacks is also one of the only 
 plugins (I know of at least) that allows you to view the specific NBT tags on items.
 
-## Download
-Please download the plugin from the Official Bukkit page [here](https://dev.bukkit.org/projects/backpack-item). I do 
-not get any ad revenue if you download the plugin from the releases page on GitHub. Those download links are only here 
-for convenience and to provide an archive of sources for particular versions if someone wishes to fork the project
-in the future (also I may remove the jar and only provide hashes for the jar in the future).
-
-
-## Adding languages
-This plugin uses the i18nExtractor gradle plugin written by me (drew6017) for automatically extracting / translating
-strings into other languages. You can specify any language supported by Google Translate in the last line
-under the internationalize task.
-
-__NOTE: Google loves throwing 429 errors (too many requests) when you use this because we are essentially spamming 
-google with a translation request for each string we choose to add.__ You could modify this to use googles translation
-api but you are then subject to limitations (and you have to pay). Translations are cached to the ".i18nExtractor"
-directory. Delete the cache corresponding to a particular language to refresh it. Be careful how many languages you
-add/refresh at once because too many requests ~70-150 (depending on the trust factory of the network requesting translation) 
-in one go will cause you to get locked out by google for several hours. __If you see any message about a 429 error in 
-the console, it means that a string was not translated and the resulting jar should not be used with other languages 
-as this WILL result in errors.__
-
-Also, the i18nExtractor plugin is currently licensed as "All rights reserved" to Division Industries LLC. You may not
-copy or modify any code from it. However, there is an API for creating custom translators (which you are free to do).
-
-### Steps
-1. Find the section of the build file that looks like `langs('es', 'it', 'fr')` (If you are familiar with gradle, 
-   it should be under the internationalize task).
-2. Add your desired [valid Google translate language code](https://cloud.google.com/translate/docs/languages) to the
-   list.
-3. Build the plugin.
-4. You should now be able to use this same language code in the [config.yml](https://github.com/divisionind/BackpacksRemastered/blob/master/src/main/resources/config.yml) 
-   of Backpacks. (minus any -X extensions, e.g. "zh-CH" would be "zh")
-
-##### Notes
-- Translations are cached in the `.i18nExtractor` directory, delete the cache file corresponding to your desired language
-  to grab the latest translations of that language from google.
-- See above notes about 429 errors.
-
 ## Building
 Requirements:
   - Gradle
@@ -83,3 +45,113 @@ tasks, just add an entry for the task "pack".*
 The first build will translate all of the strings from the project using google translate (see *Adding languages*)
 this may fail as the project is very large. If it does, wait a few hours to a day and try to build again to get the
 rest of the strings. If you don't want this to be an issue, remove some languages.
+
+## Adding languages
+This plugin uses the i18nExtractor gradle plugin written by me (drew6017) for automatically extracting / translating
+strings into other languages. You can specify any language supported by Google Translate in the last line
+under the internationalize task.
+
+__NOTE: Google loves throwing 429 errors (too many requests) when you use this because we are essentially spamming 
+google with a translation request for each string we choose to add.__ You could modify this to use googles translation
+api but you are then subject to limitations (and you have to pay). Translations are cached to the ".i18nExtractor"
+directory. Delete the cache corresponding to a particular language to refresh it. Be careful how many languages you
+add/refresh at once because too many requests ~70-150 (depending on the trust factory of the network requesting translation) 
+in one go will cause you to get locked out by google for several hours. __If you see any message about a 429 error in 
+the console, it means that a string was not translated and the resulting jar should not be used with other languages 
+as this WILL result in errors.__
+
+Also, the i18nExtractor plugin is currently licensed as "All rights reserved" to Division Industries LLC. You may not
+copy or modify any code from it. However, there is an API for creating custom translators (which you are free to do).
+
+### Steps
+1. Find the section of the build file that looks like `langs('es', 'it', 'fr')` (If you are familiar with gradle, 
+   it should be under the internationalize task).
+2. Add your desired [valid Google translate language code](https://cloud.google.com/translate/docs/languages) to the
+   list.
+3. Build the plugin.
+4. You should now be able to use this same language code in the [config.yml](https://github.com/divisionind/BackpacksRemastered/blob/master/src/main/resources/config.yml) 
+   of Backpacks. (minus any -X extensions, e.g. "zh-CH" would be "zh")
+
+##### Notes
+- Translations are cached in the `.i18nExtractor` directory, delete the cache file corresponding to your desired language
+  to grab the latest translations of that language from google.
+- See above notes about 429 errors.
+
+## Adaptors / Integration
+Backpacks supports 3rd-party plugin integration through the use of "Adaptors". These adaptors can register custom commands
+or other custom functionality through the use of "Abilities" (functions with re-definable meaning used internally).
+
+#### An example adaptor
+Below is an example of a plugin adaptor for a plugin named "ExamplePlugin". The name value of the `@PluginAdaptorMeta`
+annotation must be the name of your plugin as registered by your plugin.yml.
+```java
+@PluginAdaptorMeta(name = "ExamplePlugin")
+public class AdaptorExamplePlugin extends PluginAdaptor {
+
+    private ExamplePlugin parent;
+
+    @Override
+    public void onEnable(Plugin parent) throws Exception {
+        this.parent = (ExamplePlugin) parent;
+
+        Backpacks.getInstance().registerCommands(new CExampleCommand());
+        getLogger().info("Registered ExamplePlugin adaptor!");
+    }
+
+    @AbilityFunction
+    public boolean hasAccessToContainer(Player player, Location location) {
+        // ... logic
+        return true; // or false
+    }
+
+    private static class CExampleCommand extends ACommand {
+        @Override
+        public String alias() {
+            return "example";
+        }
+
+        @Override
+        public String desc() {
+            return "an example command registered by an example adaptor";
+        }
+
+        @Override
+        public String usage() {
+            return null;
+        }
+
+        @Override
+        public String permission() {
+            return "backpacks.example";
+        }
+
+        @Override
+        public void execute(CommandSender sender, String label, String[] args) {
+            // need a player instance? Player player = validatePlayer(sender);
+            // if the sender is not a player, the command will return and respond accordingly
+            respond(sender, "&eHello world!");
+        }
+    }
+}
+```
+
+#### Loading the adaptor
+```java
+public class ExamplePlugin extends JavaPlugin {
+    @Override
+    public void onEnable() {
+        Backpacks.getAdaptorManager().registerAdaptors(AdaptorExamplePlugin.class);
+        getLogger().info("ExamplePlugin has been enabled!");
+    }
+} 
+```
+
+Methods tagged with the `@AbilityFunction` annotation inside of a `PluginAdaptor` are automatically registered
+as abilities with the system. If no value is specified (e.g. `@AbilityFunction("someName")`) then the method's 
+name is used as the ability name. Abilities overwrite each other, so, if multiple adaptors register an ability
+with the same name, the last adaptor loaded will have the ability that persists. The following is a list of
+current abilities used internally by Backpacks:
+
+#### Current abilities
+- `boolean hasAccessToContainer(Player, Location)`: returns true if the player has access to the block at the 
+  specified location, otherwise false

@@ -18,40 +18,24 @@
 
 package com.divisionind.bprm;
 
-import org.bukkit.plugin.Plugin;
-
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-/**
- * This is an adaptor interface for defining 3rd-party plugin-specific functionality.
- */
-public abstract class PluginAdaptor {
+public class AdaptorLogger extends Logger {
 
-    /**
-     * Initializes the adaptor with the resolved plugin instance.
-     * @param parent
-     */
-    public void onEnable(Plugin parent) throws Exception {}
+    private final String prefix;
 
-    private AdaptorManager manager;
-    private PluginAdaptorLoader loader;
-    private Logger logger;
-
-    final void init(AdaptorManager manager, PluginAdaptorLoader loader) {
-        this.manager = manager;
-        this.loader = loader;
-        this.logger = new AdaptorLogger(this);
+    public AdaptorLogger(PluginAdaptor context) {
+        super(context.getLoader().getAdaptorClass().getCanonicalName(), null);
+        this.prefix = "[BackpacksRemastered:" + context.getLoader().getMeta().name() + "] ";
+        setParent(context.getManager().getPlugin().getLogger());
+        setLevel(Level.ALL);
     }
 
-    public final AdaptorManager getManager() {
-        return manager;
-    }
-
-    public final PluginAdaptorLoader getLoader() {
-        return loader;
-    }
-
-    public Logger getLogger() {
-        return logger;
+    @Override
+    public void log(LogRecord record) {
+        record.setMessage(prefix + record.getMessage());
+        super.log(record);
     }
 }

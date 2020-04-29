@@ -72,7 +72,7 @@ public class Backpacks extends JavaPlugin {
         // initialize game ticking with this plugin
         GameTickEvent.initialize(this);
 
-        commands.addAll(Arrays.asList(new CHelp(),
+        registerCommands(new CHelp(),
                 new CInfo(),
                 new CItemInfo(),
                 new CItemInfoGet(),
@@ -81,7 +81,7 @@ public class Backpacks extends JavaPlugin {
                 new CSplit(),
                 new CMaterialsList(),
                 new CMaterialsSearch(),
-                new CVFurnace()));
+                new CVFurnace());
 
         getAdaptorManager().registerAdaptors(AdaptorGriefPrevention.class);
 
@@ -193,7 +193,14 @@ public class Backpacks extends JavaPlugin {
     }
 
     public void setupFromConfig() {
-        if (parseIntSilent(getConfig().getString("version")) != CONFIGURATION_VERSION) {
+        int inputVersion;
+        try {
+            inputVersion = Integer.parseInt(getConfig().getString("version"));
+        } catch (NumberFormatException e) {
+            inputVersion = -1;
+        }
+
+        if (inputVersion != CONFIGURATION_VERSION) {
             File configFile = new File(getDataFolder(), "config.yml");
             File configFileBak = new File(getDataFolder(), "config.yml.bak");
             try {
@@ -223,16 +230,12 @@ public class Backpacks extends JavaPlugin {
         if (MAX_COMBINED_BACKPACKS > 9 || MAX_COMBINED_BACKPACKS < 1) MAX_COMBINED_BACKPACKS = 9;
     }
 
-    private int parseIntSilent(String in) {
-        try {
-            return Integer.parseInt(in);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-
     private void registerEvents(Listener... listeners) {
         for (Listener lis : listeners) Bukkit.getPluginManager().registerEvents(lis, this);
+    }
+
+    public void registerCommands(ACommand... commands) {
+        this.commands.addAll(Arrays.asList(commands));
     }
 
     public List<ACommand> getCommands() {
