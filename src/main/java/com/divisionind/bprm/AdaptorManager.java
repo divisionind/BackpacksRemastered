@@ -85,7 +85,7 @@ public class AdaptorManager {
 
                 // perform setup for the plugin adaptor
                 try {
-                    adaptor.init(plugin);
+                    adaptor.onEnable(plugin);
                 } catch (Exception e) {
                     this.plugin.getLogger().severe("Failed to load plugin adaptor for: " + plugin.getName());
                     e.printStackTrace();

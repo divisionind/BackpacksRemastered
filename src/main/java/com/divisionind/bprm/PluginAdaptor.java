@@ -29,10 +29,15 @@ public abstract class PluginAdaptor {
      * Initializes the adaptor with the resolved plugin instance.
      * @param parent
      */
-    public abstract void init(Plugin parent) throws Exception;
+    public abstract void onEnable(Plugin parent) throws Exception;
 
     private AdaptorManager manager;
     private PluginAdaptorLoader loader;
+
+    final void init(AdaptorManager manager, PluginAdaptorLoader loader) {
+        this.manager = manager;
+        this.loader = loader;
+    }
 
     public AdaptorManager getManager() {
         return manager;
@@ -40,13 +45,5 @@ public abstract class PluginAdaptor {
 
     public PluginAdaptorLoader getLoader() {
         return loader;
-    }
-
-    protected void setManager(AdaptorManager manager) {
-        this.manager = manager;
-    }
-
-    protected void setLoader(PluginAdaptorLoader loader) {
-        this.loader = loader;
     }
 }

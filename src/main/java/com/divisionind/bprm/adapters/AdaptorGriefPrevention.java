@@ -34,7 +34,7 @@ public class AdaptorGriefPrevention extends PluginAdaptor {
     private GriefPrevention parent;
 
     @Override
-    public void init(Plugin parent) throws Exception {
+    public void onEnable(Plugin parent) throws Exception {
         this.parent = (GriefPrevention) parent;
     }
 

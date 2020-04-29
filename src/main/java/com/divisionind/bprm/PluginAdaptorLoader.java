@@ -50,8 +50,7 @@ public class PluginAdaptorLoader {
      */
     public PluginAdaptor load(AdaptorManager manager) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         PluginAdaptor adaptor = adaptorClass.getConstructor().newInstance();
-        adaptor.setManager(manager);
-        adaptor.setLoader(this);
+        adaptor.init(manager, this);
 
         return adaptor;
     }
