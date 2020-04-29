@@ -10,6 +10,11 @@ you can craft backpacks or obtain them through commands. Backpacks can also be d
 even stored in another backpack (configurable) and will always retain their inventory. Backpacks is also one of the only 
 plugins (I know of at least) that allows you to view the specific NBT tags on items.
 
+## Table of contents
+**[Building](#building)**<br>
+**[Adding languages](#adding-languages)**<br>
+**[Adaptors and Integration](#adaptors-and-integration)**<br>
+
 ## Building
 Requirements:
   - Gradle
@@ -77,7 +82,7 @@ copy or modify any code from it. However, there is an API for creating custom tr
   to grab the latest translations of that language from google.
 - See above notes about 429 errors.
 
-## Adaptors / Integration
+## Adaptors and Integration
 Backpacks supports 3rd-party plugin integration through the use of "Adaptors". These adaptors can register custom commands
 or other custom functionality through the use of "Abilities" (functions with re-definable meaning used internally).
 
