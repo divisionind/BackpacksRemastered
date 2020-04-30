@@ -86,7 +86,7 @@ copy or modify any code from it. However, there is an API for creating custom tr
 Backpacks supports 3rd-party plugin integration through the use of "Adaptors". These adaptors can register custom commands
 or other custom functionality through the use of "Abilities" (functions with re-definable meaning used internally).
 
-#### An example adaptor
+#### An example adaptor (see examples/ for more)
 Below is an example of a plugin adaptor for a plugin named "ExamplePlugin". The name value of the `@PluginAdaptorMeta`
 annotation must be the name of your plugin as registered by your plugin.yml.
 ```java

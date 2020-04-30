@@ -1,0 +1,6 @@
+name: ExampleCommands
+description: An example of command registration by an Adaptor.
+main: com.divisionind.bpcmds.ExampleCommands
+version: 2020.1.1
+depend:
+  - BackpacksRemastered

@@ -16,26 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.divisionind.bprm;
+package com.divisionind.bpcmds;
 
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+import com.divisionind.bprm.Backpacks;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class AdaptorLogger extends Logger {
-
-    private final String prefix;
-
-    public AdaptorLogger(PluginAdaptor context) {
-        super(context.getLoader().getAdaptorClass().getCanonicalName(), null);
-        this.prefix = "[" + context.getManager().getPlugin().getName() + "/" + context.getLoader().getMeta().name() + "] ";
-        setParent(context.getManager().getPlugin().getLogger());
-        setLevel(Level.ALL);
-    }
-
+public class ExampleCommands extends JavaPlugin {
     @Override
-    public void log(LogRecord record) {
-        record.setMessage(prefix + record.getMessage());
-        super.log(record);
+    public void onEnable() {
+        Backpacks.getAdaptorManager().registerAdaptors(AdaptorExampleCommands.class);
+        getLogger().info("ExampleCommands plugin enabled!");
     }
 }

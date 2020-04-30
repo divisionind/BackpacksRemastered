@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group 'com.divisionind'
+version '2020.1.1'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://raw.githubusercontent.com/divisionind/maven/repo' }
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly group: 'org.spigotmc', name: 'spigot-full', version: '1.15.2'
+    compileOnly group: 'com.github.divisionind', name: 'BackpacksRemastered', version: 'v2020.0.4'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
