@@ -22,14 +22,13 @@ import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class InventoryLocation extends SurfaceLocation {
+public abstract class InventoryLocation implements SurfaceLocation {
 
     public abstract Inventory resolveInventory() throws UnknownItemLocationException;
 
     private int lastKnownSlot;
 
-    public InventoryLocation(ItemPointerType itemPointerType, int lastKnownSlot) {
-        super(itemPointerType);
+    public InventoryLocation(int lastKnownSlot) {
         this.lastKnownSlot = lastKnownSlot;
     }
 

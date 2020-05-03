@@ -77,16 +77,16 @@ public class BackpackTrackEvents implements Listener {
             UUID playerId = entity.getUniqueId();
             switch (inv.getType()) {
                 case PLAYER:
-                    checkAndUpdate(item, previous -> new InventoryLocationPlayer(slot, playerId));
+                    checkAndUpdate(item, () -> new InventoryLocationPlayer(slot, playerId));
                     break;
                 case ENDER_CHEST:
-                    checkAndUpdate(item, previous -> new InventoryLocationEnderChest(slot, playerId));
+                    checkAndUpdate(item, () -> new InventoryLocationEnderChest(slot, playerId));
                     break;
                 default: // set to default to support any future inventory containing blocks
                     InventoryHolder holder = inv.getHolder();
                     if (holder instanceof org.bukkit.inventory.BlockInventoryHolder) {
                         org.bukkit.inventory.BlockInventoryHolder blockHolder = (org.bukkit.inventory.BlockInventoryHolder) holder;
-                        checkAndUpdate(item, previous -> new InventoryLocationBlock(slot, blockHolder));
+                        checkAndUpdate(item, () -> new InventoryLocationBlock(slot, blockHolder));
                     }
                     break;
             }
@@ -103,7 +103,7 @@ public class BackpackTrackEvents implements Listener {
         if (!e.isCancelled() && e.getEntityType().equals(EntityType.PLAYER)) {
             // if the item slot gets added to this event, a great optimization could be made
             final UUID playerId = e.getEntity().getUniqueId();
-            checkAndUpdate(e.getItem().getItemStack(), previous -> new InventoryLocationPlayer(0, playerId));
+            checkAndUpdate(e.getItem().getItemStack(), () -> new InventoryLocationPlayer(0, playerId));
         }
     }
 
@@ -112,7 +112,7 @@ public class BackpackTrackEvents implements Listener {
         // should encompass chest breaking and player item dropping
         if (!e.isCancelled()) {
             final World lastWorld = e.getEntity().getWorld();
-            checkAndUpdate(e.getEntity().getItemStack(), previous -> new LocationGround(lastWorld));
+            checkAndUpdate(e.getEntity().getItemStack(), () -> new LocationGround(lastWorld));
         }
     }
 
@@ -141,13 +141,13 @@ public class BackpackTrackEvents implements Listener {
             if (vfurnace != null) {
                 ItemStackPointer itemLocation = vfurnace.getItemLocation();
                 if (itemLocation != null) {
-                    itemLocation.setSurfaceLocation(action.acquire(itemLocation.getSurfaceLocation()));
+                    itemLocation.setSurfaceLocation(action.acquire());
                 }
             }
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException | InstantiationException e) { }
     }
 
     private interface UpdateAction {
-        SurfaceLocation acquire(SurfaceLocation previous);
+        SurfaceLocation acquire();
     }
 }

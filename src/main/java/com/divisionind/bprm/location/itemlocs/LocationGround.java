@@ -19,7 +19,6 @@
 package com.divisionind.bprm.location.itemlocs;
 
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
-import com.divisionind.bprm.location.ItemPointerType;
 import com.divisionind.bprm.location.SurfaceLocation;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -29,12 +28,11 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class LocationGround extends SurfaceLocation {
+public class LocationGround implements SurfaceLocation {
 
     private final World lastWorld;
 
     public LocationGround(World lastWorld) {
-        super(ItemPointerType.GROUND);
         this.lastWorld = lastWorld;
     }
 

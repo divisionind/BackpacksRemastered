@@ -19,7 +19,6 @@
 package com.divisionind.bprm.location.itemlocs;
 
 import com.divisionind.bprm.location.InventoryLocation;
-import com.divisionind.bprm.location.ItemPointerType;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
@@ -29,7 +28,7 @@ public class InventoryLocationBlock extends InventoryLocation {
     private final BlockInventoryHolder storageBlockInvHolder;
 
     public InventoryLocationBlock(int lastKnownSlot, BlockInventoryHolder storageBlockInvHolder) {
-        super(ItemPointerType.BLOCK, lastKnownSlot);
+        super(lastKnownSlot);
         this.storageBlockInvHolder = storageBlockInvHolder;
     }
 

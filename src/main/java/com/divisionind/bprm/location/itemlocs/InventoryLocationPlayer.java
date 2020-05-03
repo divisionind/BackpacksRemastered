@@ -21,7 +21,6 @@ package com.divisionind.bprm.location.itemlocs;
 import com.divisionind.bprm.AlwaysPlayer;
 import com.divisionind.bprm.exceptions.UnknownItemLocationException;
 import com.divisionind.bprm.location.InventoryLocation;
-import com.divisionind.bprm.location.ItemPointerType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -33,12 +32,7 @@ public class InventoryLocationPlayer extends InventoryLocation {
     protected final AlwaysPlayer alwaysPlayer;
 
     public InventoryLocationPlayer(int lastKnownSlot, UUID playerId) {
-        super(ItemPointerType.PLAYER, lastKnownSlot);
-        this.alwaysPlayer = new AlwaysPlayer(playerId);
-    }
-
-    protected InventoryLocationPlayer(int lastKnownSlot, UUID playerId, ItemPointerType itemPointerType) {
-        super(itemPointerType, lastKnownSlot);
+        super(lastKnownSlot);
         this.alwaysPlayer = new AlwaysPlayer(playerId);
     }
 
