@@ -26,6 +26,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface PluginAdaptorMeta {
+    /**
+     * Name of the plugin this adaptor should be loaded for (if present)
+     * @return
+     */
     String name();
-    //String[] versionRange() default {}; // TODO implement multi-version support for plugins
+
+    // multi-version plugin support should be added inside the adaptor
 }
