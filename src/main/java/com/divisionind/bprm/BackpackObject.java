@@ -43,10 +43,10 @@ public enum BackpackObject {
     private ItemStack item;
     private List<String> lore;
 
-    private Color color;
-    private int type;
-    private String permission;
-    private BackpackHandler handler;
+    private final Color color;
+    private final int type;
+    private final String permission;
+    private final BackpackHandler handler;
 
     BackpackObject(Color color, int type, BackpackHandler handler) {
         this.color = color;
@@ -96,7 +96,7 @@ public enum BackpackObject {
 
     private static ItemStack getBackpack(Color color, int type, String name, List<String> lore) {
         ItemStack backpack = new ItemStack(Material.LEATHER_CHESTPLATE);
-        LeatherArmorMeta meta = (LeatherArmorMeta)backpack.getItemMeta();
+        LeatherArmorMeta meta = (LeatherArmorMeta) backpack.getItemMeta();
         meta.setColor(color);
         meta.setDisplayName(Backpacks.translate(name));
         meta.setLore(lore);
