@@ -14,6 +14,7 @@ plugins (I know of at least) that allows you to view the specific NBT tags on it
 **[Building](#building)**<br>
 **[Adding languages](#adding-languages)**<br>
 **[Adaptors and Integration](#adaptors-and-integration)**<br>
+**[Donate](#donate)**<br>
 
 ## Building
 Requirements:
@@ -160,3 +161,8 @@ current abilities used internally by Backpacks:
 #### Current abilities
 - `boolean hasAccessToContainer(Player, Location)`: returns true if the player has access to the block at the 
   specified location, otherwise false
+  
+## Donate
+- BTC: `bc1qhr43elqs4hduv6ls0893zup7t6mlmlh8qmcl30`
+- ETH: `0x1bdA7dB6484802DFf4945edc52363B4A8FAcb470`
+- ETC: `0x4a368bb4cd854f650169ce207268c303ffecafb2`
