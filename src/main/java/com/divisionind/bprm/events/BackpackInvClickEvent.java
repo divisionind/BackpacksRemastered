@@ -19,6 +19,7 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.BackpackObject;
+import com.divisionind.bprm.BackpackRecipes;
 import com.divisionind.bprm.Backpacks;
 import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.backpacks.BPCombined;
@@ -44,7 +45,7 @@ public class BackpackInvClickEvent implements Listener {
             }
 
             // key move event
-            if (Backpacks.getInstance().getBackpackRecipes().getBackpackKey().equals(clicked)) {
+            if (BackpackRecipes.backpackKey.equals(clicked)) {
                 e.setCancelled(true);
                 return;
             }

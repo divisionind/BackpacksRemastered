@@ -35,9 +35,10 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 // TODO redo this whole system using a registry style item storage system for easier crafting/giving/etc.
+// TODO add option to enable/disable backpacks from conf.
 public class BackpackRecipes {
 
-    private ItemStack backpackKey;
+    public static ItemStack backpackKey;
 
     public BackpackRecipes(FileConfiguration config, Logger log) {
         // load backpacks
@@ -63,10 +64,6 @@ public class BackpackRecipes {
             return;
         }
         loadRecipeFromConfig(config, log, "backpack_key", backpackKey);
-    }
-
-    public ItemStack getBackpackKey() {
-        return backpackKey;
     }
 
     private void loadRecipeFromConfig(FileConfiguration config, Logger log, String recipeName, ItemStack item) {

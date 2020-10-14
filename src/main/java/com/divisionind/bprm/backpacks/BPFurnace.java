@@ -78,7 +78,12 @@ public class BPFurnace extends BackpackHandler {
 
             if (backpack.hasNBT("furnace_data")) {
                 //furnace.load((NBTTagCompound) backpack.getAsMap("furnace_data").getTagCompound());
-                NMSMethod.load.getMethod().invoke(furnace, backpack.getAsMap("furnace_data").getTagCompound());
+                Object furnaceDataTC = backpack.getAsMap("furnace_data").getTagCompound();
+                if (KnownVersion.v1_16_R1.isBefore()) {
+                    NMSMethod.load.getMethod().invoke(furnace, furnaceDataTC);
+                } else {
+                    NMSMethod.load.getMethod().invoke(furnace, null, furnaceDataTC);
+                }
             }
 
             UUID furnaceId = UUID.randomUUID();

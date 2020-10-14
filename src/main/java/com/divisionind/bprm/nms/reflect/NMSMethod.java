@@ -25,6 +25,11 @@ import java.lang.reflect.Method;
 
 import static com.divisionind.bprm.nms.reflect.NMSClass.*;
 
+/*
+    TODO maybe create function handler to adapt at different versions (similar to Abilities)
+    will make it easier to update as the functions may be adapted to yield equivalent results and can just take function with KnownVersion parameters it should be active on,
+    if no KnownVersion found, the adapter for the latest known version will be used
+ */
 public enum NMSMethod {
 
     asNMSCopy(CraftItemStack, "asNMSCopy", ItemStack.class),
@@ -36,11 +41,12 @@ public enum NMSMethod {
     getTypeId(NBTBase, "getTypeId"),
     getKeys(() -> KnownVersion.v1_13_R1.isBefore() ? NBTTagCompound.getClazz().getMethod("c") : NBTTagCompound.getClazz().getMethod("getKeys")),
     getServer(CraftServer, "getServer"),
-    getWorldServer(() -> KnownVersion.v1_13_R1.isBefore() ? MinecraftServer.getClazz().getMethod("getWorldServer", int.class) : MinecraftServer.getClazz().getMethod("getWorldServer", DimensionManager.getClazz())),
+    getWorldServer(() -> KnownVersion.v1_13_R1.isBefore() ? MinecraftServer.getClazz().getMethod("getWorldServer", int.class) : fuzzyMethodLookup(MinecraftServer.getClazz(), false, (method) -> method.getName().equals("getWorldServer") ? 0 : 1)),
     tick(() -> KnownVersion.v1_13_R1.isBefore() ? TileEntityFurnace.getClazz().getMethod("e") : TileEntityFurnace.getClazz().getMethod("tick")),
     isBurning(true, true, TileEntityFurnace, "isBurning"),
     save(TileEntityFurnace, "save", NBTTagCompound.getClazz()),
-    load(TileEntityFurnace, "load", NBTTagCompound.getClazz()),
+    load(() -> KnownVersion.v1_16_R1.isBefore() ? TileEntityFurnace.getClazz().getMethod("load", NBTTagCompound.getClazz()) : fuzzyMethodLookup(TileEntityFurnace.getClazz(), false, (method) -> method.getName().equals("load") ? 0 : 1)),
+    //load(TileEntityFurnace, "load", NBTTagCompound.getClazz()),
     getInventory(CraftInventory, "getInventory"),
     getBukkitEntity(EntityPlayer, "getBukkitEntity");
 
@@ -74,6 +80,15 @@ public enum NMSMethod {
 
     public Method getMethod() {
         return method;
+    }
+
+    private static Method fuzzyMethodLookup(Class<?> clazz, boolean declared, Comparable<Method> condition) throws NoSuchMethodException {
+        for (Method method : (declared ? clazz.getDeclaredMethods() : clazz.getMethods())) {
+            if (condition.compareTo(method) == 0)
+                return method;
+        }
+
+        throw new NoSuchMethodException(String.format("Failed to match fuzzy method lookup in class: %s.", clazz.getName()));
     }
 
     private interface MethodInitializer {

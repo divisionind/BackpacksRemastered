@@ -242,10 +242,6 @@ public class Backpacks extends JavaPlugin {
         return commands;
     }
 
-    public BackpackRecipes getBackpackRecipes() {
-        return backpackRecipes;
-    }
-
     public static String translate(String in) {
         return ChatColor.translateAlternateColorCodes('&', in);
     }

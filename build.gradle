@@ -51,7 +51,7 @@ apply plugin: ExtractorPlugin
 def baseVersion = "2020.0.5"
 def beta = true
 
-def spigotVersion = "1.15.1"
+def mcVersion = "1.16.2"
 def runningServerPluginsDir = System.env.DEV_SERVER
 
 group 'com.divisionind'
@@ -212,7 +212,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly group: 'org.spigotmc', name: 'spigot-full', version: spigotVersion
+    compileOnly group: 'org.bukkit', name: 'craftbukkit', version: mcVersion
     compileOnly group: 'com.github.TechFortress', name: 'GriefPrevention', version: '16.13.0'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
