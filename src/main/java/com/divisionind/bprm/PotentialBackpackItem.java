@@ -39,7 +39,7 @@ public class PotentialBackpackItem extends NMSItemStack {
     }
 
     public int getType() throws IllegalAccessException, InvocationTargetException {
-        return (int)getNBT(NBTType.INT, FIELD_NAME_TYPE);
+        return (int) getNBT(NBTType.INT, FIELD_NAME_TYPE);
     }
 
     public byte[] getData() throws IllegalAccessException, InvocationTargetException {

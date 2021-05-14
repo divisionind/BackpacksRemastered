@@ -21,7 +21,6 @@ package com.divisionind.bprm.commands;
 import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.BackpackObject;
 import com.divisionind.bprm.BackpackRecipes;
-import com.divisionind.bprm.Backpacks;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

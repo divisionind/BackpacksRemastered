@@ -63,7 +63,7 @@ public class CMaterialsSearch extends ACommand {
 
     public static void renderList(StringBuilder sb, Material[] mats) {
         sb.append("&eMaterials: &7");
-        for (int i = 0;i<mats.length;i++) {
+        for (int i = 0; i < mats.length; i++) {
             sb.append(mats[i].name());
             if ((i + 1) != mats.length) sb.append(", ");
         }

@@ -32,6 +32,7 @@ public class BackpackCloseEvent implements Listener {
     public void onBackpackClose(InventoryCloseEvent e) {
         if (!Backpacks.isBackpackInventory(e.getInventory())) return;
         ItemStack bp = e.getPlayer().getInventory().getChestplate();
+
         try {
             PotentialBackpackItem bpi = new PotentialBackpackItem(bp);
             if (bpi.isBackpack()) {
