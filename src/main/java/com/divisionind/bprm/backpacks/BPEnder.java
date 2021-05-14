@@ -32,5 +32,6 @@ public class BPEnder extends BackpackHandler {
     }
 
     @Override
-    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception { }
+    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback)
+            throws Exception { }
 }

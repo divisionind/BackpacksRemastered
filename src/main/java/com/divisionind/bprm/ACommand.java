@@ -120,7 +120,8 @@ public abstract class ACommand {
      * Calls the command only if the sender has permission.
      *
      * @param sender thing performing the command
-     * @param label what actual text was typed that triggered this command (if the command has aliases, which one was used)
+     * @param label what actual text was typed that triggered this command (if the command has aliases,
+     *              which one was used)
      * @param args arguments passed into the command (args[0] is always equal to {@link ACommand#alias()})
      */
     public void call(CommandSender sender, String label, String[] args) {
@@ -134,7 +135,8 @@ public abstract class ACommand {
                 respondiu(sender, label);
             }
         } else {
-            respond(sender, String.format("&cYou do not have permission to use this command. This command requires the permission \"%s\".", permission()));
+            respond(sender, String.format("&cYou do not have permission to use this command. " +
+                    "This command requires the permission \"%s\".", permission()));
         }
     }
 }

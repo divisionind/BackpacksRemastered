@@ -33,7 +33,8 @@ public class NBTMap {
         this.tagCompound = tagCompound;
     }
 
-    public NBTMap() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public NBTMap()
+            throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         this.tagCompound = NMSClass.NBTTagCompound.getClazz().getDeclaredConstructor().newInstance();
     }
 
@@ -47,7 +48,9 @@ public class NBTMap {
 
     @Deprecated
     public void setNBT(String key, Object value) throws InvocationTargetException, IllegalAccessException {
-        setNBT(NBTType.getByClass(value.getClass()), key, value); // this does not work because it gets the object class of primitives (can fix by mapping primitives to their class object)
+        // this does not work because it gets the object class of primitives
+        //   (can fix by mapping primitives to their class object)
+        setNBT(NBTType.getByClass(value.getClass()), key, value);
     }
 
     public Object getNBT(NBTType type, String key) throws InvocationTargetException, IllegalAccessException {
@@ -55,7 +58,9 @@ public class NBTMap {
     }
 
     public <T> T getNBT(Class<T> clazz, String key) throws InvocationTargetException, IllegalAccessException {
-        return (T)getNBT(NBTType.getByClass(clazz), key); // about 40% slower than the alternative in practice, see POCNBTMapSpeedTest, thats only a difference of 18ns(time for light to travel ~5 meters) per an operation
+        // about 40% slower than the alternative in practice, see POCNBTMapSpeedTest,
+        // thats only a difference of 18ns(time for light to travel ~5 meters) per an operation
+        return (T) getNBT(NBTType.getByClass(clazz), key);
     }
 
     public void removeNBT(String key) throws InvocationTargetException, IllegalAccessException {
@@ -76,11 +81,11 @@ public class NBTMap {
     }
 
     public Set<String> getKeys() throws InvocationTargetException, IllegalAccessException {
-        return (Set<String>)NMSMethod.getKeys.getMethod().invoke(tagCompound);
+        return (Set<String>) NMSMethod.getKeys.getMethod().invoke(tagCompound);
     }
 
     public byte getKeyInternalTypeId(String key) throws InvocationTargetException, IllegalAccessException {
         Object nbtBase = NBTType.COMPOUND.getGet().invoke(tagCompound, key);
-        return (byte)NMSMethod.getTypeId.getMethod().invoke(nbtBase);
+        return (byte) NMSMethod.getTypeId.getMethod().invoke(nbtBase);
     }
 }

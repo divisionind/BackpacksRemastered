@@ -43,7 +43,8 @@ import java.util.UUID;
 
 public class BPFurnace extends BackpackHandler {
 
-    // TODO if the player is wearing the backpack (and furnacing), make it emit light around them (later update) (also, yes, this is possible, see mc protocol wiki)
+    // TODO if the player is wearing the backpack (and furnacing), make it emit light around them (later update)
+    //   (also, yes, this is possible, see mc protocol wiki)
 
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
@@ -70,7 +71,6 @@ public class BPFurnace extends BackpackHandler {
                 furnace = NMSClass.TileEntityFurnaceFurnace.getClazz().getDeclaredConstructor().newInstance();
             }
             // assign it a dimension
-            //furnace.setWorld(((CraftServer)Bukkit.getServer()).getServer().getWorldServer(DimensionManager.OVERWORLD)); // note: this is used because the alternative method is depreciated
             Object craftServer = NMSClass.CraftServer.getClazz().cast(Bukkit.getServer());
             Object dedicatedServer = NMSMethod.getServer.getMethod().invoke(craftServer);
             Object worldServer = NMS.getWorldServer(dedicatedServer);
@@ -93,12 +93,14 @@ public class BPFurnace extends BackpackHandler {
 
         // create an inventory to represent the furnace
         //new CraftInventoryFurnace(furnace);
-        return (Inventory) NMSClass.CraftInventoryFurnace.getClazz().getDeclaredConstructor(NMSClass.TileEntityFurnace.getClazz()).newInstance(furnace);
+        return (Inventory) NMSClass.CraftInventoryFurnace.getClazz()
+                .getDeclaredConstructor(NMSClass.TileEntityFurnace.getClazz()).newInstance(furnace);
     }
 
     @Override
     public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception {
-        // ((CraftInventory)inv).getInventory() == IInventory which is our instance of TileEntityFurnace, we use this for identifying
+        // ((CraftInventory)inv).getInventory() == IInventory which is our instance of TileEntityFurnace,
+        //   we use this for identifying
         Inventory inv = e.getInventory();
         //TileEntityFurnace furnace = (TileEntityFurnace) ((CraftInventory)inv).getInventory();
         Object craftInventory = NMSClass.CraftInventory.getClazz().cast(inv);
@@ -119,14 +121,16 @@ public class BPFurnace extends BackpackHandler {
         if (vFurnaceEntry != null) {
             vFurnaceEntry.getValue().setItemLocation(new ItemStackPointer(
                     modifiedItem,
-                    new InventoryLocationPlayer(102, e.getPlayer().getUniqueId()))); // 102 == chestplate slot, good first place to look
+                    new InventoryLocationPlayer(102, e.getPlayer().getUniqueId())));
+            // 102 == chestplate slot, good first place to look
         }
 
         // update item post NBT modification
         callback.update(modifiedItem);
     }
 
-    public static void updateFurnaceDataTo(Object furnace, NBTMap backpack) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void updateFurnaceDataTo(Object furnace, NBTMap backpack)
+            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         // update backpack contents with inventory
         NBTMap nbtMap = new NBTMap();
         //furnace.save((NBTTagCompound) nbtMap.getTagCompound());

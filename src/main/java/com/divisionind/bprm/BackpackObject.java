@@ -105,7 +105,8 @@ public enum BackpackObject {
         // apply backpack_type nbt data
         try {
             return NMSItemStack.setNBTOnce(backpack, NBTType.INT, PotentialBackpackItem.FIELD_NAME_TYPE, type);
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException
+                | NoSuchMethodException e) {
             return null;
         }
     }

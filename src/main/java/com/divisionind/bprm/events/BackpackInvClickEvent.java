@@ -39,7 +39,8 @@ public class BackpackInvClickEvent implements Listener {
             ItemStack clicked = e.getCurrentItem();
 
             // if the click type was number key, resolve the item moved by it
-            // NOTE: This is possibly a bug with bukkit because getCurrentItem() returns the value of the destination item (rather than the source item) when moving items using number keys
+            // NOTE: This is possibly a bug with bukkit because getCurrentItem() returns the value of the destination
+            //   item (rather than the source item) when moving items using number keys
             if (e.getClick().equals(ClickType.NUMBER_KEY)) {
                 clicked = e.getWhoClicked().getInventory().getItem(e.getHotbarButton());
             }
@@ -52,7 +53,8 @@ public class BackpackInvClickEvent implements Listener {
 
             // forward clicks to combined backpack click handler
             try {
-                PotentialBackpackItem backpack = new PotentialBackpackItem(e.getWhoClicked().getInventory().getChestplate());
+                PotentialBackpackItem backpack = new PotentialBackpackItem(
+                        e.getWhoClicked().getInventory().getChestplate());
                 if (backpack.isBackpack()) {
                     BackpackObject bpo = backpack.getTypeObject();
 
@@ -64,8 +66,10 @@ public class BackpackInvClickEvent implements Listener {
 
                 // backpack nest event
                 PotentialBackpackItem clickedBackpack = new PotentialBackpackItem(clicked);
-                if (clickedBackpack.isBackpack() && !e.getWhoClicked().hasPermission("backpacks.nest")) e.setCancelled(true);
-            } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException ex) {
+                if (clickedBackpack.isBackpack() && !e.getWhoClicked().hasPermission("backpacks.nest"))
+                    e.setCancelled(true);
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException
+                    | NoSuchMethodException ex) {
                 ex.printStackTrace();
             }
         }

@@ -38,8 +38,11 @@ public class BackpackCloseEvent implements Listener {
                 int type = bpi.getType();
                 BackpackObject backpack = BackpackObject.getByType(type);
                 if (backpack == null) {
-                    ACommand.respondf(e.getPlayer(), "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
-                } else backpack.getHandler().onClose(e, bpi, newItem -> e.getPlayer().getInventory().setChestplate(newItem));
+                    ACommand.respondf(e.getPlayer(),
+                            "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?",
+                            type);
+                } else backpack.getHandler().onClose(e, bpi,
+                        newItem -> e.getPlayer().getInventory().setChestplate(newItem));
             }
         } catch (Exception ex) {
             ex.printStackTrace();

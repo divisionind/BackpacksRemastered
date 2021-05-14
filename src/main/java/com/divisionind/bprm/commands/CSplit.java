@@ -43,7 +43,8 @@ public class CSplit extends ACommand {
 
     @Override
     public String desc() {
-        return "separates a backpack in your hand from the item it has been combined with or pulls backpack out of a combined backpack";
+        return "separates a backpack in your hand from the item it has been combined with or pulls backpack " +
+                "out of a combined backpack";
     }
 
     @Override
@@ -111,7 +112,9 @@ public class CSplit extends ACommand {
 
                 // copy backpack data to new backpack
                 BackpackObject bpo = backpack.getTypeObject();
-                PotentialBackpackItem newBackpack = new PotentialBackpackItem(bpo.getItem()); // will cause null pointer if backpack does not exist in this version
+
+                // will cause null pointer if backpack does not exist in this version
+                PotentialBackpackItem newBackpack = new PotentialBackpackItem(bpo.getItem());
                 newBackpack.setType(backpack.getType());
                 newBackpack.setData(backpack.getData());
 
@@ -128,7 +131,8 @@ public class CSplit extends ACommand {
                 safeAddItem(p, newBackpack.getModifiedItem());
                 respond(sender, "&eSplit backpack from what it was combined with.");
             } else respond(sender, "&cThis item is not a backpack.");
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | IOException | ClassNotFoundException | NoSuchMethodException e) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | IOException
+                | ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }

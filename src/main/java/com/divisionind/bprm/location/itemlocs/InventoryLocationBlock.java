@@ -42,6 +42,7 @@ public class InventoryLocationBlock extends InventoryLocation {
     @Override
     public String toString() {
         Block storageBlock = storageBlockInvHolder.getBlock();
-        return "Block ([" + storageBlock.getType().name() + "/" + storageBlock.getWorld().getName() + "]" + storageBlock.getX() + ", " + storageBlock.getY() + ", " + storageBlock.getZ() + ")";
+        return "Block ([" + storageBlock.getType().name() + "/" + storageBlock.getWorld().getName() + "]" +
+                storageBlock.getX() + ", " + storageBlock.getY() + ", " + storageBlock.getZ() + ")";
     }
 }

@@ -63,7 +63,9 @@ public class CItemInfoGet extends ACommand {
                 NBTType type = NBTType.getByInternalId(btype);
 
                 if (type == null) {
-                    respondf(sender, "&cCould not resolve data type for key \"%s\". The internal type id was \"0x%02x or %s\".", args[1], btype, btype);
+                    respondf(sender,
+                            "&cCould not resolve data type for key \"%s\". The internal type id was \"0x%02x or %s\".",
+                            args[1], btype, btype);
                     return;
                 }
 
@@ -72,7 +74,8 @@ public class CItemInfoGet extends ACommand {
             } else {
                 respondf(sender, "&cKey \"%s\" not found. See a list of keys with the item:info command.", args[1]);
             }
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException
+                | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }

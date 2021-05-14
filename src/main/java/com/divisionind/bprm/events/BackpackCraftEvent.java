@@ -46,7 +46,8 @@ public class BackpackCraftEvent implements Listener {
 
         // scan for available chestplate materials
         for (Material material : Material.values()) {
-            if (material.name().toLowerCase().contains("chestplate") && !material.getClass().isAnnotationPresent(Deprecated.class))
+            if (material.name().toLowerCase().contains("chestplate")
+                    && !material.getClass().isAnnotationPresent(Deprecated.class))
                 COMBINABLE.add(material);
         }
         COMBINABLE.add(Material.ELYTRA);
@@ -65,13 +66,16 @@ public class BackpackCraftEvent implements Listener {
             int backpack_type = backpackItem.getType();
             BackpackObject backpack = BackpackObject.getByType(backpack_type);
             if (backpack == null || !backpack.hasCraftPermission(ent)) {
-                ent.sendMessage(Backpacks.translate(String.format("&cYou do not have permission to craft the %s backpack.", backpack == null ? "null" : backpack.name().toLowerCase())));
+                ent.sendMessage(Backpacks.translate(
+                        String.format("&cYou do not have permission to craft the %s backpack.",
+                                backpack == null ? "null" : backpack.name().toLowerCase())));
                 e.setCancelled(true);
                 return;
             }
 
             ACommand.respondf(ent, "&eYou just crafted a %s backpack.", backpack.name().toLowerCase());
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException ex) {
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException
+                | NoSuchMethodException ex) {
             ex.printStackTrace();
         }
     }
@@ -132,7 +136,8 @@ public class BackpackCraftEvent implements Listener {
 
                            // set backpack item at that index, return result
                            combinedInv.setItem(center, normalBackpack.getItem());
-                           combinedBackpack.setData(BackpackSerialization.toByteArrayInventory(combinedInv, BPCombined.NAME));
+                           combinedBackpack.setData(BackpackSerialization.toByteArrayInventory(combinedInv,
+                                   BPCombined.NAME));
                            e.getInventory().setResult(combinedBackpack.getModifiedItem());
                            return;
                        }
@@ -146,14 +151,16 @@ public class BackpackCraftEvent implements Listener {
 
                 Material type = itemOtherThanBackpack.getItem().getType();
                 if (COMBINABLE.contains(type)) {
-                    // if backpack has already be combined, stop it from being combined again (also allows backpacks to be combined infinitely with leather chestplates)
+                    // if backpack has already be combined, stop it from being combined again (also allows backpacks
+                    //   to be combined infinitely with leather chestplates)
                     if (!backpack.getItem().getType().equals(Material.LEATHER_CHESTPLATE)) return;
 
                     int bpType = backpack.getType();
 
                     // if other items type is contained in our list of combinables
                     itemOtherThanBackpack.setNBT(NBTType.INT, PotentialBackpackItem.FIELD_NAME_TYPE, bpType);
-                    if (backpack.hasData()) itemOtherThanBackpack.setNBT(NBTType.BYTE_ARRAY, PotentialBackpackItem.FIELD_NAME_DATA, backpack.getData());
+                    if (backpack.hasData()) itemOtherThanBackpack.setNBT(NBTType.BYTE_ARRAY,
+                            PotentialBackpackItem.FIELD_NAME_DATA, backpack.getData());
 
                     // copy lore from backpack and add it to the bottom of this items lore
                     ItemStack result = itemOtherThanBackpack.getModifiedItem();
@@ -171,7 +178,8 @@ public class BackpackCraftEvent implements Listener {
                     e.getInventory().setResult(result);
                 }
             }
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | IOException | ClassNotFoundException | NoSuchMethodException ex) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | IOException
+                | ClassNotFoundException | NoSuchMethodException ex) {
             ex.printStackTrace();
         }
     }

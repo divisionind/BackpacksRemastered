@@ -41,7 +41,8 @@ public class ItemStackPointer {
         // must have a known surface location to resolve
         if (surfaceLocation == null) throw new UnknownItemLocationException();
 
-        // modify items in backpack recursively, returning ItemStack (which is the modified backpack) until you can call surfaceLocation.replace(item, surfaceItem);
+        // modify items in backpack recursively, returning ItemStack (which is the modified backpack) until you can
+        //   call surfaceLocation.replace(item, surfaceItem);
         // currently I am not supporting backpack nesting
         surfaceLocation.replace(item, surfaceItem);
     }

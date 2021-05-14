@@ -45,7 +45,8 @@ public abstract class BackpackHandler {
      * @param callback a callback for replacing the item should any info about it be updated whilst it was open
      * @throws Exception if there was an error closing the backpack
      */
-    public abstract void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception;
+    public abstract void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback)
+            throws Exception;
 
     /**
      * Completes the final steps of opening the backpack. These are things

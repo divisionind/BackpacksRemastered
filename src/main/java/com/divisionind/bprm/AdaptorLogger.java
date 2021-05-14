@@ -28,7 +28,8 @@ public class AdaptorLogger extends Logger {
 
     public AdaptorLogger(PluginAdaptor context) {
         super(context.getLoader().getAdaptorClass().getCanonicalName(), null);
-        this.prefix = "[" + context.getManager().getPlugin().getName() + "/" + context.getLoader().getMeta().name() + "] ";
+        this.prefix = "[" + context.getManager().getPlugin().getName() + "/" + context.getLoader().getMeta().name()
+                + "] ";
         setParent(context.getManager().getPlugin().getLogger());
         setLevel(Level.ALL);
     }

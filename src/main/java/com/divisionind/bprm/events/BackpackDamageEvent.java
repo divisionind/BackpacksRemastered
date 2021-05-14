@@ -34,7 +34,8 @@ public class BackpackDamageEvent implements Listener {
         try {
             PotentialBackpackItem pbi = new PotentialBackpackItem(e.getItem());
             if (pbi.isBackpack()) e.setCancelled(true);
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException ex) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException
+                | NoSuchMethodException ex) {
             ex.printStackTrace();
         }
     }

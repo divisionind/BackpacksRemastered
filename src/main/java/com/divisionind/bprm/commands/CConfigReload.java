@@ -45,7 +45,8 @@ public class CConfigReload extends ACommand {
 
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
-        respond(sender, "&cWARNING: This command is not fully supported. Only use this for testing new configurations and ensure to reload the server once you are done.");
+        respond(sender,
+                "&cWARNING: This command is not fully supported. Only use this for testing new configurations and ensure to reload the server once you are done.");
         respond(sender, "&eReloading the configuration...");
         Backpacks.getInstance().reloadConfig();
         Backpacks.getInstance().setupFromConfig();

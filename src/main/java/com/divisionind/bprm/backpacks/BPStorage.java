@@ -47,7 +47,8 @@ public abstract class BPStorage extends BackpackHandler {
     }
 
     @Override
-    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception {
+    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback)
+            throws Exception {
         backpack.setData(BackpackSerialization.toByteArrayInventory(e.getInventory(), e.getView().getTitle()));
         callback.update(backpack.getModifiedItem());
     }

@@ -51,7 +51,8 @@ public class AlwaysPlayer {
                 GameProfile gameProfile = new GameProfile(playerId, offlinePlayer.getName());
                 //MinecraftServer server = ((CraftServer)Bukkit.getServer()).getServer();
                 //WorldServer worldServer = server.getWorldServer(DimensionManager.OVERWORLD);
-                //EntityPlayer entityPlayer = new EntityPlayer(server, worldServer, gameProfile, new PlayerInteractManager(worldServer));
+                //EntityPlayer entityPlayer = new EntityPlayer(server, worldServer, gameProfile,
+                //  new PlayerInteractManager(worldServer));
                 //player = entityPlayer.getBukkitEntity();
                 try {
                     Object craftServer = NMSClass.CraftServer.getClazz().cast(Bukkit.getServer());
@@ -61,10 +62,12 @@ public class AlwaysPlayer {
                             .getConstructor(NMSClass.WorldServer.getClazz())
                             .newInstance(worldServer);
                     Object entityPlayer = NMSClass.EntityPlayer.getClazz()
-                            .getConstructor(NMSClass.MinecraftServer.getClazz(), NMSClass.WorldServer.getClazz(), gameProfile.getClass(), NMSClass.PlayerInteractManager.getClazz())
+                            .getConstructor(NMSClass.MinecraftServer.getClazz(), NMSClass.WorldServer.getClazz(),
+                                    gameProfile.getClass(), NMSClass.PlayerInteractManager.getClazz())
                             .newInstance(dedicatedServer, worldServer, gameProfile, playerInteractManager);
                     player = (Player) NMSMethod.getBukkitEntity.getMethod().invoke(entityPlayer);
-                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException
+                        | InstantiationException e) {
                     e.printStackTrace();
                     return null;
                 }

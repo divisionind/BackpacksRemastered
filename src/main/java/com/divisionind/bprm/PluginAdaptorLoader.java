@@ -35,7 +35,9 @@ public class PluginAdaptorLoader {
         this.adaptorClass = adaptorClass;
 
         if (!adaptorClass.isAnnotationPresent(PluginAdaptorMeta.class)) {
-            throw new InvalidAdaptorException(String.format("The class \"%s\" does not have the @PluginAdaptorMeta annotation but requires it.", adaptorClass.getName()));
+            throw new InvalidAdaptorException(
+                    String.format("The class \"%s\" does not have the @PluginAdaptorMeta annotation but requires it.",
+                            adaptorClass.getName()));
         }
     }
 
@@ -48,7 +50,8 @@ public class PluginAdaptorLoader {
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    public PluginAdaptor load(AdaptorManager manager) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public PluginAdaptor load(AdaptorManager manager)
+            throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         PluginAdaptor adaptor = adaptorClass.getConstructor().newInstance();
         adaptor.init(manager, this);
 

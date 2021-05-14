@@ -30,11 +30,13 @@ public class NMSItemStack extends NBTMap {
     private ItemStack item;
     private Object craftItemStack;
 
-    public NMSItemStack(ItemStack item) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+    public NMSItemStack(ItemStack item)
+            throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         this(item, NMSMethod.asNMSCopy.getMethod().invoke(null, item));
     }
 
-    private NMSItemStack(ItemStack item, Object craftItemStack) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
+    private NMSItemStack(ItemStack item, Object craftItemStack)
+            throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         super(getNBTTagCompound(craftItemStack));
         this.item = item;
         this.craftItemStack = craftItemStack;
@@ -52,7 +54,8 @@ public class NMSItemStack extends NBTMap {
         return craftItemStack;
     }
 
-    private static Object getNBTTagCompound(Object nmsItemStack) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+    private static Object getNBTTagCompound(Object nmsItemStack)
+            throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         Object nbtCompound = NMSMethod.getTag.getMethod().invoke(nmsItemStack);
         if (nbtCompound == null) {
             nbtCompound = NMSClass.NBTTagCompound.getClazz().getDeclaredConstructor().newInstance();
@@ -62,7 +65,8 @@ public class NMSItemStack extends NBTMap {
     }
 
 
-    public static ItemStack setNBTOnce(ItemStack item, NBTType type, String key, Object value) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+    public static ItemStack setNBTOnce(ItemStack item, NBTType type, String key, Object value)
+            throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         NMSItemStack nmsItem = new NMSItemStack(item);
         nmsItem.setNBT(type, key, value);
         return nmsItem.getModifiedItem();

@@ -64,7 +64,8 @@ public class BackpackTrackEvents implements Listener {
                             inv = e.getView().getBottomInventory();
                         }
 
-                        // slot will equal first free slot in inv, not the result of e.getSlot(). it is more efficient to not include slot
+                        // slot will equal first free slot in inv, not the result of e.getSlot().
+                        //   it is more efficient to not include slot
                         itemMoveHandler(inv, 0, e.getCurrentItem(), e.getWhoClicked());
                         break;
                     default:
@@ -85,7 +86,8 @@ public class BackpackTrackEvents implements Listener {
                 default: // set to default to support any future inventory containing blocks
                     InventoryHolder holder = inv.getHolder();
                     if (holder instanceof org.bukkit.inventory.BlockInventoryHolder) {
-                        org.bukkit.inventory.BlockInventoryHolder blockHolder = (org.bukkit.inventory.BlockInventoryHolder) holder;
+                        org.bukkit.inventory.BlockInventoryHolder blockHolder =
+                                (org.bukkit.inventory.BlockInventoryHolder) holder;
                         checkAndUpdate(item, () -> new InventoryLocationBlock(slot, blockHolder));
                     }
                     break;
@@ -117,9 +119,8 @@ public class BackpackTrackEvents implements Listener {
     }
 
 
-    private static VirtualFurnace getActiveVFurnace(ItemStack item) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
-        // quickly filter out majority of items here (this was removed to allow for the tracking of non-leather chestplate backpack)
-        //if (!item.getType().equals(Material.LEATHER_CHESTPLATE)) return null;
+    private static VirtualFurnace getActiveVFurnace(ItemStack item)
+            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
 
         // is it a furnace backpack?
         PotentialBackpackItem potentialBackpack = new PotentialBackpackItem(item);
@@ -140,11 +141,13 @@ public class BackpackTrackEvents implements Listener {
             VirtualFurnace vfurnace = getActiveVFurnace(item);
             if (vfurnace != null) {
                 ItemStackPointer itemLocation = vfurnace.getItemLocation();
+
                 if (itemLocation != null) {
                     itemLocation.setSurfaceLocation(action.acquire());
                 }
             }
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException | InstantiationException e) { }
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException
+                | InstantiationException e) { }
     }
 
     private interface UpdateAction {

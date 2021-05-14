@@ -45,17 +45,21 @@ public class BackpackLinkEvent implements Listener {
                 if (backpack.isBackpack()) {
                     int type = backpack.getType();
                     if (type == BackpackObject.LINKED.getTypeId()) {
-                        // the player is left clicking a block with a linked backpack in hand, this is lookin guuuuuddd
+                        // the player is left clicking a block with a linked backpack in hand, this is lookin good
 
                         Block block = e.getClickedBlock();
                         if (block == null) return;
                         Material blockMat = block.getType();
-                        if (blockMat.equals(Material.CHEST) || blockMat.equals(Material.TRAPPED_CHEST) || blockMat.equals(Material.FURNACE)) {
+                        if (blockMat.equals(Material.CHEST) || blockMat.equals(Material.TRAPPED_CHEST)
+                                || blockMat.equals(Material.FURNACE)) {
                             // there is no centralized/clean way of checking for container access that I can think of
                             // so, im going to have to do it on a per-plugin basis
-                            // check with the plugin specific adaptor ability to see if the player has access to the container
-                            AdaptorAbility hasContainerAccess = Backpacks.getAdaptorManager().getAbility("hasAccessToContainer");
-                            if (hasContainerAccess != null && !hasContainerAccess.call(boolean.class, e.getPlayer(), block.getLocation())) {
+                            // check with the plugin specific adaptor ability to see if the player has access
+                            //   to the container
+                            AdaptorAbility hasContainerAccess = Backpacks.getAdaptorManager()
+                                    .getAbility("hasAccessToContainer");
+                            if (hasContainerAccess != null
+                                    && !hasContainerAccess.call(boolean.class, e.getPlayer(), block.getLocation())) {
                                 ACommand.respond(e.getPlayer(), "&cAccess to this container was denied.");
                                 return;
                             }
@@ -69,11 +73,13 @@ public class BackpackLinkEvent implements Listener {
                             meta.setLore(newLore);
                             newBackpack.setItemMeta(meta);
                             e.getPlayer().getInventory().setItemInMainHand(newBackpack);
-                            ACommand.respond(e.getPlayer(), "&eYou feel a strong connection form between the backpack and the container.");
+                            ACommand.respond(e.getPlayer(),
+                                    "&eYou feel a strong connection form between the backpack and the container.");
                         }
                     }
                 }
-            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | IOException | NoSuchMethodException ex) {
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | IOException
+                    | NoSuchMethodException ex) {
                 ex.printStackTrace();
             }
         }

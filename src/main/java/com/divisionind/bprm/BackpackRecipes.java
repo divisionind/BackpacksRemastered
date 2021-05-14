@@ -60,19 +60,23 @@ public class BackpackRecipes {
         backpackKey.setItemMeta(backpack_key_meta);
         try {
             backpackKey = NMSItemStack.setNBTOnce(backpackKey, NBTType.BOOLEAN, "backpack_key", true);
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException
+                | NoSuchMethodException e) {
             return;
         }
         loadRecipeFromConfig(config, log, "backpack_key", backpackKey);
     }
 
     private void loadRecipeFromConfig(FileConfiguration config, Logger log, String recipeName, ItemStack item) {
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(Backpacks.getInstance(), recipeName), item); // to add pre 1.12 version backwards compatibility, change this namespaced key stuff
+        // to add pre 1.12 version backwards compatibility, change this namespaced key stuff
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(Backpacks.getInstance(), recipeName), item);
 
         // ensures section exists in config
-        ConfigurationSection section = config.getConfigurationSection(String.format("recipes.%s.ingredients", recipeName));
+        ConfigurationSection section = config.getConfigurationSection(String.format("recipes.%s.ingredients",
+                recipeName));
         if (section == null) {
-            log.warning(String.format("The ingredients section for %s did not exist. Could not create recipe.", recipeName));
+            log.warning(String.format("The ingredients section for %s did not exist. Could not create recipe.",
+                    recipeName));
             return;
         }
 

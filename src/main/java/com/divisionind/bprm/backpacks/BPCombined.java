@@ -65,11 +65,15 @@ public class BPCombined extends BackpackHandler {
                 int type = backpack.getType();
                 BackpackObject bpo = BackpackObject.getByType(type);
                 if (bpo == null) {
-                    ACommand.respondf(e.getWhoClicked(), "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?", type);
+                    ACommand.respondf(e.getWhoClicked(), "&cBackpack of type %s does not exist in this version. " +
+                            "Why did you downgrade the plugin?", type);
                 } else {
                     // remove backpack identifier viewer so the onClose event is not triggered by this open event
                     Backpacks.removeFakeBackpackViewer(e.getClickedInventory());
-                    e.getWhoClicked().closeInventory(); // ensure to force close the inventory right after this or else a duplication glitch would be possible
+
+                    // ensure to force close the inventory right after this or else a duplication glitch
+                    //   would be possible
+                    e.getWhoClicked().closeInventory();
 
                     // open clicked backpack
                     BackpackHandler handler = bpo.getHandler();
@@ -81,12 +85,14 @@ public class BPCombined extends BackpackHandler {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace(); // TODO respond that there was an error opening the backpack and to contact server admin
+            // TODO respond that there was an error opening the backpack and to contact server admin
+            ex.printStackTrace();
         }
     }
 
     @Override
-    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception {
+    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback)
+            throws Exception {
         // return if no backpack was opened
         if (!openBackpacks.containsKey(e.getPlayer().getUniqueId())) return;
 

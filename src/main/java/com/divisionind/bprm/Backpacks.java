@@ -99,14 +99,17 @@ public class Backpacks extends JavaPlugin {
             if (!KnownVersion.v1_14_R1.isBefore()) {
                 registerEvents(new BackpackTrackEvents.InventoryClickTrackEvent());
             } else {
-                getLogger().warning("Backpack tracking is enabled but not fully supported in this version. Please consider upgrading.");
+                getLogger().warning("Backpack tracking is enabled but not fully supported in this version. " +
+                        "Please consider upgrading.");
             }
         }
 
         getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMS.VERSION));
         List<Exception> nmsExceptions = NMS.initialize();
         if (nmsExceptions.size() > 0) {
-            getLogger().severe(nmsExceptions.size() + " error(s) initializing NMS. Was the detected server wrong? If not, then NMS has changed significantly sense this plugin was released and therefore, it can not fully adapt.");
+            getLogger().severe(nmsExceptions.size() + " error(s) initializing NMS. Was the detected server wrong? " +
+                    "If not, then NMS has changed significantly sense this plugin was released and therefore, " +
+                    "it can not fully adapt.");
             for (Exception ex : nmsExceptions) ex.printStackTrace();
         }
 
@@ -120,10 +123,12 @@ public class Backpacks extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::onPostLoad);
 
         // TODO implement an update notifier (will send messages to admins in game about updates to backpacks)
-        // New version of BackpacksRemastered available (as red "CURRENT")->(as green "NEW")! Would you like to update? YES, NO, LATER. (make this clickable)
+        // New version of BackpacksRemastered available (as red "CURRENT")->(as green "NEW")!
+        //  Would you like to update? YES, NO, LATER. (make this clickable)
         // check for new update periodically and set a flag variable that is checked when an admin joins the game
 
-        getLogger().info(String.format("BackpacksRemastered v%s (git: %s) was enabled in %.2fs!", VERSION, GIT_HASH, ((double)(System.currentTimeMillis() - startTime)) / 1000.0D));
+        getLogger().info(String.format("BackpacksRemastered v%s (git: %s) was enabled in %.2fs!", VERSION, GIT_HASH,
+                ((double)(System.currentTimeMillis() - startTime)) / 1000.0D));
     }
 
     @Override
@@ -159,7 +164,7 @@ public class Backpacks extends JavaPlugin {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) { // see https://hub.spigotmc.org/javadocs/spigot/org/bukkit/plugin/java/JavaPlugin.html#onTabComplete-org.bukkit.command.CommandSender-org.bukkit.command.Command-java.lang.String-java.lang.String:A-
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> entries = new ArrayList<>();
 
         if (args.length > 1) {
@@ -211,7 +216,8 @@ public class Backpacks extends JavaPlugin {
                 e.printStackTrace();
             }
 
-            getLogger().warning("Your configuration file was outdated. The old configuration was moved to config.yml.bak and a new one has been created. Please manually copy over your settings.");
+            getLogger().warning("Your configuration file was outdated. The old configuration was moved to " +
+                    "config.yml.bak and a new one has been created. Please manually copy over your settings.");
         }
 
         // checks for lang and country code TODO this needs work

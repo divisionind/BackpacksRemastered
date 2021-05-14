@@ -29,7 +29,10 @@ import java.lang.reflect.InvocationTargetException;
 public class VirtualFurnace {
 
     private Object furnace;
-    private boolean released; // if not opened, the backpack is released -> then when it stops burning, it can be removed from the TickEvent
+
+    /* if not opened, the backpack is released -> then when it stops burning, it can be removed from the TickEvent */
+    private boolean released;
+
     private ItemStackPointer itemLocation;
 
     public VirtualFurnace(Object furnace) {

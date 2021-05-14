@@ -61,7 +61,8 @@ public class CItemInfo extends ACommand {
                 respondn(sender, s);
             }
             respondf(sender, "&eFound %s NBT data entries.", data.size());
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+        } catch (InvocationTargetException | IllegalAccessException | InstantiationException
+                | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }

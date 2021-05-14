@@ -38,12 +38,14 @@ public class BPCraft extends BackpackHandler {
     }
 
     @Override
-    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback) throws Exception {
+    public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback)
+            throws Exception {
         // TODO possibly save the contents of the workbench, this would make life a lot easier
     }
 
     @Override
     public void finalizeBackpackOpen(HumanEntity p, Inventory inv) throws Exception {
-        inv.getViewers().add(NMS.FAKE_VIEWER); // we do not want to open the backpack here because it was probably already opened
+        // we do not want to open the backpack here because it was probably already opened
+        inv.getViewers().add(NMS.FAKE_VIEWER);
     }
 }

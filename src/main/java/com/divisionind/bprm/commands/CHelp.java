@@ -71,7 +71,8 @@ public class CHelp extends ACommand {
         respondf(sender, "&bPage (&e%s &b/ &e%s&b)", page, numberOfPages);
         List<ACommand> commands = getOnPage(page);
         for (ACommand cmd : commands) {
-            respondnf(sender, "&e/%s %s %s\n  &7%s", label, cmd.alias(), cmd.usage() == null ? "" : cmd.usage(), cmd.desc());
+            respondnf(sender, "&e/%s %s %s\n  &7%s", label, cmd.alias(), cmd.usage() == null ? "" : cmd.usage(),
+                    cmd.desc());
         }
     }
 

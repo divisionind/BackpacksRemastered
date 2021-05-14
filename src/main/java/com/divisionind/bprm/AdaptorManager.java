@@ -77,7 +77,8 @@ public class AdaptorManager {
                 PluginAdaptor adaptor;
                 try {
                     adaptor = loader.load(this);
-                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException
+                        | InvocationTargetException e) {
                     this.plugin.getLogger().severe("Failed to create plugin adaptor instance for: " + plugin.getName());
                     e.printStackTrace();
                     continue;
@@ -99,7 +100,8 @@ public class AdaptorManager {
                         AbilityFunction abilityFunction = method.getAnnotation(AbilityFunction.class);
 
                         try {
-                            registerAbility(abilityFunction.value().equals("") ? method.getName() : abilityFunction.value(),
+                            registerAbility(abilityFunction.value().equals("") ?
+                                            method.getName() : abilityFunction.value(),
                                     new AdaptorAbility(adaptor, method));
                         } catch (InvalidAdaptorAbilityException e) {
                             e.printStackTrace(); // this could never happen

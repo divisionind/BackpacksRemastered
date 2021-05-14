@@ -78,7 +78,8 @@ public class BackpackSerialization {
         return bout.toByteArray();
     }
 
-    public static ItemStack[] fromByteArrayItemStackArray(byte[] data, int numItemstacks) throws IOException, ClassNotFoundException {
+    public static ItemStack[] fromByteArrayItemStackArray(byte[] data, int numItemstacks)
+            throws IOException, ClassNotFoundException {
         ByteArrayInputStream bin = new ByteArrayInputStream(data);
         BukkitObjectInputStream in = new BukkitObjectInputStream(bin);
         ItemStack[] itemArray = new ItemStack[numItemstacks];

@@ -56,7 +56,8 @@ public class BackpackFurnaceTickEvent implements Listener {
                             // very likely error here (as tracking is not perfect), ignore it for now
                             //e.printStackTrace(); // for debugging purposes
                         }
-                    } catch (InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+                    } catch (InvocationTargetException | IllegalAccessException | InstantiationException
+                            | NoSuchMethodException e) {
                         e.printStackTrace();
                     }
                 }

@@ -55,7 +55,10 @@ public enum NMSClass {
      */
     NMSClass(String base, String path, KnownVersion before) {
         this(base, path);
-        if (before.isBefore()) this.path = null; // bit of a hack but ehh, ive been planning on recoding the nms stuff for a while so ill fix it later
+
+        // bit of a hack but ehh, ive been planning on recoding the nms stuff for a while so ill fix it later
+        if (before.isBefore())
+            this.path = null;
     }
 
     void init() throws ClassNotFoundException {
