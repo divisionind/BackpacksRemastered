@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm.nms.reflect;
 
+import com.divisionind.bprm.exceptions.FuzzyClassLookupException;
 import com.divisionind.bprm.nms.KnownVersion;
 
 import static com.divisionind.bprm.nms.reflect.NMS.CRAFT;
@@ -61,8 +62,20 @@ public enum NMSClass {
             this.path = null;
     }
 
-    void init() throws ClassNotFoundException {
-        if (path != null) this.clazz = Class.forName(path);
+    void init() throws ClassNotFoundException, FuzzyClassLookupException {
+        try {
+            if (path != null)
+                clazz = Class.forName(path);
+        } catch (ClassNotFoundException e) {
+            // could not resolve class the traditional/fast way, use slow lookup (1.17+)
+            if (classResolver == null) {
+                classResolver = new FuzzyClassResolver();
+            }
+
+            String[] pathParts = path.split("\\.");
+            path = classResolver.lookup(pathParts[pathParts.length - 1]); // lookup by class name
+            clazz = Class.forName(path);
+        }
     }
 
     public Class getClazz() {
@@ -71,5 +84,11 @@ public enum NMSClass {
 
     public String getPath() {
         return path;
+    }
+
+    private static FuzzyClassResolver classResolver;
+
+    public static void cleanup() {
+        classResolver = null;
     }
 }

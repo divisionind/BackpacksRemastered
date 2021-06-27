@@ -53,6 +53,9 @@ public class NMS {
             }
         }
 
+        // ensure fuzzy-lookup table gets cleaned
+        NMSClass.cleanup();
+
         // init all getters and setters for the various NBTTag data values
         NBTType.COMPOUND.setClassType(NMSClass.NBTBase.getClazz());
         for (NBTType type : NBTType.values()) {

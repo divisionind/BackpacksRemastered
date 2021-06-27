@@ -51,7 +51,7 @@ apply plugin: ExtractorPlugin
 def baseVersion = "2020.0.6"
 def beta = true
 
-def mcVersion = "1.16.2"
+def mcVersion = "1.17"
 def runningServerPluginsDir = System.env.DEV_SERVER
 
 group 'com.divisionind'
