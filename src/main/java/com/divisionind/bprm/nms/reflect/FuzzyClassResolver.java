@@ -88,6 +88,24 @@ public class FuzzyClassResolver {
         throw new FuzzyClassLookupException(String.format("Failed to find class by name %s. Server has changed too significantly.", name));
     }
 
+    /**
+     * Finds a class in the MC server jar by name. This method is intended to be used as a fallback if normal class path
+     * resolution fails.
+     *
+     * @param name of the class
+     * @param partialPath tries to find a class with this partial first, then falls-back to just name lookup
+     * @return path to the class
+     * @throws FuzzyClassLookupException if the class could not be found
+     */
+    public String lookup(String name, String partialPath) throws FuzzyClassLookupException {
+        for (String clazz : bukkitClasses) {
+            if (clazz.endsWith(name) && clazz.contains(partialPath))
+                return clazz;
+        }
+
+        return lookup(name);
+    }
+
     private static File getServerJar() throws URISyntaxException {
         return new File(Bukkit.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
     }

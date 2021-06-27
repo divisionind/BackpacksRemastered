@@ -73,7 +73,14 @@ public enum NMSClass {
             }
 
             String[] pathParts = path.split("\\.");
-            path = classResolver.lookup(pathParts[pathParts.length - 1]); // lookup by class name
+            String partialPath;
+
+            if (path.startsWith(SERVER))
+                partialPath = "net.minecraft";
+            else
+                partialPath = "org.bukkit.craftbukkit";
+
+            path = classResolver.lookup(pathParts[pathParts.length - 1], partialPath); // lookup by class name
             clazz = Class.forName(path);
         }
     }
