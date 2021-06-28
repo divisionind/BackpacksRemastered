@@ -60,10 +60,11 @@ public enum NMSMethod {
     //load(TileEntityFurnace, "load", NBTTagCompound.getClazz()),
     getInventory(CraftInventory, "getInventory"),
     getBukkitEntity(EntityPlayer, "getBukkitEntity"),
-    getWorld(() ->    KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getWorld")),
-    getPosition(() -> KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getPosition")),
-    getBlock(() ->    KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getBlock")),
-    getTileEntity(CraftTileInventoryConverter_Furnace, "getTileEntity");
+    getWorld(() ->      KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getWorld")),
+    getPosition(() ->   KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getPosition")),
+    getBlock(() ->      KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getBlock")),
+    getTileEntity(() -> KnownVersion.v1_17_R1.isBefore() ? null : CraftTileInventoryConverter_Furnace
+            .getClazz().getMethod("getTileEntity"));
 
     private Method method;
     private MethodInitializer methodInitializer;
@@ -89,7 +90,10 @@ public enum NMSMethod {
 
     void init() throws NoSuchMethodException {
         this.method = methodInitializer.init();
-        if (methodPrivate) this.method.setAccessible(true);
+
+        if (methodPrivate)
+            this.method.setAccessible(true);
+
         this.methodInitializer = null; // so the initializer can be garbage collected, we will never need it again
     }
 

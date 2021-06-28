@@ -20,6 +20,7 @@ package com.divisionind.bprm.nms.reflect;
 
 import com.divisionind.bprm.FakeBackpackViewer;
 import com.divisionind.bprm.nms.KnownVersion;
+import com.divisionind.bprm.nms.reflect.ex.NMSLoadException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 
@@ -49,7 +50,7 @@ public class NMS {
             try {
                 nmsClass.init();
             } catch (Exception e) {
-                exceptions.add(e);
+                exceptions.add(new NMSLoadException("NMSClass: " + nmsClass.name(), e));
             }
         }
 
@@ -62,7 +63,7 @@ public class NMS {
             try {
                 type.init(NMSClass.NBTTagCompound.getClazz());
             } catch (Exception e) {
-                exceptions.add(e);
+                exceptions.add(new NMSLoadException("NMSType: " + type.name(), e));
             }
         }
 
@@ -71,7 +72,7 @@ public class NMS {
             try {
                 nmsMethod.init();
             } catch (Exception e) {
-                exceptions.add(e);
+                exceptions.add(new NMSLoadException("NMSMethod: " + nmsMethod.name(), e));
             }
         }
 
