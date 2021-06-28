@@ -48,7 +48,7 @@ plugins {
 
 apply plugin: ExtractorPlugin
 
-def baseVersion = "2020.0.6"
+def baseVersion = "2021.1.2"
 def beta = true
 
 def mcVersion = "1.17"
