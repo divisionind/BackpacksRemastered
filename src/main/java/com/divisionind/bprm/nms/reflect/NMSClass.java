@@ -44,7 +44,8 @@ public enum NMSClass {
     PlayerInteractManager(SERVER, "PlayerInteractManager"),
     WorldServer(SERVER, "WorldServer"),
     BlockPosition(SERVER, "BlockPosition", KnownVersion.v1_17_R1.isBefore()),
-    IBlockData(SERVER, "IBlockData", KnownVersion.v1_17_R1.isBefore());
+    IBlockData(SERVER, "IBlockData", KnownVersion.v1_17_R1.isBefore()),
+    CraftTileInventoryConverter_Furnace(CRAFT, "inventory.util.CraftTileInventoryConverter$Furnace", KnownVersion.v1_17_R1.isBefore());
 
     private String path;
     private Class clazz;

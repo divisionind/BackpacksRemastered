@@ -66,9 +66,14 @@ public class BPFurnace extends BackpackHandler {
             if (KnownVersion.v1_14_R1.isBefore()) {
                 // furnace = new TileEntityFurnace(); // only works pre-1.14
                 furnace = NMSClass.TileEntityFurnace.getClazz().getDeclaredConstructor().newInstance();
-            } else {
+            } else
+            if (KnownVersion.v1_17_R1.isBefore()) {
                 // furnace = new TileEntityFurnaceFurnace();
                 furnace = NMSClass.TileEntityFurnaceFurnace.getClazz().getDeclaredConstructor().newInstance();
+            } else {
+                // this would probably work back to v1_14_R1 but ehh I cant be bothered testing
+                furnace = NMSClass.CraftTileInventoryConverter_Furnace.getClazz().getDeclaredConstructor().newInstance();
+                furnace = NMSMethod.getTileEntity.getMethod().invoke(furnace);
             }
             // assign it a dimension
             Object craftServer = NMSClass.CraftServer.getClazz().cast(Bukkit.getServer());
@@ -81,8 +86,11 @@ public class BPFurnace extends BackpackHandler {
                 Object furnaceDataTC = backpack.getAsMap("furnace_data").getTagCompound();
                 if (KnownVersion.v1_16_R1.isBefore()) {
                     NMSMethod.load.getMethod().invoke(furnace, furnaceDataTC);
-                } else {
+                } else
+                if (KnownVersion.v1_17_R1.isBefore()) {
                     NMSMethod.load.getMethod().invoke(furnace, null, furnaceDataTC);
+                } else {
+                    NMSMethod.load.getMethod().invoke(furnace, furnaceDataTC); // back to old method, make up your mind
                 }
             }
 

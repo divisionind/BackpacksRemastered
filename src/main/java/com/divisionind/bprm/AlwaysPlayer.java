@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.nms.KnownVersion;
 import com.divisionind.bprm.nms.reflect.NMS;
 import com.divisionind.bprm.nms.reflect.NMSClass;
 import com.divisionind.bprm.nms.reflect.NMSMethod;
@@ -45,8 +46,10 @@ public class AlwaysPlayer {
 
     public Player resolvePlayer() {
         Player player = Bukkit.getPlayer(playerId);
+
         if (player == null) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerId);
+
             if (offlinePlayer.hasPlayedBefore()) {
                 GameProfile gameProfile = new GameProfile(playerId, offlinePlayer.getName());
                 //MinecraftServer server = ((CraftServer)Bukkit.getServer()).getServer();
@@ -58,13 +61,23 @@ public class AlwaysPlayer {
                     Object craftServer = NMSClass.CraftServer.getClazz().cast(Bukkit.getServer());
                     Object dedicatedServer = NMSMethod.getServer.getMethod().invoke(craftServer);
                     Object worldServer = NMS.getWorldServer(dedicatedServer);
-                    Object playerInteractManager = NMSClass.PlayerInteractManager.getClazz()
-                            .getConstructor(NMSClass.WorldServer.getClazz())
-                            .newInstance(worldServer);
-                    Object entityPlayer = NMSClass.EntityPlayer.getClazz()
-                            .getConstructor(NMSClass.MinecraftServer.getClazz(), NMSClass.WorldServer.getClazz(),
-                                    gameProfile.getClass(), NMSClass.PlayerInteractManager.getClazz())
-                            .newInstance(dedicatedServer, worldServer, gameProfile, playerInteractManager);
+                    Object entityPlayer;
+
+                    if (KnownVersion.v1_17_R1.isBefore()) {
+                        Object playerInteractManager = NMSClass.PlayerInteractManager.getClazz()
+                                .getConstructor(NMSClass.WorldServer.getClazz())
+                                .newInstance(worldServer);
+                        entityPlayer = NMSClass.EntityPlayer.getClazz()
+                                .getConstructor(NMSClass.MinecraftServer.getClazz(), NMSClass.WorldServer.getClazz(),
+                                        gameProfile.getClass(), NMSClass.PlayerInteractManager.getClazz())
+                                .newInstance(dedicatedServer, worldServer, gameProfile, playerInteractManager);
+                    } else {
+                        entityPlayer = NMSClass.EntityPlayer.getClazz()
+                                .getConstructor(NMSClass.MinecraftServer.getClazz(), NMSClass.WorldServer.getClazz(),
+                                        gameProfile.getClass())
+                                .newInstance(dedicatedServer, worldServer, gameProfile);
+                    }
+
                     player = (Player) NMSMethod.getBukkitEntity.getMethod().invoke(entityPlayer);
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException
                         | InstantiationException e) {
@@ -91,8 +104,10 @@ public class AlwaysPlayer {
     public String getName() {
         String playerName;
         Player player = Bukkit.getPlayer(playerId);
+
         if (player == null) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerId);
+
             if (offlinePlayer.hasPlayedBefore()) {
                 playerName = offlinePlayer.getName();
             } else playerName = "unknown";

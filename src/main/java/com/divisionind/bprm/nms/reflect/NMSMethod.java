@@ -62,7 +62,8 @@ public enum NMSMethod {
     getBukkitEntity(EntityPlayer, "getBukkitEntity"),
     getWorld(() ->    KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getWorld")),
     getPosition(() -> KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getPosition")),
-    getBlock(() ->    KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getBlock"));
+    getBlock(() ->    KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getBlock")),
+    getTileEntity(CraftTileInventoryConverter_Furnace, "getTileEntity");
 
     private Method method;
     private MethodInitializer methodInitializer;
