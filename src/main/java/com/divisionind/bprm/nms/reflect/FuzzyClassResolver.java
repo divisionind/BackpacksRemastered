@@ -71,6 +71,18 @@ public class FuzzyClassResolver {
         }
     }
 
+    private boolean namesMatch(String path, String name) {
+        String pathName;
+
+        if (path.contains(".")) {
+            String[] parts = path.split("\\.");
+            pathName = parts[parts.length - 1];
+        } else
+            pathName = path;
+
+        return pathName.equals(name);
+    }
+
     /**
      * Finds a class in the MC server jar by name. This method is intended to be used as a fallback if normal class path
      * resolution fails.
@@ -81,7 +93,7 @@ public class FuzzyClassResolver {
      */
     public String lookup(String name) throws FuzzyClassLookupException {
         for (String clazz : bukkitClasses) {
-            if (clazz.endsWith(name))
+            if (namesMatch(clazz, name))
                 return clazz;
         }
 
@@ -99,7 +111,7 @@ public class FuzzyClassResolver {
      */
     public String lookup(String name, String partialPath) throws FuzzyClassLookupException {
         for (String clazz : bukkitClasses) {
-            if (clazz.endsWith(name) && clazz.contains(partialPath))
+            if (namesMatch(clazz, name) && clazz.contains(partialPath))
                 return clazz;
         }
 

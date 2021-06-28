@@ -93,11 +93,19 @@ public class NMS {
                 });
 
         try {
-            Field overWorldField = NMSClass.DimensionManager.getClazz().getDeclaredField("OVERWORLD");
-            DIMENSION_MANAGER_OVERWORLD = overWorldField.get(null);
+            if (KnownVersion.v1_17_R1.isBefore()) {
+                Field overWorldField = NMSClass.DimensionManager.getClazz().getDeclaredField("OVERWORLD");
+                DIMENSION_MANAGER_OVERWORLD = overWorldField.get(null);
 
-            TileEntity_world = NMSClass.TileEntity.getClazz().getDeclaredField("world");
-            TileEntity_world.setAccessible(true);
+                TileEntity_world = NMSClass.TileEntity.getClazz().getDeclaredField("world");
+                TileEntity_world.setAccessible(true);
+            } else {
+                Field overWorldKeyField = NMSClass.World.getClazz().getDeclaredField("f");
+                DIMENSION_MANAGER_OVERWORLD = overWorldKeyField.get(null);
+
+                TileEntity_world = NMSClass.TileEntity.getClazz().getDeclaredField("n");
+                TileEntity_world.setAccessible(true);
+            }
         } catch (Exception e) {
             exceptions.add(e);
         }

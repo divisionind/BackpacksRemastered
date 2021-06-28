@@ -48,7 +48,9 @@ public enum NMSMethod {
             fuzzyMethodLookup(MinecraftServer.getClazz(), false,
                     (method) -> method.getName().equals("getWorldServer") ? 0 : 1)),
     tick(() -> KnownVersion.v1_13_R1.isBefore() ?
-            TileEntityFurnace.getClazz().getMethod("e") : TileEntityFurnace.getClazz().getMethod("tick")),
+            TileEntityFurnace.getClazz().getMethod("e") : (KnownVersion.v1_17_R1.isBefore() ?
+            TileEntityFurnace.getClazz().getMethod("tick") :
+            TileEntityFurnace.getClazz().getMethod("a", World.getClazz(), BlockPosition.getClazz(), IBlockData.getClazz(), TileEntityFurnace.getClazz()))),
     isBurning(true, true, TileEntityFurnace, "isBurning"),
     save(TileEntityFurnace, "save", NBTTagCompound.getClazz()),
     load(() -> KnownVersion.v1_16_R1.isBefore() ?
@@ -57,7 +59,10 @@ public enum NMSMethod {
                     (method) -> method.getName().equals("load") ? 0 : 1)),
     //load(TileEntityFurnace, "load", NBTTagCompound.getClazz()),
     getInventory(CraftInventory, "getInventory"),
-    getBukkitEntity(EntityPlayer, "getBukkitEntity");
+    getBukkitEntity(EntityPlayer, "getBukkitEntity"),
+    getWorld(() ->    KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getWorld")),
+    getPosition(() -> KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getPosition")),
+    getBlock(() ->    KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getBlock"));
 
     private Method method;
     private MethodInitializer methodInitializer;

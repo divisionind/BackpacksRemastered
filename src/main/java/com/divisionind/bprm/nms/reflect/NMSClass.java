@@ -32,7 +32,7 @@ public enum NMSClass {
     NBTBase(SERVER, "NBTBase"),
     TileEntity(SERVER, "TileEntity"),
     TileEntityFurnace(SERVER, "TileEntityFurnace"),
-    TileEntityFurnaceFurnace(SERVER, "TileEntityFurnaceFurnace", KnownVersion.v1_14_R1),
+    TileEntityFurnaceFurnace(SERVER, "TileEntityFurnaceFurnace", KnownVersion.v1_14_R1.isBefore()),
     CraftServer(CRAFT, "CraftServer"),
     DedicatedServer(SERVER, "DedicatedServer"),
     MinecraftServer(SERVER, "MinecraftServer"),
@@ -42,7 +42,9 @@ public enum NMSClass {
     CraftInventory(CRAFT, "inventory.CraftInventory"),
     EntityPlayer(SERVER, "EntityPlayer"),
     PlayerInteractManager(SERVER, "PlayerInteractManager"),
-    WorldServer(SERVER, "WorldServer");
+    WorldServer(SERVER, "WorldServer"),
+    BlockPosition(SERVER, "BlockPosition", KnownVersion.v1_17_R1.isBefore()),
+    IBlockData(SERVER, "IBlockData", KnownVersion.v1_17_R1.isBefore());
 
     private String path;
     private Class clazz;
@@ -54,11 +56,11 @@ public enum NMSClass {
     /**
      * Does not load the class specified if the version is before the specified
      */
-    NMSClass(String base, String path, KnownVersion before) {
+    NMSClass(String base, String path, boolean condition) {
         this(base, path);
 
         // bit of a hack but ehh, ive been planning on recoding the nms stuff for a while so ill fix it later
-        if (before.isBefore())
+        if (condition)
             this.path = null;
     }
 

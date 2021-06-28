@@ -19,6 +19,7 @@
 package com.divisionind.bprm;
 
 import com.divisionind.bprm.location.ItemStackPointer;
+import com.divisionind.bprm.nms.KnownVersion;
 import com.divisionind.bprm.nms.reflect.NMSMethod;
 
 import java.lang.reflect.InvocationTargetException;
@@ -64,7 +65,15 @@ public class VirtualFurnace {
 
     public void tick() throws InvocationTargetException, IllegalAccessException {
         //furnace.tick();
-        NMSMethod.tick.getMethod().invoke(furnace);
+        if (KnownVersion.v1_17_R1.isBefore()) {
+            NMSMethod.tick.getMethod().invoke(furnace);
+        } else {
+            Object world = NMSMethod.getWorld.getMethod().invoke(furnace);
+            Object blockpos = NMSMethod.getPosition.getMethod().invoke(furnace);
+            Object blockdata = NMSMethod.getBlock.getMethod().invoke(furnace);
+
+            NMSMethod.tick.getMethod().invoke(null, world, blockpos, blockdata, furnace);
+        }
     }
 
     public boolean isReleased() {
