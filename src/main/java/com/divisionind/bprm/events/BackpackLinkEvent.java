@@ -19,8 +19,8 @@
 package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.*;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Container;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -43,15 +43,16 @@ public class BackpackLinkEvent implements Listener {
             try {
                 PotentialBackpackItem backpack = new PotentialBackpackItem(inhand);
                 if (backpack.isBackpack()) {
+
                     int type = backpack.getType();
                     if (type == BackpackObject.LINKED.getTypeId()) {
-                        // the player is left clicking a block with a linked backpack in hand, this is lookin good
 
+                        // the player is left clicking a block with a linked backpack in hand, this is lookin good
                         Block block = e.getClickedBlock();
-                        if (block == null) return;
-                        Material blockMat = block.getType();
-                        if (blockMat.equals(Material.CHEST) || blockMat.equals(Material.TRAPPED_CHEST)
-                                || blockMat.equals(Material.FURNACE)) {
+                        if (block == null)
+                            return;
+
+                        if (block.getState() instanceof Container) {
                             // there is no centralized/clean way of checking for container access that I can think of
                             // so, im going to have to do it on a per-plugin basis
                             // check with the plugin specific adaptor ability to see if the player has access

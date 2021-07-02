@@ -24,7 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Furnace;
+import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.DoubleChestInventory;
@@ -34,14 +34,22 @@ public class BPLinked extends BackpackHandler {
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
         if (backpack.hasData()) {
-            Location chestLocation = BackpackSerialization.fromByteArrayLocation(backpack.getData());
-            Block chestBlock = chestLocation.getBlock();
+            Location location = BackpackSerialization.fromByteArrayLocation(backpack.getData());
+            Block block = location.getBlock();
+            Material blockType = block.getType();
 
             Inventory inv;
-            if (chestBlock.getType().equals(Material.FURNACE)) {
-                Furnace furnace = (Furnace)chestBlock.getState();
-                inv = furnace.getInventory();
-            } else inv = getChestInventory(chestBlock);
+            if (blockType.equals(Material.CHEST)) {
+                inv = getChestInventory(block);
+            } else {
+                BlockState state = block.getState();
+
+                if (state instanceof Container) {
+                    inv = ((Container) state).getInventory();
+                } else {
+                    inv = null;
+                }
+            }
 
             if (inv == null) {
                 ACommand.respond(p, "&cThe container to which this bag was linked no longer exists.");
@@ -61,7 +69,7 @@ public class BPLinked extends BackpackHandler {
     public static Inventory getChestInventory(Block block) {
         BlockState blockState = block.getState();
         if (blockState instanceof Chest) {
-            Chest chest = (Chest)blockState;
+            Chest chest = (Chest) blockState;
             Inventory inv = chest.getInventory();
 
             if (inv instanceof DoubleChestInventory) {
