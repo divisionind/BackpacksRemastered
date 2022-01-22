@@ -260,18 +260,10 @@ public class Backpacks extends JavaPlugin {
         return instance.adaptorManager;
     }
 
-    // we can no longer check if the viewer equals the fake backpack viewer instance because that will always be false
-    public static boolean isBackpackInventory(Inventory inv) {
-        for (HumanEntity ent : inv.getViewers()) {
-            if (ent instanceof FakeBackpackViewer) return true;
-        }
-
-        return false;
-    }
-
     public static void removeFakeBackpackViewer(Inventory inv) {
         List<HumanEntity> viewers = inv.getViewers();
-        for (int i = 0;i<viewers.size();i++) {
+
+        for (int i = 0; i < viewers.size(); i++) {
             if (viewers.get(i) instanceof FakeBackpackViewer) {
                 viewers.remove(i);
                 return;

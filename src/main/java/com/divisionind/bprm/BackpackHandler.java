@@ -55,10 +55,11 @@ public abstract class BackpackHandler {
      *
      * @param p player to open the backpack for
      * @param inv inventory created from openBackpack
+     * @param pbi reference to corresponding pbi
      * @throws Exception if there was a problem finalizing the opening of the backpack
      */
-    public void finalizeBackpackOpen(HumanEntity p, Inventory inv) throws Exception {
-        inv.getViewers().add(NMS.FAKE_VIEWER);
+    public void finalizeBackpackOpen(HumanEntity p, Inventory inv, PotentialBackpackItem pbi) throws Exception {
+        inv.getViewers().add(NMS.createFakeViewer(pbi));
         p.openInventory(inv);
     }
 }

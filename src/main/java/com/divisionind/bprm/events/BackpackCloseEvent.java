@@ -20,8 +20,9 @@ package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.BackpackObject;
-import com.divisionind.bprm.Backpacks;
+import com.divisionind.bprm.FakeBackpackViewer;
 import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.nms.reflect.NMS;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -30,8 +31,17 @@ import org.bukkit.inventory.ItemStack;
 public class BackpackCloseEvent implements Listener {
     @EventHandler
     public void onBackpackClose(InventoryCloseEvent e) {
-        if (!Backpacks.isBackpackInventory(e.getInventory())) return;
+        // is it a backpack?
+        FakeBackpackViewer viewer = NMS.getBackpackViewer(e.getInventory());
+        if (viewer == null)
+            return;
+
+        // does this inv belong to the backpack
         ItemStack bp = e.getPlayer().getInventory().getChestplate();
+        if (!viewer.getOwnerBP().getItem().equals(bp))
+            return;
+
+        // TODO turn these 2 blocks ^ into asserts
 
         try {
             PotentialBackpackItem bpi = new PotentialBackpackItem(bp);

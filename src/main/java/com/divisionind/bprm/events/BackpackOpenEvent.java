@@ -81,7 +81,7 @@ public class BackpackOpenEvent implements Listener {
                             if (inv == null)
                                 return;
 
-                            handler.finalizeBackpackOpen(e.getPlayer(), inv);
+                            handler.finalizeBackpackOpen(e.getPlayer(), inv, bpi);
                         }
                     }
                 }

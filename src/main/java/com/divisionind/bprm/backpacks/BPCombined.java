@@ -80,7 +80,7 @@ public class BPCombined extends BackpackHandler {
                     Inventory inv = handler.openBackpack((Player) e.getWhoClicked(), backpack);
 
                     if (inv == null) return;
-                    handler.finalizeBackpackOpen(e.getWhoClicked(), inv);
+                    handler.finalizeBackpackOpen(e.getWhoClicked(), inv, backpack);
                     openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
                 }
             }

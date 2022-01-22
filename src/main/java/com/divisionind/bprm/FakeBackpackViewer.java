@@ -20,4 +20,6 @@ package com.divisionind.bprm;
 
 import org.bukkit.entity.HumanEntity;
 
-public interface FakeBackpackViewer extends HumanEntity {}
+public interface FakeBackpackViewer extends HumanEntity {
+    PotentialBackpackItem getOwnerBP();
+}

@@ -44,8 +44,8 @@ public class BPCraft extends BackpackHandler {
     }
 
     @Override
-    public void finalizeBackpackOpen(HumanEntity p, Inventory inv) throws Exception {
+    public void finalizeBackpackOpen(HumanEntity p, Inventory inv, PotentialBackpackItem pbi) throws Exception {
         // we do not want to open the backpack here because it was probably already opened
-        inv.getViewers().add(NMS.FAKE_VIEWER);
+        inv.getViewers().add(NMS.createFakeViewer(pbi));
     }
 }

@@ -19,10 +19,12 @@
 package com.divisionind.bprm.nms.reflect;
 
 import com.divisionind.bprm.FakeBackpackViewer;
+import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.nms.KnownVersion;
 import com.divisionind.bprm.nms.reflect.ex.NMSLoadException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.Inventory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -36,7 +38,6 @@ public class NMS {
     public static final String SERVER = "net.minecraft.server." + VERSION + ".";
     public static final String CRAFT = "org.bukkit.craftbukkit." + VERSION + ".";
 
-    public static HumanEntity FAKE_VIEWER;
     public static Field TileEntity_world;
     // TODO add NMSField and NMSConstructor managers
 
@@ -76,23 +77,6 @@ public class NMS {
             }
         }
 
-        // initialize fake viewer using reflection (so that it can support spigot + craftbukkit)
-        FAKE_VIEWER = (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(),
-                new Class[]{FakeBackpackViewer.class},
-                (proxy, method, args) -> {
-                    Class type = method.getReturnType();
-
-                    if (type.equals(boolean.class)) return false;
-                    if (type.equals(int.class)) return 0;
-                    if (type.equals(double.class)) return 0D;
-                    if (type.equals(float.class)) return 0F;
-                    if (type.equals(long.class)) return 0L;
-                    if (type.equals(short.class)) return (short)0;
-                    if (type.equals(byte.class)) return (byte)0;
-
-                    return null;
-                });
-
         try {
             if (KnownVersion.v1_17_R1.isBefore()) {
                 Field overWorldField = NMSClass.DimensionManager.getClazz().getDeclaredField("OVERWORLD");
@@ -120,6 +104,35 @@ public class NMS {
         } else {
             return NMSMethod.getWorldServer.getMethod().invoke(dedicatedServer, NMS.DIMENSION_MANAGER_OVERWORLD);
         }
+    }
+
+    public static FakeBackpackViewer createFakeViewer(PotentialBackpackItem backpack) {
+        return (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(), new Class[] {FakeBackpackViewer.class},
+                (proxy, method, args) -> {
+                    if (method.getName().equals("getOwnerBP"))
+                        return backpack;
+
+                    Class type = method.getReturnType();
+                    if (type.equals(boolean.class)) return false;
+                    if (type.equals(int.class)) return 0;
+                    if (type.equals(double.class)) return 0D;
+                    if (type.equals(float.class)) return 0F;
+                    if (type.equals(long.class)) return 0L;
+                    if (type.equals(short.class)) return (short) 0;
+                    if (type.equals(byte.class)) return (byte) 0;
+
+                    return null;
+                });
+    }
+
+    public static FakeBackpackViewer getBackpackViewer(Inventory inv) {
+        for (HumanEntity ent : inv.getViewers()) {
+            if (ent instanceof FakeBackpackViewer) {
+                return (FakeBackpackViewer) ent;
+            }
+        }
+
+        return null;
     }
 
     private static String getVersion() {
