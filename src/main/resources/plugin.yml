@@ -71,10 +71,10 @@ permissions:
     default: true
   backpacks.materials:
     description: Allows players to use the materials command.
-    default: op
+    default: true
   backpacks.materials.search:
     description: Allows players to use the materials-search command.
-    default: op
+    default: true
   backpacks.vfurnace:
     description: Allows players to use the vfurnace command.
-    default: op
+    default: true
