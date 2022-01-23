@@ -28,9 +28,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class BackpackCloseEvent implements Listener {
     @EventHandler
-    public void onBackpackClose(InventoryCloseEvent e) {
+    public void onBackpackClose(InventoryCloseEvent e) throws InvocationTargetException, IllegalAccessException {
         // is it a backpack?
         FakeBackpackViewer viewer = NMS.getBackpackViewer(e.getInventory());
         if (viewer == null)
@@ -38,7 +40,7 @@ public class BackpackCloseEvent implements Listener {
 
         // does this inv belong to the backpack
         ItemStack bp = e.getPlayer().getInventory().getChestplate();
-        if (!viewer.getOwnerBP().getItem().equals(bp))
+        if (!viewer.getOwnerBP().getItem().equals(bp) && viewer.getOwnerBP().getType() != BackpackObject.FURNACE.getTypeId())
             return;
 
         // TODO turn these 2 blocks ^ into asserts
