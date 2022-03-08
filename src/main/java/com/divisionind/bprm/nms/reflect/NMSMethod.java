@@ -32,37 +32,36 @@ import static com.divisionind.bprm.nms.reflect.NMSClass.*;
     latest known version will be used
  */
 public enum NMSMethod {
-
     asNMSCopy(CraftItemStack, "asNMSCopy", ItemStack.class),
     asBukkitCopy(CraftItemStack, "asBukkitCopy", ItemStack.getClazz()),
-    getTag(ItemStack, "getTag"),
-    setTag(ItemStack, "setTag", NBTTagCompound.getClazz()),
-    hasKey(NBTTagCompound, "hasKey", String.class),
-    removeTag(NBTTagCompound, "remove", String.class),
-    getTypeId(NBTBase, "getTypeId"),
+    getTag(ItemStack, (KnownVersion.v1_18_R1.isBefore() ? "getTag" : "s")),
+    setTag(ItemStack, (KnownVersion.v1_18_R1.isBefore() ? "setTag" : "c"), NBTTagCompound.getClazz()),
+    hasKey(NBTTagCompound, (KnownVersion.v1_18_R1.isBefore() ? "hasKey" : "e"), String.class),
+    removeTag(NBTTagCompound, (KnownVersion.v1_18_R1.isBefore() ? "remove" : "r"), String.class),
+    getTypeId(NBTBase, (KnownVersion.v1_18_R1.isBefore() ? "getTypeId" : "a")),
     getKeys(() -> KnownVersion.v1_13_R1.isBefore() ?
-            NBTTagCompound.getClazz().getMethod("c") : NBTTagCompound.getClazz().getMethod("getKeys")),
+            NBTTagCompound.getClazz().getMethod("c") : NBTTagCompound.getClazz().getMethod(KnownVersion.v1_18_R1.isBefore() ? "getKeys" : "d")),
     getServer(CraftServer, "getServer"),
     getWorldServer(() -> KnownVersion.v1_13_R1.isBefore() ?
-            MinecraftServer.getClazz().getMethod("getWorldServer", int.class) :
+            MinecraftServer.getClazz().getMethod((KnownVersion.v1_18_R1.isBefore() ? "getWorldServer" : "a"), int.class) :
             fuzzyMethodLookup(MinecraftServer.getClazz(), false,
-                    (method) -> method.getName().equals("getWorldServer") ? 0 : 1)),
+                    (method) -> method.getName().equals(KnownVersion.v1_18_R1.isBefore() ? "getWorldServer" : "a") ? 0 : 1)),
     tick(() -> KnownVersion.v1_13_R1.isBefore() ?
             TileEntityFurnace.getClazz().getMethod("e") : (KnownVersion.v1_17_R1.isBefore() ?
             TileEntityFurnace.getClazz().getMethod("tick") :
             TileEntityFurnace.getClazz().getMethod("a", World.getClazz(), BlockPosition.getClazz(), IBlockData.getClazz(), TileEntityFurnace.getClazz()))),
-    isBurning(true, true, TileEntityFurnace, "isBurning"),
-    save(TileEntityFurnace, "save", NBTTagCompound.getClazz()),
+    isBurning(true, true, TileEntityFurnace, (KnownVersion.v1_18_R1.isBefore() ? "isBurning" : "i")),
+    save(TileEntityFurnace, (KnownVersion.v1_18_R1.isBefore() ? "save" : "a"), NBTTagCompound.getClazz()),
     load(() -> KnownVersion.v1_16_R1.isBefore() ?
-            TileEntityFurnace.getClazz().getMethod("load", NBTTagCompound.getClazz()) :
+            TileEntityFurnace.getClazz().getMethod((KnownVersion.v1_18_R1.isBefore() ? "load" : "a"), NBTTagCompound.getClazz()) :
             fuzzyMethodLookup(TileEntityFurnace.getClazz(), false,
-                    (method) -> method.getName().equals("load") ? 0 : 1)),
+                    (method) -> method.getName().equals(KnownVersion.v1_18_R1.isBefore() ? "load" : "a") ? 0 : 1)),
     //load(TileEntityFurnace, "load", NBTTagCompound.getClazz()),
     getInventory(CraftInventory, "getInventory"),
     getBukkitEntity(EntityPlayer, "getBukkitEntity"),
-    getWorld(() ->      KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getWorld")),
-    getPosition(() ->   KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getPosition")),
-    getBlock(() ->      KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod("getBlock")),
+    getWorld(() ->      KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod(KnownVersion.v1_18_R1.isBefore() ? "getWorld" : "k")),
+    getPosition(() ->   KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod(KnownVersion.v1_18_R1.isBefore() ? "getPosition" : "p")),
+    getBlock(() ->      KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod(KnownVersion.v1_18_R1.isBefore() ? "getBlock" : "q")),
     getTileEntity(() -> KnownVersion.v1_17_R1.isBefore() ? null : CraftTileInventoryConverter_Furnace
             .getClazz().getMethod("getTileEntity"));
 
