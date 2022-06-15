@@ -65,13 +65,6 @@ public class BackpackOpenEvent implements Listener {
                             ACommand.respondf(e.getPlayer(), "&cBackpack of type %s does not exist in this version. " +
                                     "Why did you downgrade the plugin?", backpackType);
                         } else {
-                            if (backpack.equals(BackpackObject.COMBINED)) {
-                                // this bp broke and ive been meaning to re-write is code for a while cause it kinda sucks
-                                // until I have time to do that, I am just going to disable it
-                                ACommand.respondf(e.getPlayer(), "&eThe combined backpack is temporarily disabled... sorry. You can still remove your backpacks from it using the \"&7/bp split&e\" command.");
-                                return;
-                            }
-
                             // opening backpack, while it opens, disable this code from running
                             UUID playerId = e.getPlayer().getUniqueId();
                             if (openingBackpacks.contains(playerId))

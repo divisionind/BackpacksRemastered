@@ -32,12 +32,11 @@ import java.util.UUID;
 public class BPCombined extends BackpackHandler {
 
     public static final String NAME = "Combined Backpack";
+    private final HashMap<UUID, Integer> openBackpacks = new HashMap<>();
 
     public static Inventory createInv() {
         return Bukkit.createInventory(null, 9, NAME);
     }
-
-    private HashMap<UUID, Integer> openBackpacks = new HashMap<>();
 
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
@@ -68,20 +67,29 @@ public class BPCombined extends BackpackHandler {
                     ACommand.respondf(e.getWhoClicked(), "&cBackpack of type %s does not exist in this version. " +
                             "Why did you downgrade the plugin?", type);
                 } else {
-                    // remove backpack identifier viewer so the onClose event is not triggered by this open event
-                    Backpacks.removeFakeBackpackViewer(e.getClickedInventory());
+                    Bukkit.getScheduler().runTask(Backpacks.getInstance(), () -> {
+                        try {
+                            // remove backpack identifier viewer so the onClose event is not triggered by this open event
+                            Backpacks.removeFakeBackpackViewer(e.getClickedInventory());
 
-                    // ensure to force close the inventory right after this or else a duplication glitch
-                    //   would be possible
-                    e.getWhoClicked().closeInventory();
+                            // ensure to force close the inventory right after this or else a duplication glitch
+                            //   would be possible
+                            e.getWhoClicked().closeInventory();
 
-                    // open clicked backpack
-                    BackpackHandler handler = bpo.getHandler();
-                    Inventory inv = handler.openBackpack((Player) e.getWhoClicked(), backpack);
+                            // open clicked backpack
+                            BackpackHandler handler = bpo.getHandler();
+                            Inventory inv = handler.openBackpack((Player) e.getWhoClicked(), backpack);
 
-                    if (inv == null) return;
-                    handler.finalizeBackpackOpen(e.getWhoClicked(), inv, backpack);
-                    openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
+                            if (inv == null) return;
+
+                            // set opened backpack for player
+                            openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
+                            handler.finalizeBackpackOpen(e.getWhoClicked(), inv, backpack);
+
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    });
                 }
             }
         } catch (Exception ex) {

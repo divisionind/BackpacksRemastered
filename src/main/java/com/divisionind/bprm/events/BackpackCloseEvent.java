@@ -28,25 +28,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class BackpackCloseEvent implements Listener {
     @EventHandler
-    public void onBackpackClose(InventoryCloseEvent e) throws InvocationTargetException, IllegalAccessException {
+    public void onBackpackClose(InventoryCloseEvent e) {
         // is it a backpack?
         FakeBackpackViewer viewer = NMS.getBackpackViewer(e.getInventory());
         if (viewer == null)
             return;
 
-        // does this inv belong to the backpack
-        ItemStack bp = e.getPlayer().getInventory().getChestplate();
-        if (!viewer.getOwnerBP().getItem().equals(bp) && viewer.getOwnerBP().getType() != BackpackObject.FURNACE.getTypeId())
-            return;
-
-        // TODO turn these 2 blocks ^ into asserts
-
         try {
+            ItemStack bp = e.getPlayer().getInventory().getChestplate();
             PotentialBackpackItem bpi = new PotentialBackpackItem(bp);
+
             if (bpi.isBackpack()) {
                 int type = bpi.getType();
                 BackpackObject backpack = BackpackObject.getByType(type);
@@ -54,8 +47,17 @@ public class BackpackCloseEvent implements Listener {
                     ACommand.respondf(e.getPlayer(),
                             "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?",
                             type);
-                } else backpack.getHandler().onClose(e, bpi,
-                        newItem -> e.getPlayer().getInventory().setChestplate(newItem));
+                } else {
+                    // does this inv belong to the backpack
+                    if (backpack.getTypeId() != BackpackObject.COMBINED.getTypeId()) {
+                        if (!viewer.getOwnerBP().getItem().equals(bp) && viewer.getOwnerBP().getType() != BackpackObject.FURNACE.getTypeId()) {
+                            return;
+                        }
+                    }
+
+                    backpack.getHandler().onClose(e, bpi,
+                            newItem -> e.getPlayer().getInventory().setChestplate(newItem));
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();

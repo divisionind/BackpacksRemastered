@@ -36,12 +36,12 @@ public class NMS {
 
     public static final String VERSION = getVersion();
     public static final String SERVER = (KnownVersion.v1_18_R1.isBefore() ? "net.minecraft.server." + VERSION + "." : "net.minecraft.server.");
-    public static final String CRAFT = "org.bukkit.craftbukkit."+VERSION+".";
+    public static final String CRAFT = "org.bukkit.craftbukkit." + VERSION + ".";
 
     public static Field TileEntity_world;
     // TODO add NMSField and NMSConstructor managers
 
-    private static Object DIMENSION_MANAGER_OVERWORLD;
+    public static Object DIMENSION_MANAGER_OVERWORLD;
 
     public static List<Exception> initialize() {
         List<Exception> exceptions = new ArrayList<>();
@@ -68,15 +68,7 @@ public class NMS {
             }
         }
 
-        // initialize methods
-        for (NMSMethod nmsMethod : NMSMethod.values()) {
-            try {
-                nmsMethod.init();
-            } catch (Exception e) {
-                exceptions.add(new NMSLoadException("NMSMethod: " + nmsMethod.name(), e));
-            }
-        }
-
+        // init some methods and classes
         try {
             if (KnownVersion.v1_17_R1.isBefore()) {
                 Field overWorldField = NMSClass.DimensionManager.getClazz().getDeclaredField("OVERWORLD");
@@ -95,6 +87,16 @@ public class NMS {
             exceptions.add(e);
         }
 
+        // initialize methods
+        for (NMSMethod nmsMethod : NMSMethod.values()) {
+            try {
+                nmsMethod.init();
+            } catch (Exception e) {
+                exceptions.add(new NMSLoadException("NMSMethod: " + nmsMethod.name(), e));
+            }
+        }
+
+
         return exceptions;
     }
 
@@ -107,7 +109,7 @@ public class NMS {
     }
 
     public static FakeBackpackViewer createFakeViewer(PotentialBackpackItem backpack) {
-        return (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(), new Class[] {FakeBackpackViewer.class},
+        return (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(), new Class[]{FakeBackpackViewer.class},
                 (proxy, method, args) -> {
                     if (method.getName().equals("getOwnerBP"))
                         return backpack;
