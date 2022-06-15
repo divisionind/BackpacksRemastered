@@ -21,30 +21,29 @@ package com.divisionind.bprm.nms.reflect;
 import com.divisionind.bprm.exceptions.FuzzyClassLookupException;
 import com.divisionind.bprm.nms.KnownVersion;
 
-import static com.divisionind.bprm.nms.reflect.NMS.CRAFT;
-import static com.divisionind.bprm.nms.reflect.NMS.SERVER;
+import static com.divisionind.bprm.nms.reflect.NMS.*;
 
 public enum NMSClass {
 
     CraftItemStack(CRAFT, "inventory.CraftItemStack"),
-    NBTTagCompound(SERVER, "NBTTagCompound"),
-    ItemStack(SERVER, "ItemStack"),
-    NBTBase(SERVER, "NBTBase"),
-    TileEntity(SERVER, "TileEntity"),
-    TileEntityFurnace(SERVER, "TileEntityFurnace"),
-    TileEntityFurnaceFurnace(SERVER, "TileEntityFurnaceFurnace", KnownVersion.v1_14_R1.isBefore()),
+    NBTTagCompound((KnownVersion.v1_18_R1.isBefore() ? SERVER : "net.minecraft.nbt."), "NBTTagCompound"),
+    ItemStack((KnownVersion.v1_18_R1.isBefore() ? SERVER : "net.minecraft.world.item."), "ItemStack"),
+    NBTBase((KnownVersion.v1_18_R1.isBefore() ? SERVER : "net.minecraft.nbt."), "NBTBase"),
+    TileEntity((KnownVersion.v1_18_R1.isBefore() ? SERVER : "net.minecraft.world.level.block.entity."), "TileEntity"),
+    TileEntityFurnace((KnownVersion.v1_18_R1.isBefore() ? SERVER : "net.minecraft.world.level.block.entity."), "TileEntityFurnace"),
+    TileEntityFurnaceFurnace((KnownVersion.v1_18_R1.isBefore() ? SERVER : "net.minecraft.world.level.block.entity."), "TileEntityFurnaceFurnace", KnownVersion.v1_14_R1.isBefore()),
     CraftServer(CRAFT, "CraftServer"),
-    DedicatedServer(SERVER, "DedicatedServer"),
+    DedicatedServer(SERVER, (KnownVersion.v1_18_R1.isBefore() ? "DedicatedServer" : "dedicated.DedicatedServer")),
     MinecraftServer(SERVER, "MinecraftServer"),
-    World(SERVER, "World"),
-    DimensionManager(SERVER, "DimensionManager"),
+    World((KnownVersion.v1_18_R1.isBefore() ? SERVER : "net.minecraft.world.level."), "World"),
+    DimensionManager((KnownVersion.v1_18_R1.isBefore() ? SERVER : "net.minecraft.world.level.dimension."), "DimensionManager"),
     CraftInventoryFurnace(CRAFT, "inventory.CraftInventoryFurnace"),
     CraftInventory(CRAFT, "inventory.CraftInventory"),
-    EntityPlayer(SERVER, "EntityPlayer"),
-    PlayerInteractManager(SERVER, "PlayerInteractManager"),
-    WorldServer(SERVER, "WorldServer"),
-    BlockPosition(SERVER, "BlockPosition", KnownVersion.v1_17_R1.isBefore()),
-    IBlockData(SERVER, "IBlockData", KnownVersion.v1_17_R1.isBefore()),
+    EntityPlayer(SERVER, (KnownVersion.v1_18_R1.isBefore() ? "EntityPlayer" : "level.EntityPlayer")),
+    PlayerInteractManager(SERVER, (KnownVersion.v1_18_R1.isBefore() ? "PlayerInteractManager" : "level.PlayerInteractManager")),
+    WorldServer(SERVER, (KnownVersion.v1_18_R1.isBefore() ? "WorldServer" : "level.WorldServer")),
+    BlockPosition((KnownVersion.v1_18_R1.isBefore() ? SERVER : "net.minecraft.core."), "BlockPosition", KnownVersion.v1_17_R1.isBefore()),
+    IBlockData((KnownVersion.v1_18_R1.isBefore() ? SERVER : "net.minecraft.world.level.block.state."), "IBlockData", KnownVersion.v1_17_R1.isBefore()),
     CraftTileInventoryConverter_Furnace(CRAFT, "inventory.util.CraftTileInventoryConverter$Furnace", KnownVersion.v1_17_R1.isBefore());
 
     private String path;

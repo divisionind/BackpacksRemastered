@@ -18,7 +18,10 @@
 
 package com.divisionind.bprm.nms.reflect;
 
+import com.divisionind.bprm.nms.KnownVersion;
+
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public enum NBTType {
 
@@ -81,8 +84,25 @@ public enum NBTType {
     }
 
     void init(Class cNBTTagCompound) throws NoSuchMethodException {
-        set = cNBTTagCompound.getMethod(String.format("set%s", getType()), String.class, getClassType());
-        get = cNBTTagCompound.getMethod(String.format("get%s", getType()), String.class);
+        if (!KnownVersion.v1_18_R1.isBefore()) {
+            set = cNBTTagCompound.getMethod("a", String.class, getClassType());
+            String thing = "p";
+            if (Objects.equals(getType(), "Byte")) thing = "f";
+            if (Objects.equals(getType(), "Short")) thing = "g";
+            if (Objects.equals(getType(), "Int")) thing = "h";
+            if (Objects.equals(getType(), "Long")) thing = "i";
+            if (Objects.equals(getType(), "Float")) thing = "j";
+            if (Objects.equals(getType(), "Double")) thing = "k";
+            if (Objects.equals(getType(), "String")) thing = "l";
+            if (Objects.equals(getType(), "ByteArray")) thing = "m";
+            if (Objects.equals(getType(), "IntArray")) thing = "n";
+            if (Objects.equals(getType(), "Boolean")) thing = "q";
+            if (Objects.equals(getType(), "")) thing = "p";
+            get = cNBTTagCompound.getMethod(thing, String.class);
+        } else {
+            set = cNBTTagCompound.getMethod(String.format("set%s", getType()), String.class, getClassType());
+            get = cNBTTagCompound.getMethod(String.format("get%s", getType()), String.class);
+        }
     }
 
     void setClassType(Class classType) {

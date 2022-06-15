@@ -35,8 +35,8 @@ import java.util.List;
 public class NMS {
 
     public static final String VERSION = getVersion();
-    public static final String SERVER = "net.minecraft.server." + VERSION + ".";
-    public static final String CRAFT = "org.bukkit.craftbukkit." + VERSION + ".";
+    public static final String SERVER = (KnownVersion.v1_18_R1.isBefore() ? "net.minecraft.server." + VERSION + "." : "net.minecraft.server.");
+    public static final String CRAFT = "org.bukkit.craftbukkit."+VERSION+".";
 
     public static Field TileEntity_world;
     // TODO add NMSField and NMSConstructor managers
