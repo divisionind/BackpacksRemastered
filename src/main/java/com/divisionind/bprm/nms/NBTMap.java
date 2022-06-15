@@ -27,7 +27,7 @@ import java.util.Set;
 
 public class NBTMap {
 
-    private Object tagCompound;
+    private final Object tagCompound;
 
     public NBTMap(Object tagCompound) {
         this.tagCompound = tagCompound;

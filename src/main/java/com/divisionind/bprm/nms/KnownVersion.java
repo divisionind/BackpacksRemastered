@@ -43,7 +43,10 @@ public enum KnownVersion {
     v1_16_R2,
     v1_16_R3,
     v1_17_R1,
-    v1_18_R1;
+    v1_18_R1,
+    v1_18_R2,
+    v1_19_R1,
+    ;
 
     public KnownVersion[] getVersionsBefore() {
         List<KnownVersion> versions = new ArrayList<>();
@@ -53,7 +56,7 @@ public enum KnownVersion {
             versions.add(v);
         }
 
-        return versions.toArray(new KnownVersion[versions.size()]);
+        return versions.toArray(new KnownVersion[0]);
     }
 
     /**
