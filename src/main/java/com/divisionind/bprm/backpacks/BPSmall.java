@@ -20,6 +20,6 @@ package com.divisionind.bprm.backpacks;
 
 public class BPSmall extends BPStorage {
     public BPSmall() {
-        super("Small Backpack", 27);
+        super("Small Backpack", 5);
     }
 }
