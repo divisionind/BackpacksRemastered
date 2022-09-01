@@ -20,6 +20,7 @@ package com.divisionind.bprm.events;
 
 import com.divisionind.bprm.*;
 import com.divisionind.bprm.nms.NMSItemStack;
+import com.divisionind.bprm.nms.reflect.NMS;
 import io.netty.util.internal.ConcurrentSet;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -46,6 +47,9 @@ public class BackpackOpenEvent implements Listener {
 
             if (!inhand.getType().equals(Material.FEATHER))
                 return;
+
+            // prevent player from opening gui if it is already open (dupe fix)
+            if(NMS.getBackpackViewer(e.getPlayer().getInventory()) != null) return;
 
             try {
                 NMSItemStack backpackKey = new NMSItemStack(inhand);
