@@ -4,11 +4,10 @@
 ![](https://img.shields.io/badge/license-GPLv3-green.svg?style=flat-square)
 
 ![](https://raw.githubusercontent.com/divisionind/BackpacksRemastered/master/screenshots/logo.png)
-> Backpacks is a very unique plugin meant to add backpacks to Minecraft without the use of any client side modifications. 
-Completely vanilla backpacks! This plugin is the first of its kind due to the fact that it adds backpacks as an item! Yes, 
-you can craft backpacks or obtain them through commands. Backpacks can also be dropped on the floor, stored in a chest, or 
-even stored in another backpack (configurable) and will always retain their inventory. Backpacks is also one of the only 
-plugins (I know of at least) that allows you to view the specific NBT tags on items.
+> BackpacksRemastered adds -- well -- backpacks, to Minecraft, the catch being without the use of any client-side modifications. 
+Completely vanilla backpacks! This plugin was the first of its kind due to the fact that it adds backpacks as an `ItemStack`
+that will persist its inventory even without the plugin installed! Backpacks also allows you to inspect the NBT data
+of items which is handy for getting an under-the-hood look at how the game works.
 
 ## Table of contents
 **[Building](#building)**<br>
@@ -17,6 +16,15 @@ plugins (I know of at least) that allows you to view the specific NBT tags on it
 **[Donate](#donate)**<br>
 
 ## Building
+
+### Docker
+```shell
+docker build -t drew6017/backpacks .
+docker run --rm -v <proj_dir>:/project -it drew6017/backpacks
+./gradlew pack
+```
+
+### Manual (old)
 Requirements:
   - Gradle
   - Java 8 **and** 11 (if on windows try AdoptOpenJDK)
