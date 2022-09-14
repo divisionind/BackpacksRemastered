@@ -87,12 +87,10 @@ public class Backpacks extends JavaPlugin {
 
         registerEvents(new BackpackCraftEvent(),
                 new BackpackDamageEvent(),
-                new BackpackCloseEvent(),
-                new BackpackOpenEvent(),
+                new BackpackOpenCloseEvent(),
                 new BackpackLinkEvent(),
                 new BackpackInvClickEvent(),
-                new BackpackFurnaceTickEvent(),
-                new CloseOpenEnforcerEvent());
+                new BackpackFurnaceTickEvent());
 
         // register these events if enabled
         if (getConfig().getBoolean("trackFurnaceBackpacks")) {

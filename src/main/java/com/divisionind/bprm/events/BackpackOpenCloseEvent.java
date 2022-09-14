@@ -18,25 +18,28 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.BackpackHandler;
-import com.divisionind.bprm.Backpacks;
-import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.*;
 import com.divisionind.bprm.nms.NMSItemStack;
+import com.divisionind.bprm.nms.reflect.NMS;
 import io.netty.util.internal.ConcurrentSet;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
-public class BackpackOpenEvent implements Listener {
+public class BackpackOpenCloseEvent implements Listener  {
 
     private static ConcurrentSet<UUID> openingBackpacks = new ConcurrentSet<>();
+    private static Set<UUID> transactions = new HashSet<>();
 
     @EventHandler
     public void onBackpackOpen(PlayerInteractEvent e) throws Exception {
@@ -70,11 +73,36 @@ public class BackpackOpenEvent implements Listener {
                     // actually open the backpack (along with adding fake viewer for identification)
                     BackpackHandler handler = bpi.getHandler();
                     Inventory inv = handler.openBackpack(e.getPlayer(), bpi);
-                    if (inv == null)
+                    if (inv == null || transactions.contains(playerId))
                         return;
+
+                    transactions.add(playerId);
                     handler.finalizeBackpackOpen(e.getPlayer(), inv, bpi);
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onBackpackClose(InventoryCloseEvent e) throws Exception {
+        // is it a backpack?
+        FakeBackpackViewer viewer = NMS.getBackpackViewer(e.getInventory());
+        if (viewer == null)
+            return;
+
+        ItemStack bp = e.getPlayer().getInventory().getChestplate();
+        PotentialBackpackItem bpi = new PotentialBackpackItem(bp);
+
+        if (bpi.isBackpack()) {
+            if (bpi.getType() != BackpackObject.COMBINED.getTypeId()) {
+                if (!viewer.getOwnerBP().getItem().equals(bp) && viewer.getOwnerBP().getType() != BackpackObject.FURNACE.getTypeId()) {
+                    return;
+                }
+            }
+
+            bpi.getHandler().onClose(e, bpi,
+                    newItem -> e.getPlayer().getInventory().setChestplate(newItem));
+        }
+        transactions.remove(e.getPlayer().getUniqueId());
     }
 }
