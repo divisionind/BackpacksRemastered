@@ -18,6 +18,7 @@
 
 package com.divisionind.bprm;
 
+import com.divisionind.bprm.exceptions.UnknownBackpackException;
 import com.divisionind.bprm.nms.NMSItemStack;
 import com.divisionind.bprm.nms.reflect.NBTType;
 import org.bukkit.inventory.ItemStack;
@@ -60,5 +61,12 @@ public class PotentialBackpackItem extends NMSItemStack {
 
     public BackpackObject getTypeObject() throws InvocationTargetException, IllegalAccessException {
         return BackpackObject.getByType(getType());
+    }
+
+    public BackpackHandler getHandler() throws InvocationTargetException, IllegalAccessException, UnknownBackpackException {
+        BackpackObject bp = BackpackObject.getByType(getType());
+        if (bp != null)
+            return bp.getHandler();
+        else throw new UnknownBackpackException();
     }
 }

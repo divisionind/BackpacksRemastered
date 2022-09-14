@@ -91,7 +91,8 @@ public class Backpacks extends JavaPlugin {
                 new BackpackOpenEvent(),
                 new BackpackLinkEvent(),
                 new BackpackInvClickEvent(),
-                new BackpackFurnaceTickEvent());
+                new BackpackFurnaceTickEvent(),
+                new CloseOpenEnforcerEvent());
 
         // register these events if enabled
         if (getConfig().getBoolean("trackFurnaceBackpacks")) {
@@ -115,17 +116,10 @@ public class Backpacks extends JavaPlugin {
 
         // register custom recipes
         backpackRecipes = new BackpackRecipes(getConfig(), getLogger());
-
         // enable metrics collection
         metrics = new Metrics(this);
-
         // add task for post load
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::onPostLoad);
-
-        // TODO implement an update notifier (will send messages to admins in game about updates to backpacks)
-        // New version of BackpacksRemastered available (as red "CURRENT")->(as green "NEW")!
-        //  Would you like to update? YES, NO, LATER. (make this clickable)
-        // check for new update periodically and set a flag variable that is checked when an admin joins the game
 
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) was enabled in %.2fs!", VERSION, GIT_HASH,
                 ((double)(System.currentTimeMillis() - startTime)) / 1000.0D));
@@ -133,8 +127,7 @@ public class Backpacks extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // TODO look for any open backpacks and close them gracefully
-
+        // TODO look for any open backpacks and close them gracefully (to prevent possible dupe)
         getLogger().info(String.format("BackpacksRemastered v%s (git: %s) has been disabled.", VERSION, GIT_HASH));
     }
 

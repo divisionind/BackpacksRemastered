@@ -18,7 +18,6 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.BackpackObject;
 import com.divisionind.bprm.FakeBackpackViewer;
 import com.divisionind.bprm.PotentialBackpackItem;
@@ -30,37 +29,24 @@ import org.bukkit.inventory.ItemStack;
 
 public class BackpackCloseEvent implements Listener {
     @EventHandler
-    public void onBackpackClose(InventoryCloseEvent e) {
+    public void onBackpackClose(InventoryCloseEvent e) throws Exception {
         // is it a backpack?
         FakeBackpackViewer viewer = NMS.getBackpackViewer(e.getInventory());
         if (viewer == null)
             return;
 
-        try {
-            ItemStack bp = e.getPlayer().getInventory().getChestplate();
-            PotentialBackpackItem bpi = new PotentialBackpackItem(bp);
+        ItemStack bp = e.getPlayer().getInventory().getChestplate();
+        PotentialBackpackItem bpi = new PotentialBackpackItem(bp);
 
-            if (bpi.isBackpack()) {
-                int type = bpi.getType();
-                BackpackObject backpack = BackpackObject.getByType(type);
-                if (backpack == null) {
-                    ACommand.respondf(e.getPlayer(),
-                            "&cBackpack of type %s does not exist in this version. Why did you downgrade the plugin?",
-                            type);
-                } else {
-                    // does this inv belong to the backpack
-                    if (backpack.getTypeId() != BackpackObject.COMBINED.getTypeId()) {
-                        if (!viewer.getOwnerBP().getItem().equals(bp) && viewer.getOwnerBP().getType() != BackpackObject.FURNACE.getTypeId()) {
-                            return;
-                        }
-                    }
-
-                    backpack.getHandler().onClose(e, bpi,
-                            newItem -> e.getPlayer().getInventory().setChestplate(newItem));
+        if (bpi.isBackpack()) {
+            if (bpi.getType() != BackpackObject.COMBINED.getTypeId()) {
+                if (!viewer.getOwnerBP().getItem().equals(bp) && viewer.getOwnerBP().getType() != BackpackObject.FURNACE.getTypeId()) {
+                    return;
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+            bpi.getHandler().onClose(e, bpi,
+                    newItem -> e.getPlayer().getInventory().setChestplate(newItem));
         }
     }
 }

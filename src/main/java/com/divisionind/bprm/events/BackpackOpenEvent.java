@@ -18,7 +18,9 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.*;
+import com.divisionind.bprm.BackpackHandler;
+import com.divisionind.bprm.Backpacks;
+import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.nms.NMSItemStack;
 import io.netty.util.internal.ConcurrentSet;
 import org.bukkit.Bukkit;
@@ -37,57 +39,41 @@ public class BackpackOpenEvent implements Listener {
     private static ConcurrentSet<UUID> openingBackpacks = new ConcurrentSet<>();
 
     @EventHandler
-    public void onBackpackOpen(PlayerInteractEvent e) {
+    public void onBackpackOpen(PlayerInteractEvent e) throws Exception {
         // did right click
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             // is item in hand backpack key
             // TODO add support for use from off-hand as well
             ItemStack inhand = e.getPlayer().getInventory().getItemInMainHand();
-
             if (!inhand.getType().equals(Material.FEATHER))
                 return;
 
-            try {
-                NMSItemStack backpackKey = new NMSItemStack(inhand);
+            NMSItemStack backpackKey = new NMSItemStack(inhand);
+            if (backpackKey.hasNBT("backpack_key")) {
+                ItemStack backpackItem = e.getPlayer().getInventory().getChestplate();
+                if (backpackItem == null)
+                    return;
 
-                if (backpackKey.hasNBT("backpack_key")) {
-                    ItemStack backpackItem = e.getPlayer().getInventory().getChestplate();
-                    if (backpackItem == null)
+                PotentialBackpackItem bpi = new PotentialBackpackItem(backpackItem);
+
+                if (bpi.isBackpack()) {
+                    // de-bounce backpack opening
+                    UUID playerId = e.getPlayer().getUniqueId();
+                    if (openingBackpacks.contains(playerId))
                         return;
 
-                    PotentialBackpackItem bpi = new PotentialBackpackItem(backpackItem);
+                    openingBackpacks.add(playerId);
+                    // 8ticks = 0.4s should be enough time for the backpack to open (unless someone is rly lagging)
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(Backpacks.getInstance(),
+                            () -> openingBackpacks.remove(playerId), Backpacks.OPEN_BACKPACK_COOLDOWN);
 
-                    // is wearing backpack
-                    if (bpi.isBackpack()) {
-                        int backpackType = bpi.getType();
-                        BackpackObject backpack = BackpackObject.getByType(backpackType);
-                        if (backpack == null) {
-                            ACommand.respondf(e.getPlayer(), "&cBackpack of type %s does not exist in this version. " +
-                                    "Why did you downgrade the plugin?", backpackType);
-                        } else {
-                            // opening backpack, while it opens, disable this code from running
-                            UUID playerId = e.getPlayer().getUniqueId();
-                            if (openingBackpacks.contains(playerId))
-                                return;
-
-                            openingBackpacks.add(playerId);
-                            // 8ticks = 0.4s should be enough time for the backpack to open (unless someone is lagging)
-                            Bukkit.getScheduler().scheduleSyncDelayedTask(Backpacks.getInstance(),
-                                    () -> openingBackpacks.remove(playerId), Backpacks.OPEN_BACKPACK_COOLDOWN);
-
-                            // actually open the backpack (along with adding fake viewer for identification)
-                            BackpackHandler handler = backpack.getHandler();
-                            Inventory inv = handler.openBackpack(e.getPlayer(), bpi);
-                            if (inv == null)
-                                return;
-
-                            handler.finalizeBackpackOpen(e.getPlayer(), inv, bpi);
-                        }
-                    }
+                    // actually open the backpack (along with adding fake viewer for identification)
+                    BackpackHandler handler = bpi.getHandler();
+                    Inventory inv = handler.openBackpack(e.getPlayer(), bpi);
+                    if (inv == null)
+                        return;
+                    handler.finalizeBackpackOpen(e.getPlayer(), inv, bpi);
                 }
-            } catch (Exception ex) {
-                // TODO respond that there was an error opening the backpack and to contact server admin
-                ex.printStackTrace();
             }
         }
     }
