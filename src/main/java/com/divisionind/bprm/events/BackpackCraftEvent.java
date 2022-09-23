@@ -113,6 +113,7 @@ public class BackpackCraftEvent implements Listener {
 
                            // disables combined backpacks from being put into other combined backpacks
                            if (BackpackObject.COMBINED.equals(normalBackpack.getTypeObject())) {
+                               e.getInventory().setResult(null);
                                return;
                            }
 
