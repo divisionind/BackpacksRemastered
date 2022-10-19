@@ -19,6 +19,7 @@
 package com.divisionind.bprm.backpacks;
 
 import com.divisionind.bprm.*;
+import com.divisionind.bprm.nms.reflect.NMS;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -43,7 +44,7 @@ public class BPCombined extends BackpackHandler {
         Inventory display;
 
         if (backpack.hasData()) {
-            display = BackpackSerialization.fromByteArrayInventory(backpack.getData());
+            display = backpack.getDataAsInventory();
         } else {
             display = createInv();
         }
@@ -70,7 +71,7 @@ public class BPCombined extends BackpackHandler {
                     Bukkit.getScheduler().runTask(Backpacks.getInstance(), () -> {
                         try {
                             // remove backpack identifier viewer so the onClose event is not triggered by this open event
-                            Backpacks.removeFakeBackpackViewer(e.getClickedInventory());
+                            NMS.removeFakeBackpackViewer(e.getClickedInventory());
 
                             // ensure to force close the inventory right after this or else a duplication glitch
                             //   would be possible
@@ -106,7 +107,7 @@ public class BPCombined extends BackpackHandler {
 
         // get slot from map and backpack item of that slot in the combined backpack
         int slot = openBackpacks.remove(e.getPlayer().getUniqueId());
-        Inventory combinedInv = BackpackSerialization.fromByteArrayInventory(backpack.getData());
+        Inventory combinedInv = backpack.getDataAsInventory();
         ItemStack bpItemInUse = combinedInv.getItem(slot);
         PotentialBackpackItem inUse = new PotentialBackpackItem(bpItemInUse);
 
@@ -118,7 +119,7 @@ public class BPCombined extends BackpackHandler {
         bpo.getHandler().onClose(e, inUse, newItem -> combinedInv.setItem(slot, newItem));
 
         // update the combined backpacks data
-        backpack.setData(BackpackSerialization.toByteArrayInventory(combinedInv, NAME));
+        backpack.setData(combinedInv, NAME);
 
         callback.update(backpack.getModifiedItem());
     }

@@ -21,8 +21,16 @@ package com.divisionind.bprm;
 import com.divisionind.bprm.exceptions.UnknownBackpackException;
 import com.divisionind.bprm.nms.NMSItemStack;
 import com.divisionind.bprm.nms.reflect.NBTType;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 public class PotentialBackpackItem extends NMSItemStack {
@@ -53,6 +61,69 @@ public class PotentialBackpackItem extends NMSItemStack {
 
     public void setData(byte[] data) throws InvocationTargetException, IllegalAccessException {
         setNBT(NBTType.BYTE_ARRAY, FIELD_NAME_DATA, data);
+    }
+
+    public void setData(Inventory inv, String name) throws IOException, InvocationTargetException, IllegalAccessException {
+        // create output streams
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        BukkitObjectOutputStream out = new BukkitObjectOutputStream(bout);
+
+        // write view name and inventory size (not storing this info with backpack type for legacy reasons)
+        out.writeInt(inv.getSize());
+        out.writeUTF(name);
+
+        // store items
+        for (int i = 0; i < inv.getSize(); i++) out.writeObject(inv.getItem(i));
+
+        // flush and close output
+        out.flush();
+        out.close();
+
+        setData(bout.toByteArray());
+    }
+
+    public void setData(Location location) throws IOException, InvocationTargetException, IllegalAccessException {
+        // create output streams
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        BukkitObjectOutputStream out = new BukkitObjectOutputStream(bout);
+
+        // write the location object
+        out.writeObject(location);
+
+        // flush and close output
+        out.flush();
+        out.close();
+
+        setData(bout.toByteArray());
+    }
+
+    public Location getDataAsLocation() throws InvocationTargetException, IllegalAccessException, IOException, ClassNotFoundException {
+        // create input streams
+        ByteArrayInputStream bin = new ByteArrayInputStream(getData());
+        BukkitObjectInputStream in = new BukkitObjectInputStream(bin);
+
+        // read location from data
+        Location location = (Location) in.readObject();
+
+        // close stream, return location
+        in.close();
+        return location;
+    }
+
+    public Inventory getDataAsInventory() throws InvocationTargetException, IllegalAccessException, IOException, ClassNotFoundException {
+        // create input streams
+        ByteArrayInputStream bin = new ByteArrayInputStream(getData());
+        BukkitObjectInputStream in = new BukkitObjectInputStream(bin);
+
+        // create inventory based on stored size / title
+        Inventory inv = Bukkit.getServer().createInventory(null, in.readInt(), in.readUTF());
+
+        // load items from inventory
+        for (int i = 0; i < inv.getSize(); i++) inv.setItem(i, (ItemStack) in.readObject());
+
+        // close stream, return inventory
+        in.close();
+        return inv;
     }
 
     public boolean hasData() throws InvocationTargetException, IllegalAccessException {

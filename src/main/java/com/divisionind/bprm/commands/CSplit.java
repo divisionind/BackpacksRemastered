@@ -20,7 +20,6 @@ package com.divisionind.bprm.commands;
 
 import com.divisionind.bprm.ACommand;
 import com.divisionind.bprm.BackpackObject;
-import com.divisionind.bprm.BackpackSerialization;
 import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.backpacks.BPCombined;
 import org.bukkit.Material;
@@ -82,7 +81,7 @@ public class CSplit extends ACommand {
                         }
 
                         // ensure no out of bounds exception
-                        Inventory combinedInv = BackpackSerialization.fromByteArrayInventory(backpack.getData());
+                        Inventory combinedInv = backpack.getDataAsInventory();
                         if (slot >= combinedInv.getSize()) {
                             respondf(sender, "&cThe supplied slot number is too large. The max is %s.", slot);
                             return;
@@ -97,7 +96,7 @@ public class CSplit extends ACommand {
 
                         // null item before giving it back to favor the deletion of the item rather than duplication
                         combinedInv.setItem(slot, null);
-                        backpack.setData(BackpackSerialization.toByteArrayInventory(combinedInv, BPCombined.NAME));
+                        backpack.setData(combinedInv, BPCombined.NAME);
                         p.getInventory().setItemInMainHand(backpack.getModifiedItem());
 
                         safeAddItem(p, item);

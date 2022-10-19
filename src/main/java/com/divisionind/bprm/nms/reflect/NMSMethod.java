@@ -25,34 +25,39 @@ import java.lang.reflect.Method;
 
 import static com.divisionind.bprm.nms.reflect.NMSClass.*;
 
-/*
-    TODO maybe create function handler to adapt at different versions (similar to Abilities)
-    will make it easier to update as the functions may be adapted to yield equivalent results and can just take
-    function with KnownVersion parameters it should be active on, if no KnownVersion found, the adapter for the
-    latest known version will be used
+/**
+ * WARNING: DO NOT MODIFY PREVIOUS VERSION NMS, ONLY APPEND W/ NEW isBefore()'s
+ * Otherwise, you will break previous version compatibility.
+ * See how the other entries have been appended for examples.
  */
 @SuppressWarnings("unchecked")
 public enum NMSMethod {
     asNMSCopy(CraftItemStack, "asNMSCopy", ItemStack.class),
     asBukkitCopy(CraftItemStack, "asBukkitCopy", ItemStack.getClazz()),
-    getTag(ItemStack, (KnownVersion.v1_18_R1.isBefore() ? "getTag" : KnownVersion.v1_19_R1.isBefore() ? "t" : "v")),
+    getTag(ItemStack, (KnownVersion.v1_18_R1.isBefore() ? "getTag" :
+            KnownVersion.v1_18_R2.isBefore() ? "s" : KnownVersion.v1_19_R1.isBefore() ? "t" : "v")),
     setTag(ItemStack, (KnownVersion.v1_18_R1.isBefore() ? "setTag" : "c"), NBTTagCompound.getClazz()),
     hasKey(NBTTagCompound, (KnownVersion.v1_18_R1.isBefore() ? "hasKey" : "e"), String.class),
     removeTag(NBTTagCompound, (KnownVersion.v1_18_R1.isBefore() ? "remove" : "r"), String.class),
     getTypeId(NBTBase, (KnownVersion.v1_18_R1.isBefore() ? "getTypeId" : "a")),
     getKeys(() -> KnownVersion.v1_13_R1.isBefore() ?
-            NBTTagCompound.getClazz().getMethod("c") : NBTTagCompound.getClazz().getMethod(KnownVersion.v1_18_R1.isBefore() ? "getKeys" : "d")),
+            NBTTagCompound.getClazz().getMethod("c") :
+            NBTTagCompound.getClazz().getMethod(KnownVersion.v1_18_R1.isBefore() ? "getKeys" : "d")),
     getServer(CraftServer, "getServer"),
-    getWorldServer(() -> KnownVersion.v1_13_R1.isBefore() ? MinecraftServer.getClazz().getMethod("a", int.class) : fuzzyMethodLookup(MinecraftServer.getClazz(), false, (method) -> KnownVersion.v1_18_R1.isBefore() ? method.getName().equals("getWorldServer") ? 0 : 1 : method.getName().equals("a") && method.getParameterCount() > 0 && method.getParameterTypes()[0].equals(NMS.DIMENSION_MANAGER_OVERWORLD.getClass()) ? 0 : 1)),
+    getWorldServer(() -> KnownVersion.v1_13_R1.isBefore() ?
+            MinecraftServer.getClazz().getMethod((KnownVersion.v1_18_R1.isBefore() ? "getWorldServer" : "a"), int.class) :
+            fuzzyMethodLookup(MinecraftServer.getClazz(), false,
+                    (method) -> method.getName().equals(KnownVersion.v1_18_R1.isBefore() ? "getWorldServer" : "a") ? 0 : 1)),
     tick(() -> KnownVersion.v1_13_R1.isBefore() ?
             TileEntityFurnace.getClazz().getMethod("e") : (KnownVersion.v1_17_R1.isBefore() ?
             TileEntityFurnace.getClazz().getMethod("tick") :
             TileEntityFurnace.getClazz().getMethod("a", World.getClazz(), BlockPosition.getClazz(), IBlockData.getClazz(), TileEntityFurnace.getClazz()))),
     isBurning(true, true, TileEntityFurnace, (KnownVersion.v1_18_R1.isBefore() ? "isBurning" : "i")),
-    save(true, true, TileEntityFurnace, (KnownVersion.v1_18_R1.isBefore() ? "save" : "b"), NBTTagCompound.getClazz()),
-    load(() -> KnownVersion.v1_16_R1.isBefore() ? TileEntityFurnace.getClazz().getMethod("a", NBTTagCompound.getClazz()) : fuzzyMethodLookup(TileEntityFurnace.getClazz(), false,
-            (method) -> KnownVersion.v1_18_R1.isBefore() ? method.getName().equals("load") ? 0 : 1 : method.getName().equals("a") && method.getParameterCount() > 0 && method.getParameterTypes()[0].equals(NBTTagCompound.getClazz()) ? 0 : 1)),
-    //load(TileEntityFurnace, "load", NBTTagCompound.getClazz()),
+    save(true, true, TileEntityFurnace, (KnownVersion.v1_18_R1.isBefore() ? "save" : KnownVersion.v1_19_R1.isBefore() ? "a" : "b"), NBTTagCompound.getClazz()),
+    load(() -> KnownVersion.v1_16_R1.isBefore() ?
+            TileEntityFurnace.getClazz().getMethod((KnownVersion.v1_18_R1.isBefore() ? "load" : "a"), NBTTagCompound.getClazz()) :
+            fuzzyMethodLookup(TileEntityFurnace.getClazz(), false,
+                    (method) -> method.getName().equals(KnownVersion.v1_18_R1.isBefore() ? "load" : "a") ? 0 : 1)),
     getInventory(CraftInventory, "getInventory"),
     getBukkitEntity(EntityPlayer, "getBukkitEntity"),
     getWorld(() ->      KnownVersion.v1_17_R1.isBefore() ? null : TileEntity.getClazz().getMethod(KnownVersion.v1_18_R1.isBefore() ? "getWorld" : "k")),

@@ -18,7 +18,10 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.*;
+import com.divisionind.bprm.ACommand;
+import com.divisionind.bprm.BackpackObject;
+import com.divisionind.bprm.Backpacks;
+import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.backpacks.BPCombined;
 import com.divisionind.bprm.nms.NMSItemStack;
 import com.divisionind.bprm.nms.reflect.NBTType;
@@ -120,7 +123,7 @@ public class BackpackCraftEvent implements Listener {
                            // resolve stored backpacks
                            Inventory combinedInv;
                            if (combinedBackpack.hasData()) {
-                               combinedInv = BackpackSerialization.fromByteArrayInventory(combinedBackpack.getData());
+                               combinedInv = combinedBackpack.getDataAsInventory();
                            } else combinedInv = BPCombined.createInv();
 
                            // count how many backpacks are in the combined backpack
@@ -137,8 +140,7 @@ public class BackpackCraftEvent implements Listener {
 
                            // set backpack item at that index, return result
                            combinedInv.setItem(center, normalBackpack.getItem());
-                           combinedBackpack.setData(BackpackSerialization.toByteArrayInventory(combinedInv,
-                                   BPCombined.NAME));
+                           combinedBackpack.setData(combinedInv, BPCombined.NAME);
                            e.getInventory().setResult(combinedBackpack.getModifiedItem());
                            return;
                        }

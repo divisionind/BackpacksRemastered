@@ -65,7 +65,7 @@ public class BackpackLinkEvent implements Listener {
                                 return;
                             }
 
-                            backpack.setData(BackpackSerialization.toByteArrayLocation(block.getLocation()));
+                            backpack.setData(block.getLocation());
                             ItemStack newBackpack = backpack.getModifiedItem();
                             ItemMeta meta = newBackpack.getItemMeta();
                             List<String> newLore = new ArrayList<>(BackpackObject.LINKED.getLore());

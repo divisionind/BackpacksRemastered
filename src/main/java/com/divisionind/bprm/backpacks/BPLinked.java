@@ -18,7 +18,10 @@
 
 package com.divisionind.bprm.backpacks;
 
-import com.divisionind.bprm.*;
+import com.divisionind.bprm.ACommand;
+import com.divisionind.bprm.BackpackHandler;
+import com.divisionind.bprm.PotentialBackpackItem;
+import com.divisionind.bprm.UpdateItemCallback;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,7 +37,7 @@ public class BPLinked extends BackpackHandler {
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
         if (backpack.hasData()) {
-            Location location = BackpackSerialization.fromByteArrayLocation(backpack.getData());
+            Location location = backpack.getDataAsLocation();
             Block block = location.getBlock();
             Material blockType = block.getType();
 

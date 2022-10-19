@@ -47,7 +47,7 @@ public enum NMSClass {
     CraftTileInventoryConverter_Furnace(CRAFT, "inventory.util.CraftTileInventoryConverter$Furnace", KnownVersion.v1_17_R1.isBefore());
 
     private String path;
-    private Class<?> clazz;
+    private Class clazz;
 
     NMSClass(String base, String path) {
         this.path = base + path;

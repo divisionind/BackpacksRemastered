@@ -19,7 +19,6 @@
 package com.divisionind.bprm.backpacks;
 
 import com.divisionind.bprm.BackpackHandler;
-import com.divisionind.bprm.BackpackSerialization;
 import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.UpdateItemCallback;
 import org.bukkit.Bukkit;
@@ -40,7 +39,7 @@ public abstract class BPStorage extends BackpackHandler {
     @Override
     public Inventory openBackpack(Player p, PotentialBackpackItem backpack) throws Exception {
         if (backpack.hasData()) {
-            return BackpackSerialization.fromByteArrayInventory(backpack.getData());
+            return backpack.getDataAsInventory();
         } else {
             return Bukkit.getServer().createInventory(null, size, title);
         }
@@ -49,7 +48,7 @@ public abstract class BPStorage extends BackpackHandler {
     @Override
     public void onClose(InventoryCloseEvent e, PotentialBackpackItem backpack, UpdateItemCallback callback)
             throws Exception {
-        backpack.setData(BackpackSerialization.toByteArrayInventory(e.getInventory(), e.getView().getTitle()));
+        backpack.setData(e.getInventory(), e.getView().getTitle());
         callback.update(backpack.getModifiedItem());
     }
 }

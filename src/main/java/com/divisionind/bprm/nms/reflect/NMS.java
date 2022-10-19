@@ -41,7 +41,7 @@ public class NMS {
     public static Field TileEntity_world;
     // TODO add NMSField and NMSConstructor managers
 
-    public static Object DIMENSION_MANAGER_OVERWORLD;
+    private static Object DIMENSION_MANAGER_OVERWORLD;
 
     public static List<Exception> initialize() {
         List<Exception> exceptions = new ArrayList<>();
@@ -109,7 +109,7 @@ public class NMS {
     }
 
     public static FakeBackpackViewer createFakeViewer(PotentialBackpackItem backpack) {
-        return (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(), new Class[]{FakeBackpackViewer.class},
+        return (FakeBackpackViewer) Proxy.newProxyInstance(FakeBackpackViewer.class.getClassLoader(), new Class[] {FakeBackpackViewer.class},
                 (proxy, method, args) -> {
                     if (method.getName().equals("getOwnerBP"))
                         return backpack;
@@ -125,6 +125,17 @@ public class NMS {
 
                     return null;
                 });
+    }
+
+    public static void removeFakeBackpackViewer(Inventory inv) {
+        List<HumanEntity> viewers = inv.getViewers();
+
+        for (int i = 0; i < viewers.size(); i++) {
+            if (viewers.get(i) instanceof FakeBackpackViewer) {
+                viewers.remove(i);
+                return;
+            }
+        }
     }
 
     public static FakeBackpackViewer getBackpackViewer(Inventory inv) {

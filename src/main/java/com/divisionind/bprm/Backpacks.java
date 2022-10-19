@@ -28,9 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -91,8 +89,9 @@ public class Backpacks extends JavaPlugin {
                 new BackpackLinkEvent(),
                 new BackpackInvClickEvent(),
                 new BackpackFurnaceTickEvent());
+        if (!KnownVersion.v1_16_R1.isBefore())
+            registerEvents(new com.divisionind.bprm.events.BackpackNetheriteUpgrade());
 
-        // register these events if enabled
         if (getConfig().getBoolean("trackFurnaceBackpacks")) {
             registerEvents(new BackpackTrackEvents());
             if (!KnownVersion.v1_14_R1.isBefore()) {
@@ -249,16 +248,5 @@ public class Backpacks extends JavaPlugin {
 
     public static AdaptorManager getAdaptorManager() {
         return instance.adaptorManager;
-    }
-
-    public static void removeFakeBackpackViewer(Inventory inv) {
-        List<HumanEntity> viewers = inv.getViewers();
-
-        for (int i = 0; i < viewers.size(); i++) {
-            if (viewers.get(i) instanceof FakeBackpackViewer) {
-                viewers.remove(i);
-                return;
-            }
-        }
     }
 }

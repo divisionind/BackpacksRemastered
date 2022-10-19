@@ -50,8 +50,8 @@ public abstract class BackpackHandler {
 
     /**
      * Completes the final steps of opening the backpack. These are things
-     * that must be done but are often similar. Unfortunately, bukkits poor
-     * and inconsistent inventory opening system is why this exists.
+     * that must be done but are often similar. Unfortunately, bukkit's
+     * inconsistent inventory opening system is why this exists.
      *
      * @param p player to open the backpack for
      * @param inv inventory created from openBackpack
