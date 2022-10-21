@@ -96,6 +96,7 @@ public class BackpackOpenCloseEvent implements Listener  {
         if (bpi.isBackpack()) {
             if (bpi.getType() != BackpackObject.COMBINED.getTypeId()) {
                 if (!viewer.getOwnerBP().getItem().equals(bp) && viewer.getOwnerBP().getType() != BackpackObject.FURNACE.getTypeId()) {
+                    transactions.remove(e.getPlayer().getUniqueId());
                     return;
                 }
             }

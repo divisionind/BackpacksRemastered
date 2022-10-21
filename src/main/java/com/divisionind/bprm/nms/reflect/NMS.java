@@ -40,7 +40,7 @@ public class NMS {
     public static Field TileEntity_world;
     // TODO add NMSField and NMSConstructor managers
 
-    private static Object DIMENSION_MANAGER_OVERWORLD;
+    public static Object DIMENSION_MANAGER_OVERWORLD;
 
     public static List<Exception> initialize() {
         List<Exception> exceptions = new ArrayList<>();

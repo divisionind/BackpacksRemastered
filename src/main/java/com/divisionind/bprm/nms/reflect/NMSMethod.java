@@ -44,20 +44,22 @@ public enum NMSMethod {
             NBTTagCompound.getClazz().getMethod("c") :
             NBTTagCompound.getClazz().getMethod(v1_18_R1.before() ? "getKeys" : "d")),
     getServer(CraftServer, "getServer"),
-    getWorldServer(() -> v1_13_R1.before() ?
-            MinecraftServer.getClazz().getMethod((v1_18_R1.before() ? "getWorldServer" : "a"), int.class) :
+    getWorldServer(() -> v1_13_R1.before() ? MinecraftServer.getClazz().getMethod((v1_18_R1.before() ? "getWorldServer" : "a"), int.class) :
             fuzzyMethodLookup(MinecraftServer.getClazz(), false,
-                    (method) -> method.getName().equals(v1_18_R1.before() ? "getWorldServer" : "a") ? 0 : 1)),
+                    (method) -> v1_18_R1.before() ? method.getName().equals("getWorldServer") ? 0 : 1 :
+                            method.getName().equals("a") && method.getParameterCount() > 0 &&
+                                    method.getParameterTypes()[0].equals(NMS.DIMENSION_MANAGER_OVERWORLD.getClass()) ? 0 : 1)),
     tick(() -> v1_13_R1.before() ?
             TileEntityFurnace.getClazz().getMethod("e") : (v1_17_R1.before() ?
             TileEntityFurnace.getClazz().getMethod("tick") :
             TileEntityFurnace.getClazz().getMethod("a", World.getClazz(), BlockPosition.getClazz(), IBlockData.getClazz(), TileEntityFurnace.getClazz()))),
     isBurning(true, true, TileEntityFurnace, (v1_18_R1.before() ? "isBurning" : "i")),
     save(true, true, TileEntityFurnace, (v1_18_R1.before() ? "save" : v1_19_R1.before() ? "a" : "b"), NBTTagCompound.getClazz()),
-    load(() -> v1_16_R1.before() ?
-            TileEntityFurnace.getClazz().getMethod((v1_18_R1.before() ? "load" : "a"), NBTTagCompound.getClazz()) :
+    load(() -> v1_16_R1.before() ? TileEntityFurnace.getClazz().getMethod((v1_18_R1.before() ? "load" : "a"), NBTTagCompound.getClazz()) :
             fuzzyMethodLookup(TileEntityFurnace.getClazz(), false,
-                    (method) -> method.getName().equals(v1_18_R1.before() ? "load" : "a") ? 0 : 1)),
+                    (method) -> v1_18_R1.before() ? method.getName().equals("load") ? 0 : 1 :
+                            method.getName().equals("a") && method.getParameterCount() > 0 &&
+                                    method.getParameterTypes()[0].equals(NBTTagCompound.getClazz()) ? 0 : 1)),
     getInventory(CraftInventory, "getInventory"),
     getBukkitEntity(EntityPlayer, "getBukkitEntity"),
     getWorld(() ->      v1_17_R1.before() ? null : TileEntity.getClazz().getMethod(v1_18_R1.before() ? "getWorld" : "k")),
