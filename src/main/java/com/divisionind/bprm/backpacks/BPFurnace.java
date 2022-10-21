@@ -63,11 +63,11 @@ public class BPFurnace extends BackpackHandler {
         // contains the magic that makes our virtual furnace
         if (furnace == null) {
             // create fake furnace tile entity
-            if (KnownVersion.v1_14_R1.isBefore()) {
+            if (KnownVersion.v1_14_R1.before()) {
                 // furnace = new TileEntityFurnace(); // only works pre-1.14
                 furnace = NMSClass.TileEntityFurnace.getClazz().getDeclaredConstructor().newInstance();
             } else
-            if (KnownVersion.v1_17_R1.isBefore()) {
+            if (KnownVersion.v1_17_R1.before()) {
                 // furnace = new TileEntityFurnaceFurnace();
                 furnace = NMSClass.TileEntityFurnaceFurnace.getClazz().getDeclaredConstructor().newInstance();
             } else {
@@ -84,10 +84,10 @@ public class BPFurnace extends BackpackHandler {
             if (backpack.hasNBT("furnace_data")) {
                 //furnace.load((NBTTagCompound) backpack.getAsMap("furnace_data").getTagCompound());
                 Object furnaceDataTC = backpack.getAsMap("furnace_data").getTagCompound();
-                if (KnownVersion.v1_16_R1.isBefore()) {
+                if (KnownVersion.v1_16_R1.before()) {
                     NMSMethod.load.getMethod().invoke(furnace, furnaceDataTC);
                 } else
-                if (KnownVersion.v1_17_R1.isBefore()) {
+                if (KnownVersion.v1_17_R1.before()) {
                     NMSMethod.load.getMethod().invoke(furnace, null, furnaceDataTC);
                 } else {
                     NMSMethod.load.getMethod().invoke(furnace, furnaceDataTC); // back to old method, make up your mind

@@ -63,7 +63,7 @@ public class AlwaysPlayer {
                     Object worldServer = NMS.getWorldServer(dedicatedServer);
                     Object entityPlayer;
 
-                    if (KnownVersion.v1_17_R1.isBefore()) {
+                    if (KnownVersion.v1_17_R1.before()) {
                         Object playerInteractManager = NMSClass.PlayerInteractManager.getClazz()
                                 .getConstructor(NMSClass.WorldServer.getClazz())
                                 .newInstance(worldServer);

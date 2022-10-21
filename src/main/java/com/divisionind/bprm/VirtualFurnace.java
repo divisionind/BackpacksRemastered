@@ -65,7 +65,7 @@ public class VirtualFurnace {
 
     public void tick() throws InvocationTargetException, IllegalAccessException {
         //furnace.tick();
-        if (KnownVersion.v1_17_R1.isBefore()) {
+        if (KnownVersion.v1_17_R1.before()) {
             NMSMethod.tick.getMethod().invoke(furnace);
         } else {
             Object world = NMSMethod.getWorld.getMethod().invoke(furnace);

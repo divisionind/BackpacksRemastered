@@ -18,15 +18,15 @@
 
 package com.divisionind.bprm.nms;
 
-import com.divisionind.bprm.nms.reflect.NMS;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.bukkit.Bukkit;
 
 /**
- * A list of known versions. This allows us to get the versions before our version and is useful
- * for when NMS changes. Note: We can NOT reliably get the versions after a particular version
- * because those are always changing.
+ * A list of known versions. This gives us a history of how one version progressed to the next which
+ * is useful for quickly resolving NMS functionality at runtime. It's why we can support so many versions.
+ *
+ * This requires that our list of previous versions be comprehensive back to min_supported_version, but allows for
+ * future unknown versions (not in the enum) to fall back to whatever the latest NMS revision is. Hence, why there
+ * is no .after().
  */
 public enum KnownVersion {
 
@@ -48,31 +48,27 @@ public enum KnownVersion {
     v1_19_R1,
     ;
 
-    public KnownVersion[] getVersionsBefore() {
-        List<KnownVersion> versions = new ArrayList<>();
+    private static final KnownVersion KVERSION;
+    public static final String VERSION;
 
-        for (KnownVersion v : values()) {
-            if (v.equals(this)) break;
-            versions.add(v);
+    static {
+        String vtmp = Bukkit.getServer().getClass().getPackage().getName();
+        VERSION = vtmp.substring(vtmp.lastIndexOf('.') + 1);
+
+        KnownVersion ktmp;
+        try {
+            ktmp = valueOf(VERSION);
+        } catch (IllegalArgumentException e) {
+            KnownVersion[] versions = values();
+            ktmp = versions[versions.length-1];
         }
-
-        return versions.toArray(new KnownVersion[0]);
+        KVERSION = ktmp;
     }
 
     /**
-     * Checks if the current server version is before the current instances version
-     *
-     * @return result
+     * @return whether the current server version is before the current instance's version (non-inclusive)
      */
-    public boolean isBefore() {
-        return equalsAny(NMS.VERSION, getVersionsBefore());
-    }
-
-    public static boolean equalsAny(String in, KnownVersion... cmp) {
-        for (KnownVersion c : cmp) {
-            if (in.equals(c.name())) return true;
-        }
-
-        return false;
+    public boolean before() {
+        return KVERSION.ordinal() < ordinal();
     }
 }

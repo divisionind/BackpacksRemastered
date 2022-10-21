@@ -22,7 +22,6 @@ import com.divisionind.bprm.FakeBackpackViewer;
 import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.nms.KnownVersion;
 import com.divisionind.bprm.nms.reflect.ex.NMSLoadException;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 
@@ -32,10 +31,10 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NMS {
+import static com.divisionind.bprm.nms.KnownVersion.VERSION;
 
-    public static final String VERSION = getVersion();
-    public static final String SERVER = (KnownVersion.v1_18_R1.isBefore() ? "net.minecraft.server." + VERSION + "." : "net.minecraft.server.");
+public class NMS {
+    public static final String SERVER = (KnownVersion.v1_18_R1.before() ? "net.minecraft.server." + VERSION + "." : "net.minecraft.server.");
     public static final String CRAFT = "org.bukkit.craftbukkit." + VERSION + ".";
 
     public static Field TileEntity_world;
@@ -70,7 +69,7 @@ public class NMS {
 
         // init some methods and classes
         try {
-            if (KnownVersion.v1_17_R1.isBefore()) {
+            if (KnownVersion.v1_17_R1.before()) {
                 Field overWorldField = NMSClass.DimensionManager.getClazz().getDeclaredField("OVERWORLD");
                 DIMENSION_MANAGER_OVERWORLD = overWorldField.get(null);
 
@@ -101,7 +100,7 @@ public class NMS {
     }
 
     public static Object getWorldServer(Object dedicatedServer) throws InvocationTargetException, IllegalAccessException {
-        if (KnownVersion.v1_13_R1.isBefore()) {
+        if (KnownVersion.v1_13_R1.before()) {
             return NMSMethod.getWorldServer.getMethod().invoke(dedicatedServer, 0);
         } else {
             return NMSMethod.getWorldServer.getMethod().invoke(dedicatedServer, NMS.DIMENSION_MANAGER_OVERWORLD);
@@ -146,10 +145,5 @@ public class NMS {
         }
 
         return null;
-    }
-
-    private static String getVersion() {
-        String name = Bukkit.getServer().getClass().getPackage().getName();
-        return name.substring(name.lastIndexOf('.') + 1);
     }
 }

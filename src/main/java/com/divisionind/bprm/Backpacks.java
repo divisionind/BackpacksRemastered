@@ -89,12 +89,12 @@ public class Backpacks extends JavaPlugin {
                 new BackpackLinkEvent(),
                 new BackpackInvClickEvent(),
                 new BackpackFurnaceTickEvent());
-        if (!KnownVersion.v1_16_R1.isBefore())
+        if (!KnownVersion.v1_16_R1.before())
             registerEvents(new com.divisionind.bprm.events.BackpackNetheriteUpgrade());
 
         if (getConfig().getBoolean("trackFurnaceBackpacks")) {
             registerEvents(new BackpackTrackEvents());
-            if (!KnownVersion.v1_14_R1.isBefore()) {
+            if (!KnownVersion.v1_14_R1.before()) {
                 registerEvents(new BackpackTrackEvents.InventoryClickTrackEvent());
             } else {
                 getLogger().warning("Backpack tracking is enabled but not fully supported in this version. " +
@@ -102,7 +102,7 @@ public class Backpacks extends JavaPlugin {
             }
         }
 
-        getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", NMS.VERSION));
+        getLogger().info(String.format("Detected NMS %s. Using this for all NMS related functions.", KnownVersion.VERSION));
         List<Exception> nmsExceptions = NMS.initialize();
         if (nmsExceptions.size() > 0) {
             getLogger().severe(nmsExceptions.size() + " error(s) initializing NMS. Was the detected server wrong? " +

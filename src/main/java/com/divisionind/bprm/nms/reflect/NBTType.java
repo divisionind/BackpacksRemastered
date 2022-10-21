@@ -84,7 +84,7 @@ public enum NBTType {
     }
 
     void init(Class cNBTTagCompound) throws NoSuchMethodException {
-        if (!KnownVersion.v1_18_R1.isBefore()) {
+        if (!KnownVersion.v1_18_R1.before()) {
             set = cNBTTagCompound.getMethod("a", String.class, getClassType());
             String thing = "p";
             if (Objects.equals(getType(), "Byte")) thing = "f";
