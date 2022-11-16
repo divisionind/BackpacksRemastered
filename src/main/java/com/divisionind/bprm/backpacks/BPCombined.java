@@ -19,6 +19,7 @@
 package com.divisionind.bprm.backpacks;
 
 import com.divisionind.bprm.*;
+import com.divisionind.bprm.events.BackpackOpenCloseEvent;
 import com.divisionind.bprm.nms.reflect.NMS;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -68,29 +69,25 @@ public class BPCombined extends BackpackHandler {
                     ACommand.respondf(e.getWhoClicked(), "&cBackpack of type %s does not exist in this version. " +
                             "Why did you downgrade the plugin?", type);
                 } else {
-                    Bukkit.getScheduler().runTask(Backpacks.getInstance(), () -> {
-                        try {
-                            // remove backpack identifier viewer so the onClose event is not triggered by this open event
-                            NMS.removeFakeBackpackViewer(e.getClickedInventory());
+                    // remove backpack identifier viewer so the onClose event is not triggered by this open event
+                    NMS.removeFakeBackpackViewer(e.getClickedInventory());
 
-                            // ensure to force close the inventory right after this or else a duplication glitch
-                            //   would be possible
-                            e.getWhoClicked().closeInventory();
+                    // ensure to force close the inventory right after this or else a duplication glitch
+                    //   would be possible
+                    e.getWhoClicked().closeInventory();
 
-                            // open clicked backpack
-                            BackpackHandler handler = bpo.getHandler();
-                            Inventory inv = handler.openBackpack((Player) e.getWhoClicked(), backpack);
+                    // open clicked backpack
+                    BackpackHandler handler = bpo.getHandler();
+                    Inventory inv = handler.openBackpack((Player) e.getWhoClicked(), backpack);
 
-                            if (inv == null) return;
+                    if (inv == null) {
+                        BackpackOpenCloseEvent.transactions.remove(e.getWhoClicked().getUniqueId());
+                        return;
+                    }
 
-                            // set opened backpack for player
-                            openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
-                            handler.finalizeBackpackOpen(e.getWhoClicked(), inv, backpack);
-
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    });
+                    // set opened backpack for player
+                    openBackpacks.put(e.getWhoClicked().getUniqueId(), e.getRawSlot());
+                    handler.finalizeBackpackOpen(e.getWhoClicked(), inv, backpack);
                 }
             }
         } catch (Exception ex) {

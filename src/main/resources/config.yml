@@ -1,8 +1,5 @@
 # the configuration version (do not change this)
-version: 7
-
-# How long (in ticks, 20ticks/second) to wait after someone opens a backpack before they can open it again
-openBackpackCooldown: 8
+version: 8
 
 # Max number of backpacks that can be put into a combined backpack (cannot be more than 9)
 maxNumberOfCombinedBackpacks: 9

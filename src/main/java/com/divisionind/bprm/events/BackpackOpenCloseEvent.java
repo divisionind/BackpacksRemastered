@@ -18,11 +18,11 @@
 
 package com.divisionind.bprm.events;
 
-import com.divisionind.bprm.*;
+import com.divisionind.bprm.BackpackHandler;
+import com.divisionind.bprm.FakeBackpackViewer;
+import com.divisionind.bprm.PotentialBackpackItem;
 import com.divisionind.bprm.nms.NMSItemStack;
 import com.divisionind.bprm.nms.reflect.NMS;
-import io.netty.util.internal.ConcurrentSet;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,8 +38,7 @@ import java.util.UUID;
 
 public class BackpackOpenCloseEvent implements Listener  {
 
-    private static ConcurrentSet<UUID> openingBackpacks = new ConcurrentSet<>();
-    private static Set<UUID> transactions = new HashSet<>();
+    public static final Set<UUID> transactions = new HashSet<>();
 
     @EventHandler
     public void onBackpackOpen(PlayerInteractEvent e) throws Exception {
@@ -60,19 +59,11 @@ public class BackpackOpenCloseEvent implements Listener  {
                 PotentialBackpackItem bpi = new PotentialBackpackItem(backpackItem);
 
                 if (bpi.isBackpack()) {
-                    // de-bounce backpack opening
-                    UUID playerId = e.getPlayer().getUniqueId();
-                    if (openingBackpacks.contains(playerId))
-                        return;
-
-                    openingBackpacks.add(playerId);
-                    // 8ticks = 0.4s should be enough time for the backpack to open (unless someone is rly lagging)
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(Backpacks.getInstance(),
-                            () -> openingBackpacks.remove(playerId), Backpacks.OPEN_BACKPACK_COOLDOWN);
-
                     // actually open the backpack (along with adding fake viewer for identification)
                     BackpackHandler handler = bpi.getHandler();
                     Inventory inv = handler.openBackpack(e.getPlayer(), bpi);
+
+                    UUID playerId = e.getPlayer().getUniqueId();
                     if (inv == null || transactions.contains(playerId))
                         return;
 
@@ -94,13 +85,6 @@ public class BackpackOpenCloseEvent implements Listener  {
         PotentialBackpackItem bpi = new PotentialBackpackItem(bp);
 
         if (bpi.isBackpack()) {
-            if (bpi.getType() != BackpackObject.COMBINED.getTypeId()) {
-                if (!viewer.getOwnerBP().getItem().equals(bp) && viewer.getOwnerBP().getType() != BackpackObject.FURNACE.getTypeId()) {
-                    transactions.remove(e.getPlayer().getUniqueId());
-                    return;
-                }
-            }
-
             bpi.getHandler().onClose(e, bpi,
                     newItem -> e.getPlayer().getInventory().setChestplate(newItem));
         }

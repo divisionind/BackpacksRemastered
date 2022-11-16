@@ -43,10 +43,9 @@ public class Backpacks extends JavaPlugin {
     public static final String VERSION = "@DivisionVersion@";
     public static final String GIT_HASH = "@DivisionGitHash@";
     public static final String GIT_NUM = "@DivisionGitComm@";
-    public static final int CONFIGURATION_VERSION = 7;
+    public static final int CONFIGURATION_VERSION = 8;
 
     public static ResourceBundle bundle;
-    public static long OPEN_BACKPACK_COOLDOWN;
     public static int MAX_COMBINED_BACKPACKS;
 
     private static Backpacks instance;
@@ -221,7 +220,6 @@ public class Backpacks extends JavaPlugin {
         Locale.setDefault(loc);
         bundle = ResourceBundle.getBundle("lang");
 
-        OPEN_BACKPACK_COOLDOWN = getConfig().getLong("openBackpackCooldown");
         MAX_COMBINED_BACKPACKS = getConfig().getInt("maxNumberOfCombinedBackpacks");
         if (MAX_COMBINED_BACKPACKS > 9 || MAX_COMBINED_BACKPACKS < 1) MAX_COMBINED_BACKPACKS = 9;
     }
